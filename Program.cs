@@ -30,8 +30,8 @@ namespace FEZRepacker
         // unpacks PAK file located in given path into given directory location
         static void CommandUnpack(string pakPath, string unpackPath)
         {
-            PAKFile pak = new PAKFile(pakPath);
-            if (!pak.Loaded)
+            PAKContainer pak = PAKContainer.LoadPak(pakPath);
+            if (pak == null)
             {
                 Console.WriteLine("Failed to load PAK file.");
                 return;
@@ -39,27 +39,32 @@ namespace FEZRepacker
 
             Console.WriteLine($"Loaded .pak package containing {pak.FileCount} files.\n");
 
-            foreach((string name, XNBFile file) in pak.Files)
+            foreach ((var name, var file) in pak.Files)
             {
-                var validStr = (file.IsValid ? "" : "invalid file, ");
-                var compSize = file.GetContentsSize();
-                var uncompSize = file.GetContentsSize(true);
+                Console.WriteLine($"\"{name}\" ({file.GetInfo()})");
 
-                var compStr = $"{compSize}B" + (file.IsCompressed ? $" compressed, {uncompSize}B uncompressed" : "");
-                Console.WriteLine($"\"{name}\" ({validStr}size: {compStr})");
+                if(file is XNBFile)
+                {
+                    ((XNBFile)file).ReadXNBContent();
+                }
             }
 
-            // debug code
-            Console.WriteLine("\nAttempting to decompress and save first file in the PAK file...");
-            Console.WriteLine(pak.Files.First().Key);
-            XNBFile testFile = pak.Files.First().Value;
+            Console.WriteLine($"\nAll main types of content:");
 
-            testFile.Decompress();
-            //Console.WriteLine($"Successfully decompressed file. Final size: {testFile.GetContentsSize()}");
+            foreach (var reader in XNBContent.MainReaders)
+            {
+                Console.WriteLine($" - {reader}");
+            }
 
-            if (!Directory.Exists(unpackPath)) Directory.CreateDirectory(unpackPath);
+            Console.WriteLine("$\nAttempting to save zuish font file");
+            if (pak.Files.ContainsKey("fonts\\zuish"))
+            {
+                if (!Directory.Exists(unpackPath)) Directory.CreateDirectory(unpackPath);
+                File.WriteAllBytes($"{unpackPath}/zuish.xnb", pak.Files["fonts\\zuish"].Content);
+            }
 
-            File.WriteAllBytes($"{unpackPath}/test.bin", testFile.FileContents);
+            //if (!Directory.Exists(unpackPath)) Directory.CreateDirectory(unpackPath);
+            //File.WriteAllBytes($"{unpackPath}/test.bin", testFile.Content);
         }
 
         // packs directory in given location into a pak file with given name

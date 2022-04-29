@@ -6,37 +6,13 @@ using System.Threading.Tasks;
 
 namespace FEZRepacker
 {
-    static class XNBConstants
+
+    class XNBFile : PAKFile
     {
-        public const string IDENTIFIER = "XNB";
-        public const byte VERSION = 5;
-
-        public const byte FLAG_HIDEF = 0x01;
-        public const byte FLAG_COMPRESSED = 0x80;
-
-        public const char PLATFORM_WINDOWS = 'w';
-        public const char PLATFORM_MOBILE = 'm';
-        public const char PLATFORM_XBOX = 'x';
-
-        public const int HEADER_SIZE = 6;
-    }
-
-    class XNBFile
-    {
-        public string Identifier { get; private set; }
         public char Platform { get; private set; }
         public byte Version { get; private set; }
         public bool IsCompressed { get; private set; }
         public bool IsForHiDef { get; private set; }
-
-        public bool IsValid { get; private set; }
-
-
-        private byte[] _fileContents;
-        public byte[] FileContents => _fileContents;
-
-
-
         
         public XNBFile()
         {
@@ -48,60 +24,75 @@ namespace FEZRepacker
             IsForHiDef = false;
 
             // empty file, no data until it's passed by external stuff
-            _fileContents = new byte[0];
             Validate();
         }
 
-        public void SetData(byte[] data, bool compressed = false)
+        public int GetXNBContentSize(bool uncompressed = false)
         {
-            _fileContents = data;
-            IsCompressed = compressed;
+            // uncompressed data size
+            if (!uncompressed || !IsCompressed)
+            {
+                return _content.Length;
+            }
 
-            Validate();
+            // compressed data size - it should start with it
+            if (_content.Length >= 4)
+            {
+                return BitConverter.ToInt32(_content, 0);
+            }
+            else return 0;
+        }
+
+        public XNBContent ReadXNBContent()
+        {
+            if (IsCompressed) Decompress();
+            if (!IsValid) return null;
+            else return XNBContent.FromData(_content);
+        }
+
+        public void WriteXNBContent(XNBContent content)
+        {
+
         }
 
         public void Decompress()
         {
             if (!IsValid || !IsCompressed) return;
 
-            var newData = XNBDecompressor.Decompress(_fileContents);
-            _fileContents = newData;
+            var newData = XNBDecompressor.Decompress(_content);
+            _content = newData;
             IsCompressed = false;
         }
 
         // validates XNB file (specifically ones present in FEZ)
-        public void Validate()
+        public override void Validate()
         {
             IsValid = false;
 
             if (Identifier != XNBConstants.IDENTIFIER) return;
             if (Platform != XNBConstants.PLATFORM_WINDOWS) return;
             if (Version != XNBConstants.VERSION) return;
-            if (_fileContents.Length == 0) return;
+            if (_content.Length == 0) return;
 
             IsValid = true;
         }
 
-        public int GetContentsSize(bool uncompressed = false)
+        public override string GetInfo()
         {
-            // uncompressed data size
-            if (!uncompressed || !IsCompressed)
-            {
-                return _fileContents.Length;
-            }
+            var validStr = (IsValid ? "" : "invalid ");
+            var compSize = GetXNBContentSize();
+            var uncompSize = GetXNBContentSize(true);
 
-            // compressed data size - it should start with it
-            if(_fileContents.Length >= 4)
-            {
-                return BitConverter.ToInt32(_fileContents, 0);
-            }
-            else return 0;
+            var compStr = $"{validStr}XNB file; size: {compSize}B" + (IsCompressed ? $" compressed, {uncompSize}B uncompressed" : "");
+
+            return compStr;
         }
 
-        public static XNBFile FromStream(Stream xnbStream)
+        new public static XNBFile FromData(byte[] xnbData)
         {
             var xnb = new XNBFile();
-            
+
+            using var xnbStream = new MemoryStream(xnbData);
             using var xnbReader = new BinaryReader(xnbStream, Encoding.UTF8, false);
 
             xnb.Identifier = new string(xnbReader.ReadChars(3));
@@ -117,10 +108,33 @@ namespace FEZRepacker
             if(fileContentSize > 0)
             {
                 var data = xnbReader.ReadBytes(fileContentSize);
-                xnb.SetData(data, xnb.IsCompressed);
+                xnb.SetData(data);
             }
 
             return xnb;
+        }
+        public override void WriteTo(Stream stream, bool packed)
+        {
+            if (packed)
+            {
+                // we're saving packed file - reconstruct the header and write the content
+                using var writer = new BinaryWriter(stream);
+                writer.Write(new char[] { 'X', 'N', 'B'});
+                writer.Write(Platform);
+                writer.Write(Version);
+
+                byte flags = 0;
+                if (IsCompressed) flags |= XNBConstants.FLAG_COMPRESSED;
+                if (IsForHiDef) flags |= XNBConstants.FLAG_HIDEF;
+                writer.Write(flags);
+
+                writer.Write(_content.Length);
+                writer.Write(_content);
+            }
+            else
+            {
+                // we're saving unpacked file - write content of the XNB file
+            }
         }
     }
 }

@@ -10,14 +10,11 @@ namespace FEZRepacker
 {
     class XNBDecompressor
     {
-        // no idea what this number means, but it works...
-        public static int COMPRESSED_PROLOGUE_SIZE = 14;
-
         public static byte[] Decompress(byte[] inData)
         {
             LzxDecoder decoder = new LzxDecoder(16);
 
-            int compressedSize = inData.Length - COMPRESSED_PROLOGUE_SIZE;
+            int compressedSize = inData.Length - XNBConstants.COMPRESSED_PROLOGUE_SIZE;
             int decompressedSize = BitConverter.ToInt32(inData, 0);
 
             var dataStream = new MemoryStream(inData);

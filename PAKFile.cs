@@ -6,48 +6,57 @@ using System.Threading.Tasks;
 
 namespace FEZRepacker
 {
-    using PAKDictionary = Dictionary<string, XNBFile>;
-
     class PAKFile
     {
-        public bool Loaded { get; private set; }
+        public string Identifier { get; protected set; }
+        public bool IsValid { get; protected set; }
 
-        private PAKDictionary _files = new PAKDictionary();
-        public PAKDictionary Files => _files;
-        public int FileCount => _files.Count;
+        protected byte[] _content;
+        public byte[] Content => _content;
 
-        public PAKFile(PAKDictionary files)
+        public PAKFile()
         {
-            _files = files;
-            Loaded = true;
+            Identifier = "";
+            IsValid = false;
+            _content = new byte[0];
         }
 
-        public PAKFile(string path) => Load(path);
-
-        public void Load(string path)
+        public void SetData(byte[] data)
         {
-            if (!File.Exists(path)) return;
+            _content = data;
 
-            using var rawFileStream = new FileStream(path, FileMode.Open, FileAccess.Read);
-            using var rawFileReader = new BinaryReader(rawFileStream, Encoding.UTF8, false);
-            
-            uint filesCount = rawFileReader.ReadUInt32();
+            Validate();
+        }
 
-            for(var i = 0; i < filesCount; i++)
+        public virtual void Validate()
+        {
+            IsValid = true;
+        }
+
+        public virtual string GetInfo()
+        {
+            string identifierName = "unknown";
+            if (Identifier.All(Char.IsLetter))
             {
-                string name = rawFileReader.ReadString();
-                uint fileSize = rawFileReader.ReadUInt32();
-                byte[] data = rawFileReader.ReadBytes((int)fileSize);
-
-                _files[name] = XNBFile.FromStream(new MemoryStream(data));
+                identifierName = Identifier;
             }
 
-            Loaded = Files.Count > 0;
+            return $"{identifierName} file; size: {_content.Length}B";
         }
 
-        public void Save(string path)
+        public static PAKFile FromData(byte[] data)
         {
+            PAKFile content = new PAKFile();
 
+            content.Identifier = Encoding.UTF8.GetString(data.Take(3).ToArray());
+            content.SetData(data);
+
+            return content;
+        }
+
+        public virtual void WriteTo(Stream stream, bool packed)
+        {
+            stream.Write(_content);
         }
     }
 }
