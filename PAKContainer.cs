@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using FEZRepacker.XNB;
+
 namespace FEZRepacker
 {
     using PAKDictionary = Dictionary<string, PAKFile>;
@@ -41,9 +43,21 @@ namespace FEZRepacker
             return pak;
         }
 
-        public void SavePak()
+        public void SavePak(string path)
         {
-            // TODO: logic here
+            using var rawFileStream = new FileStream(path, FileMode.Create, FileAccess.Write);
+            using var rawFileWriter = new BinaryWriter(rawFileStream, Encoding.UTF8, false);
+
+            rawFileWriter.Write(_files.Count);
+
+            foreach((string name, PAKFile file) in _files)
+            {
+                rawFileWriter.Write(file.GetSize());
+                file.Write(rawFileWriter);
+            }
+
+            rawFileWriter.Close();
+            rawFileStream.Close();
         }
 
         public static PAKContainer LoadContent(string path)
@@ -58,35 +72,38 @@ namespace FEZRepacker
         {
             foreach ((var name, var file) in Files)
             {
+                // preparing a directory for given file
+                string fullPath = path + "\\" + name;
+                var dirName = Path.GetDirectoryName(fullPath);
+                if (dirName != null && !Directory.Exists(dirName)) Directory.CreateDirectory(dirName);
 
-                bool savedXNB = false;
-
-                if (file is XNBFile)
+                if(file is XNBFile)
                 {
-                    var xnbFile = (XNBFile)file;
+                    XNBFile xnbfile = ((XNBFile)file);
 
-                    xnbFile.Decompress();
-
-                    if (xnbFile.IsValid)
+                    var content = xnbfile.ReadXNBContent();
+                    if(content == null)
                     {
-                        XNBContent content = xnbFile.ReadXNBContent();
-
-                        savedXNB = true;
+                        xnbfile.SaveAsPacked = true;
                     }
-                    
+                    else
+                    {
+                        xnbfile.SaveAsPacked = false;
+                    }
+                    //xnbfile.SaveAsPacked = true;
                 }
+
+                string extension = file.GetExtension();
+
+                using var fileStream = new FileStream($"{fullPath}.{extension}", FileMode.Create, FileAccess.Write);
+                using var fileWriter = new BinaryWriter(fileStream, Encoding.UTF8, false);
+
+                file.Write(fileWriter);
+
+                fileWriter.Close();
+                fileStream.Close();
                 
-                if(!savedXNB)
-                {
-
-                }
-                // todo - further logic here
             }
-
-
-
-            //if (!Directory.Exists(unpackPath)) Directory.CreateDirectory(unpackPath);
-            //File.WriteAllBytes($"{unpackPath}/test.bin", testFile.Content);
         }
     }
 }

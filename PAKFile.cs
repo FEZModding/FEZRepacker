@@ -44,6 +44,21 @@ namespace FEZRepacker
             return $"{identifierName} file; size: {_content.Length}B";
         }
 
+        public virtual int GetSize()
+        {
+            return _content.Length;
+        }
+
+        public virtual string GetExtension()
+        {
+            string ext = "unk";
+            if (Identifier.All(Char.IsLetter))
+            {
+                ext = Identifier.ToLower();
+            }
+            return ext;
+        }
+
         public static PAKFile FromData(byte[] data)
         {
             PAKFile content = new PAKFile();
@@ -54,9 +69,9 @@ namespace FEZRepacker
             return content;
         }
 
-        public virtual void WriteTo(Stream stream, bool packed)
+        public virtual void Write(BinaryWriter writer)
         {
-            stream.Write(_content);
+            writer.Write(_content);
         }
     }
 }

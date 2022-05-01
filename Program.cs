@@ -1,8 +1,10 @@
 ﻿using System;
 
+using FEZRepacker.XNB.Converters;
+
 namespace FEZRepacker
 {
-    internal class Program
+    class Program
     {
         static bool VerifyArgs(string[] args, out string error)
         {
@@ -42,29 +44,11 @@ namespace FEZRepacker
             foreach ((var name, var file) in pak.Files)
             {
                 Console.WriteLine($"\"{name}\" ({file.GetInfo()})");
-
-                if(file is XNBFile)
-                {
-                    ((XNBFile)file).ReadXNBContent();
-                }
             }
 
-            Console.WriteLine($"\nAll main types of content:");
+            Console.WriteLine($"\nAttempting to save files to {unpackPath}.\n");
 
-            foreach (var reader in XNBContent.MainReaders)
-            {
-                Console.WriteLine($" - {reader}");
-            }
-
-            Console.WriteLine("$\nAttempting to save zuish font file");
-            if (pak.Files.ContainsKey("fonts\\zuish"))
-            {
-                if (!Directory.Exists(unpackPath)) Directory.CreateDirectory(unpackPath);
-                File.WriteAllBytes($"{unpackPath}/zuish.xnb", pak.Files["fonts\\zuish"].Content);
-            }
-
-            //if (!Directory.Exists(unpackPath)) Directory.CreateDirectory(unpackPath);
-            //File.WriteAllBytes($"{unpackPath}/test.bin", testFile.Content);
+            pak.SaveContent(unpackPath);
         }
 
         // packs directory in given location into a pak file with given name
@@ -77,9 +61,9 @@ namespace FEZRepacker
         {
             // showoff
             Console.WriteLine(
-                "============================\n" +
+                "==============================\n" +
                 "= FEZRepacker 0.1 by Krzyhau =\n" +
-                "============================\n\n"
+                "==============================\n\n"
             );
 
             // printing out help string if used program incorrectly
