@@ -6,14 +6,18 @@ using System.Threading.Tasks;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
+using FEZEngine;
+using YamlDotNet.Core;
+
 namespace FEZRepacker.XNB.Converters
 {
     struct LevelData
     {
         public string Name;
-        public float[] Size; // Vector3 in the original
-        public int[] StartingPosition;
-        public int StartingRotation;
+
+        [YamlMember(SerializeAs = typeof(string))]
+        public Vector3 Size;
+        public TrileFace StartingFace;
         public string SequenceSamplesPath;
         public bool Flat;
         public bool SkipPostProcess;
@@ -27,6 +31,11 @@ namespace FEZRepacker.XNB.Converters
         public float WaterHeight;
         public string SkyName;
         public string TrileSetName;
+        public Dictionary<int, Volume> Volumes;
+        public Dictionary<int, Script> Scripts;
+        public string SongName;
+        public int FAPFadeOutStart;
+        public int FAPFadeoutLength;
     }
 
     class LevelContent : XNBContent
@@ -99,38 +108,71 @@ namespace FEZRepacker.XNB.Converters
             reader.ReadByte(); // 0x02
             lvlData.Name = reader.ReadString();
 
-            lvlData.Size = new float[]
-            {
+            lvlData.Size = new Vector3(
                 reader.ReadSingle(),
                 reader.ReadSingle(),
                 reader.ReadSingle()
-            };
+            );
 
             reader.ReadByte(); // 0x03
             reader.ReadByte(); // 0x04
-            lvlData.StartingPosition = new int[]
-            {
+            lvlData.StartingFace.Position = new TrileEmplacement(
                 reader.ReadInt32(),
                 reader.ReadInt32(),
                 reader.ReadInt32()
-            };
-            lvlData.StartingRotation = reader.ReadByte();
+            );
+            reader.ReadByte(); // 0x05
+            lvlData.StartingFace.Orientation = (FaceOrientation)reader.ReadInt32();
 
-            lvlData.SequenceSamplesPath = reader.ReadString();
+            if(reader.ReadByte() > 0) lvlData.SequenceSamplesPath = reader.ReadString();
 
             lvlData.Flat = reader.ReadBoolean();
             lvlData.SkipPostProcess = reader.ReadBoolean();
 
-            //lvlData.BaseDiffuse = reader.ReadSingle();
-            //lvlData.BaseAmbient = reader.ReadSingle();
-            //lvlData.GomezHaloName = reader.ReadString();
-            //lvlData.HaloFiltering = reader.ReadBoolean();
-            //lvlData.BlinkingAlpha = reader.ReadBoolean();
-            //lvlData.Loops = reader.ReadBoolean();
-            //lvlData.WaterType = reader.ReadInt32();
-            //lvlData.WaterHeight = reader.ReadSingle();
-            //lvlData.SkyName = reader.ReadString();
-            //lvlData.TrileSetName = reader.ReadString();
+            lvlData.BaseDiffuse = reader.ReadSingle();
+            lvlData.BaseAmbient = reader.ReadSingle();
+            if (reader.ReadByte() > 0) lvlData.GomezHaloName = reader.ReadString();
+            lvlData.HaloFiltering = reader.ReadBoolean();
+            lvlData.BlinkingAlpha = reader.ReadBoolean();
+            lvlData.Loops = reader.ReadBoolean();
+            reader.ReadByte(); // 0x07
+            lvlData.WaterType = reader.ReadInt32();
+            lvlData.WaterHeight = reader.ReadSingle();
+            lvlData.SkyName = reader.ReadString();
+            if (reader.ReadByte() > 0) lvlData.TrileSetName = reader.ReadString();
+
+            reader.ReadByte(); // 0x08
+            lvlData.Volumes = new Dictionary<int, Volume>();
+            int volumesCount = reader.ReadInt32();
+            for (int i = 0; i < volumesCount; i++)
+            {
+                int volumeID = reader.ReadInt32();
+                reader.ReadByte(); // 0x09
+                Volume volume = new Volume();
+
+                reader.ReadByte(); // 0x0A
+                List<FaceOrientation> orientations = new();
+                int orientationsCount = reader.ReadInt32();
+                for(int j = 0; j < orientationsCount; j++)
+                {
+                    orientations.Add((FaceOrientation)reader.ReadInt32());
+                }
+                volume.Orientations = orientations.ToArray();
+
+                volume.From = new Vector3(
+                    reader.ReadSingle(),
+                    reader.ReadSingle(),
+                    reader.ReadSingle()
+                );
+
+                volume.To = new Vector3(
+                    reader.ReadSingle(),
+                    reader.ReadSingle(),
+                    reader.ReadSingle()
+                );
+
+            }
+
 
             content.Data = lvlData;
 
@@ -155,7 +197,7 @@ namespace FEZRepacker.XNB.Converters
             if (!(data is LevelContent)) throw new InvalidDataException();
             LevelContent lvlData = (LevelContent)data;
 
-            var serializer = new SerializerBuilder().WithNamingConvention(CamelCaseNamingConvention.Instance).Build();
+            var serializer = new SerializerBuilder().WithNamingConvention(PascalCaseNamingConvention.Instance).Build();
             var yaml = serializer.Serialize(lvlData.Data);
 
             writer.Write(Encoding.UTF8.GetBytes(yaml));

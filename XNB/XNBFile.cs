@@ -72,7 +72,7 @@ namespace FEZRepacker
 
                 usedTypes.Add(qualifier);
 
-                Console.WriteLine(qualifier.GetDisplayName());
+                //Console.WriteLine(qualifier.GetDisplayName());
             }
 
             // shared resource count + main resource

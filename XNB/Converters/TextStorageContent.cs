@@ -92,7 +92,7 @@ namespace FEZRepacker.XNB.Converters
             if (!(data is TextStorageContent)) throw new InvalidDataException();
             TextStorageContent tsData = (TextStorageContent)data;
 
-            var serializer = new SerializerBuilder().WithNamingConvention(CamelCaseNamingConvention.Instance).Build();
+            var serializer = new SerializerBuilder().Build();
             var yaml = serializer.Serialize(tsData.Data);
 
             writer.Write(Encoding.UTF8.GetBytes(yaml));

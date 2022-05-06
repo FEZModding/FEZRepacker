@@ -1,8 +1,4 @@
-﻿using System;
-
-using FEZRepacker.XNB.Converters;
-
-namespace FEZRepacker
+﻿namespace FEZRepacker
 {
     class Program
     {
