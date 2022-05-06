@@ -90,6 +90,10 @@ namespace FEZRepacker
             }
         }
 
+        public static implicit operator TypeAssemblyQualifier(string s)
+        {
+            return new TypeAssemblyQualifier(s);
+        }
         public string GetDisplayName(bool simplified=false)
         {
             string displayedName = (simplified ? "" : (Namespace + ".")) + Name;
@@ -124,6 +128,11 @@ namespace FEZRepacker
             {
                 return base.Equals(obj);
             }
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 }

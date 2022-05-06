@@ -77,31 +77,29 @@ namespace FEZRepacker
                 var dirName = Path.GetDirectoryName(fullPath);
                 if (dirName != null && !Directory.Exists(dirName)) Directory.CreateDirectory(dirName);
 
+                bool savedXNBFile = false;
+
+                // try custom xnb content saving
                 if(file is XNBFile)
                 {
                     XNBFile xnbfile = ((XNBFile)file);
 
-                    var content = xnbfile.ReadXNBContent();
-                    if(content == null)
-                    {
-                        xnbfile.SaveAsPacked = true;
-                    }
-                    else
-                    {
-                        xnbfile.SaveAsPacked = false;
-                    }
-                    //xnbfile.SaveAsPacked = true;
+                    savedXNBFile = XNBContentConvert.TrySave(xnbfile, fullPath);
                 }
 
-                string extension = file.GetExtension();
+                // if that fails, just do it normally
+                if (!savedXNBFile)
+                {
+                    string extension = file.GetExtension();
 
-                using var fileStream = new FileStream($"{fullPath}.{extension}", FileMode.Create, FileAccess.Write);
-                using var fileWriter = new BinaryWriter(fileStream, Encoding.UTF8, false);
+                    using var fileStream = new FileStream($"{fullPath}.{extension}", FileMode.Create, FileAccess.Write);
+                    using var fileWriter = new BinaryWriter(fileStream, Encoding.UTF8, false);
 
-                file.Write(fileWriter);
+                    file.Write(fileWriter);
 
-                fileWriter.Close();
-                fileStream.Close();
+                    fileWriter.Close();
+                    fileStream.Close();
+                }
                 
             }
         }
