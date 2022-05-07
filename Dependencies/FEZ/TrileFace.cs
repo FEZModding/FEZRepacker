@@ -2,7 +2,7 @@
 {
     class TrileFace
     {
-        public TrileEmplacement? Id;
-        public FaceOrientation? Face;
+        public TrileEmplacement Id = new TrileEmplacement();
+        public FaceOrientation Face;
     }
 }

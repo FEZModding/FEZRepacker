@@ -3,12 +3,17 @@
     class ArrayContentType<T> : XNBContentType<T[]> where T : notnull
     {
         private TypeAssemblyQualifier _name;
-        public ArrayContentType(XNBContentConverter converter) : base(converter)
+        private bool _skipElementType;
+        public ArrayContentType(XNBContentConverter converter, bool skipElementType = true) : base(converter)
         {
             // creating type assembly qualifier name
             _name = typeof(ArrayContentType<T>).FullName ?? "";
             _name.Namespace = "Microsoft.Xna.Framework.Content";
             _name.Name = "ArrayReader";
+
+            // some arrays have element type prefixes, some dont.
+            // i have no idea what's the rule here, im just making it a variable
+            _skipElementType = skipElementType;
         }
 
         public override TypeAssemblyQualifier Name => _name;
@@ -19,7 +24,7 @@
             T[] data = new T[dataCount];
             for (int i = 0; i < dataCount; i++)
             {
-                T? value = Converter.ReadType<T>(reader, true);
+                T? value = Converter.ReadType<T>(reader, _skipElementType);
                 if (value != null) data[i] = value;
             }
             return data;
@@ -32,7 +37,7 @@
             writer.Write(array.Length);
             foreach (T value in array)
             {
-                Converter.WriteType<T>(value, writer, true);
+                Converter.WriteType<T>(value, writer, _skipElementType);
             }
         }
     }

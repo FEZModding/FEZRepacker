@@ -10,7 +10,7 @@ namespace FEZRepacker.XNB.Types.FEZ
     {
         public VolumeActorSettingsContentType(XNBContentConverter converter) : base(converter) { }
 
-        public override TypeAssemblyQualifier Name => "FezEngine.Readers.LevelReader";
+        public override TypeAssemblyQualifier Name => "FezEngine.Readers.VolumeActorSettingsReader";
 
         public override object Read(BinaryReader reader)
         {

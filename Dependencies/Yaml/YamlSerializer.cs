@@ -7,6 +7,13 @@ namespace FEZRepacker.Dependencies.Yaml
 {
     static class YamlSerializer
     {
+        private static readonly IYamlTypeConverter[] _typeConverters = new IYamlTypeConverter[]
+        {
+            new VectorYamlTypeConverter(),
+            new TrileEmplacementYamlTypeConverter(),
+            new ScriptPropertiesYamlTypeConverter(),
+        };
+
         private static ISerializer? _serializer = null;
         private static IDeserializer? _deserializer = null;
 
@@ -14,12 +21,15 @@ namespace FEZRepacker.Dependencies.Yaml
         {
             if(_serializer == null)
             {
-                _serializer = new SerializerBuilder()
-                    .WithTypeConverter(new VectorYamlTypeConverter())
-                    .WithTypeConverter(new TrileEmplacementYamlTypeConverter())
+                var builder = new SerializerBuilder()
                     .WithEventEmitter(next => new FlowStyleEnumSequences(next))
-                    .ConfigureDefaultValuesHandling(DefaultValuesHandling.OmitNull)
-                    .Build();
+                    .ConfigureDefaultValuesHandling(DefaultValuesHandling.OmitNull);
+                
+                foreach(var type in _typeConverters)
+                {
+                    builder = builder.WithTypeConverter(type);
+                }
+                _serializer = builder.Build();
             }
 
             return _serializer;
@@ -29,10 +39,13 @@ namespace FEZRepacker.Dependencies.Yaml
         {
             if(_deserializer == null)
             {
-                _deserializer = new DeserializerBuilder()
-                    .WithTypeConverter(new VectorYamlTypeConverter())
-                    .WithTypeConverter(new TrileEmplacementYamlTypeConverter())
-                    .Build();
+                var builder = new DeserializerBuilder();
+
+                foreach (var type in _typeConverters)
+                {
+                    builder = builder.WithTypeConverter(type);
+                }
+                _deserializer = builder.Build();
             }
             return _deserializer;
         }
