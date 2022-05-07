@@ -16,5 +16,10 @@ namespace FEZEngine.Structure
         public bool HaloFiltering;
         public bool BlinkingAlpha;
         public bool Loops;
+        public LiquidType WaterType;
+        public float WaterHeight;
+        public string? SkyName;
+        public string? TrileSetName;
+        public Dictionary<int, Volume>? Volumes;
     }
 }

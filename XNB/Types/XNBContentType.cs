@@ -2,7 +2,7 @@
 {
     abstract class XNBContentType
     {
-        protected XNBContentConverter _converter;
+        private XNBContentConverter _converter;
 
         public XNBContentConverter Converter => _converter;
         public abstract TypeAssemblyQualifier Name { get; }

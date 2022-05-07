@@ -66,8 +66,9 @@ namespace FEZRepacker
         }
         public void SaveContent(string path)
         {
-            foreach ((var name, var file) in Files)
+            foreach (var name in Files.Keys)
             {
+                var file = Files[name];
                 // preparing a directory for given file
                 string fullPath = path + "\\" + name;
                 var dirName = Path.GetDirectoryName(fullPath);
@@ -81,6 +82,8 @@ namespace FEZRepacker
                     XNBFile xnbfile = ((XNBFile)file);
 
                     savedXNBFile = XNBContentConvert.TrySave(xnbfile, fullPath);
+
+                    if (!savedXNBFile) file = xnbfile.Decompressed();
                 }
 
                 // if that fails, just do it normally

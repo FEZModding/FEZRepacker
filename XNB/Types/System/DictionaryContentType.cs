@@ -19,8 +19,8 @@
             int dataCount = reader.ReadInt32();
             for(int i = 0; i < dataCount; i++)
             {
-                K? key = _converter.ReadType<K>(reader);
-                V? value = _converter.ReadType<V>(reader);
+                K? key = Converter.ReadType<K>(reader);
+                V? value = Converter.ReadType<V>(reader);
                 if(key != null && value != null) data[key] = value;
             }
             return data;
@@ -33,8 +33,8 @@
             writer.Write(dict.Count);
             foreach((K k, V v) in dict)
             {
-                _converter.WriteType<K>(k, writer);
-                _converter.WriteType<V>(v, writer);
+                Converter.WriteType<K>(k, writer);
+                Converter.WriteType<V>(v, writer);
             }
         }
     }

@@ -22,35 +22,61 @@
             ValidateType();
         }
 
-        public T? ReadType<T>(BinaryReader reader)
+        public T? ReadType<T>(BinaryReader reader, bool skipIdentifier = false)
         {
-            int type = reader.Read7BitEncodedInt();
-            if (type > 0 && type <= Types.Length)
+            if (typeof(T).IsPrimitive) skipIdentifier = true;
+
+            int type = skipIdentifier ? 0 : reader.Read7BitEncodedInt();
+            // if (type > 0 && type <= Types.Length)
+            // {
+            //     var typeConverter = Types[type - 1];
+            //     if (typeConverter.BasicType == typeof(T))
+            //     {
+            //         return (T)typeConverter.Read(reader);
+            //     }
+            //     else
+            //     {
+            //         throw new InvalidDataException($"Tried to read {typeof(T).Name}, found {typeConverter.BasicType} instead.");
+            //     }
+            // }
+
+            // since types used in different files may vary, we're not using
+            // the lookup table. instead, just find the reader we need.
+
+            if (type > 0 || skipIdentifier)
             {
-                var typeConverter = Types[type - 1];
-                if (typeConverter.BasicType == typeof(T))
+                XNBContentType? typeConverter = Types.ToList().Find(t => t.BasicType == typeof(T));
+                if (typeConverter != null)
                 {
                     return (T)typeConverter.Read(reader);
                 }
                 else
                 {
-                    throw new InvalidDataException($"Tried to read {typeof(T).Name}, found {typeConverter.BasicType} instead.");
+                    throw new InvalidDataException($"Cannot convert value of type {typeof(T).Name}");
                 }
             }
+
             // type is either null or invalid
             return default(T);
         }
 
-        public void WriteType<T>(T data, BinaryWriter writer)
+        public void WriteType<T>(T data, BinaryWriter writer, bool skipIdentifier = false)
         {
+            if (typeof(T).IsPrimitive) skipIdentifier = true;
+
             XNBContentType? type = Types.ToList().Find(t => t.BasicType == typeof(T));
             if (type != null && data != null)
             {
+                if (!skipIdentifier)
+                {
+                    var typeID = Types.ToList().IndexOf(type);
+                    writer.Write7BitEncodedInt(typeID + 1);
+                }
                 type.Write(data, writer);
             }
             else
             {
-                writer.Write((byte)0x00);
+                if(!skipIdentifier) writer.Write((byte)0x00);
             }
         }
     }

@@ -3,13 +3,13 @@ using YamlDotNet.Core;
 using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization;
 
-namespace FEZRepacker.Dependencies.Yaml.CustomConverters
+namespace FEZRepacker.Dependencies.Yaml.CustomConfigures
 {
     class VectorYamlTypeConverter : IYamlTypeConverter
     {
-        const string PREFIX = "";
-        const string SUFFIX = "";
-        const string SEPARATOR = " ";
+        const string PREFIX = "<";
+        const string SUFFIX = ">";
+        const string SEPARATOR = ",";
 
         public bool Accepts(Type type)
         {
@@ -52,12 +52,12 @@ namespace FEZRepacker.Dependencies.Yaml.CustomConverters
             if(type == typeof(Vector2))
             {
                 Vector2 vec = (Vector2)value;
-                output = $"{PREFIX}{vec.X}{SEPARATOR}{vec.Y}{SUFFIX}";
+                output = $"{PREFIX}{vec.X}{SEPARATOR} {vec.Y}{SUFFIX}";
             }
             if(type == typeof(Vector3))
             {
                 Vector3 vec = (Vector3)value;
-                output = $"{PREFIX}{vec.X}{SEPARATOR}{vec.Y}{SEPARATOR}{vec.Z}{SUFFIX}";
+                output = $"{PREFIX}{vec.X}{SEPARATOR} {vec.Y}{SEPARATOR} {vec.Z}{SUFFIX}";
             }
 
             emitter.Emit(new Scalar(TagName.Empty, output));

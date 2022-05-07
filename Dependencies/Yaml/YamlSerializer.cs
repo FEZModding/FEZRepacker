@@ -1,16 +1,12 @@
 ﻿using YamlDotNet.Serialization;
 
-using FEZRepacker.Dependencies.Yaml.CustomConverters;
+using FEZRepacker.Dependencies.Yaml.CustomConfigures;
+using YamlDotNet.Serialization.EventEmitters;
 
 namespace FEZRepacker.Dependencies.Yaml
 {
     static class YamlSerializer
     {
-        private static readonly IYamlTypeConverter[] _customConverters = new IYamlTypeConverter[]{
-            new VectorYamlTypeConverter(),
-            new TrileEmplacementYamlTypeConverter(),
-        };
-
         private static ISerializer? _serializer = null;
         private static IDeserializer? _deserializer = null;
 
@@ -18,12 +14,12 @@ namespace FEZRepacker.Dependencies.Yaml
         {
             if(_serializer == null)
             {
-                SerializerBuilder builder = new SerializerBuilder();
-                foreach (var converter in _customConverters)
-                {
-                    builder = builder.WithTypeConverter(converter);
-                }
-                _serializer = builder.Build();
+                _serializer = new SerializerBuilder()
+                    .WithTypeConverter(new VectorYamlTypeConverter())
+                    .WithTypeConverter(new TrileEmplacementYamlTypeConverter())
+                    .WithEventEmitter(next => new FlowStyleEnumSequences(next))
+                    .ConfigureDefaultValuesHandling(DefaultValuesHandling.OmitNull)
+                    .Build();
             }
 
             return _serializer;
@@ -33,12 +29,10 @@ namespace FEZRepacker.Dependencies.Yaml
         {
             if(_deserializer == null)
             {
-                DeserializerBuilder builder = new DeserializerBuilder();
-                foreach (var converter in _customConverters)
-                {
-                    builder = builder.WithTypeConverter(converter);
-                }
-                _deserializer = builder.Build();
+                _deserializer = new DeserializerBuilder()
+                    .WithTypeConverter(new VectorYamlTypeConverter())
+                    .WithTypeConverter(new TrileEmplacementYamlTypeConverter())
+                    .Build();
             }
             return _deserializer;
         }

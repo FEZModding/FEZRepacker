@@ -5,13 +5,13 @@ using YamlDotNet.Serialization;
 
 using FEZEngine.Structure;
 
-namespace FEZRepacker.Dependencies.Yaml.CustomConverters
+namespace FEZRepacker.Dependencies.Yaml.CustomConfigures
 {
     class TrileEmplacementYamlTypeConverter : IYamlTypeConverter
     {
-        const string PREFIX = "";
-        const string SUFFIX = "";
-        const string SEPARATOR = " ";
+        const string PREFIX = "(";
+        const string SUFFIX = ")";
+        const string SEPARATOR = ",";
 
         public bool Accepts(Type type)
         {
@@ -40,7 +40,7 @@ namespace FEZRepacker.Dependencies.Yaml.CustomConverters
             if (value == null) return;
 
             TrileEmplacement pos = (TrileEmplacement)value;
-            string output = $"{PREFIX}{pos.X}{SEPARATOR}{pos.Y}{SEPARATOR}{pos.Z}{SUFFIX}";
+            string output = $"{PREFIX}{pos.X}{SEPARATOR} {pos.Y}{SEPARATOR} {pos.Z}{SUFFIX}";
 
             emitter.Emit(new Scalar(TagName.Empty, output));
         }
