@@ -1,4 +1,6 @@
-﻿namespace FEZRepacker
+﻿using System.Globalization;
+
+namespace FEZRepacker
 {
     class Program
     {
@@ -55,6 +57,8 @@
 
         static void Main(string[] args)
         {
+            // keep number decimals consistent
+            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-GB");
 
             // showoff
             Console.WriteLine(

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using FEZRepacker.XNB.Types;
+﻿using FEZRepacker.XNB.Types;
 
 namespace FEZRepacker.XNB.Converters.Files
 {

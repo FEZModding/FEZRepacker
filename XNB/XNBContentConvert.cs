@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using FEZRepacker.XNB.Converters.Files;
 using System.Text;
-using System.Threading.Tasks;
-
-using FEZRepacker.XNB.Converters.Files;
 
 namespace FEZRepacker.XNB
 {
@@ -14,6 +9,7 @@ namespace FEZRepacker.XNB
         static XNBContentConvert()
         {
             AddConverter(new TextStorageConverter());
+            AddConverter(new LevelConverter());
         }
 
         private static void AddConverter(XNBContentConverter converter)

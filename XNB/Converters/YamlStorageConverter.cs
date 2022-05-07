@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using YamlDotNet.Serialization;
+﻿using System.Text;
+
+using FEZRepacker.Dependencies.Yaml;
 
 namespace FEZRepacker.XNB.Converters
 {
     abstract class YamlStorageConverter<T> : XNBContentConverter where T : notnull
     {
-        private static ISerializer _serializer => new SerializerBuilder().Build();
-        private static IDeserializer _deserializer => new DeserializerBuilder().Build();
-
         protected override void ValidateType()
         {
             base.ValidateType();
@@ -29,7 +23,7 @@ namespace FEZRepacker.XNB.Converters
             
             T data = (T)primaryType.Read(xnbReader);
 
-            var yaml = _serializer.Serialize(data);
+            var yaml = YamlSerializer.Serialize(data);
 
             outWriter.Write(Encoding.UTF8.GetBytes(yaml));
             
@@ -38,7 +32,7 @@ namespace FEZRepacker.XNB.Converters
         public override void ToBinary(BinaryReader inReader, BinaryWriter xnbWriter)
         {
             string yaml = new string(inReader.ReadChars((int)inReader.BaseStream.Length));
-            T data = _deserializer.Deserialize<T>(yaml);
+            T data = YamlSerializer.Deserialize<T>(yaml);
 
             XNBContentType primaryType = Types[0];
 
