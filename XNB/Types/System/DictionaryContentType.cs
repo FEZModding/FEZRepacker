@@ -1,4 +1,4 @@
-﻿namespace FEZRepacker.XNB.Types
+﻿namespace FEZRepacker.XNB.Types.System
 {
     class DictionaryContentType<K,V> : XNBContentType<Dictionary<K,V>> where K : notnull
     {

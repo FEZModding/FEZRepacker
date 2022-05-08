@@ -3,7 +3,7 @@
     abstract class XNBContentConverter
     {
         public abstract XNBContentType[] Types { get; }
-        public XNBContentType? PrimaryType => Types[0];
+        public XNBContentType PrimaryType => Types[0];
         public abstract string FileFormat { get; }
 
         public abstract void FromBinary(BinaryReader xnbReader, BinaryWriter outWriter);

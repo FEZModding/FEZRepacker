@@ -10,6 +10,7 @@ namespace FEZRepacker.XNB
         {
             AddConverter(new TextStorageConverter());
             AddConverter(new LevelConverter());
+            //AddConverter(new TextureConverter());
         }
 
         private static void AddConverter(XNBContentConverter converter)
@@ -38,6 +39,7 @@ namespace FEZRepacker.XNB
             int readerCount = xnbReader.Read7BitEncodedInt();
 
             List<TypeAssemblyQualifier> usedTypes = new List<TypeAssemblyQualifier>();
+            List<int> typeReaderVersions = new List<int>();
 
             for (var i = 0; i < readerCount; i++)
             {
@@ -47,6 +49,7 @@ namespace FEZRepacker.XNB
                 var qualifier = new TypeAssemblyQualifier(readerName);
 
                 usedTypes.Add(qualifier);
+                typeReaderVersions.Add(readerVersion);
             }
 
             // shared resource count + main resource
@@ -60,9 +63,9 @@ namespace FEZRepacker.XNB
 
             int resourceTypeID = xnbReader.Read7BitEncodedInt();
             TypeAssemblyQualifier mainType = usedTypes[resourceTypeID - 1];
+            int mainTypeVersion = typeReaderVersions[resourceTypeID - 1];
 
-
-            Console.WriteLine("====MAIN TYPE:" + mainType + "====");
+            Console.WriteLine($"====MAIN TYPE: {mainType}, Version: {mainTypeVersion}====");
 
             var converter = GetConverterFor(mainType);
 

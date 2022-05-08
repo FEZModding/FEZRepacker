@@ -76,6 +76,8 @@ namespace FEZRepacker
 
                 bool savedXNBFile = false;
 
+                
+
                 // try custom xnb content saving
                 if(file is XNBFile)
                 {

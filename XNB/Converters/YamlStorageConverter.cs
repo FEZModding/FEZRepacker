@@ -34,9 +34,7 @@ namespace FEZRepacker.XNB.Converters
             string yaml = new string(inReader.ReadChars((int)inReader.BaseStream.Length));
             T data = YamlSerializer.Deserialize<T>(yaml);
 
-            XNBContentType primaryType = Types[0];
-
-
+            PrimaryType.Write(data, xnbWriter);
         }
     }
 }

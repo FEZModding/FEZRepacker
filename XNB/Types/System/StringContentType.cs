@@ -1,4 +1,4 @@
-﻿namespace FEZRepacker.XNB.Types
+﻿namespace FEZRepacker.XNB.Types.System
 {
     class StringContentType : XNBContentType<string>
     {
