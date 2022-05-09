@@ -10,7 +10,8 @@ namespace FEZRepacker.XNB
         {
             AddConverter(new TextStorageConverter());
             AddConverter(new LevelConverter());
-            //AddConverter(new TextureConverter());
+            AddConverter(new TextureConverter());
+            AddConverter(new AnimatedTextureConverter());
         }
 
         private static void AddConverter(XNBContentConverter converter)
