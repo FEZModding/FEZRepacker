@@ -18,13 +18,6 @@ namespace FEZRepacker.XNB.Converters.Files
 
         public static MagickImage MagickImageFromTexture2D(Texture2D txt)
         {
-            // FEZ textures shouldn't have additional mipmaps
-            if (txt.MipmapLevels != 1)
-            {
-                throw new InvalidDataException($"Texture2D has unexpected mipmap levels count ({txt.MipmapLevels}).");
-            }
-
-
             MagickReadSettings mr = new MagickReadSettings();
             mr.Width = txt.Width;
             mr.Height = txt.Height;

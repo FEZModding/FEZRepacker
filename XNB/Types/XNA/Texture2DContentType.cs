@@ -16,6 +16,9 @@ namespace FEZRepacker.XNB.Types.XNA
             txt.Width = reader.ReadInt32();
             txt.Height = reader.ReadInt32();
             txt.MipmapLevels = reader.ReadInt32();
+            // barely any texture (no significant one) is using mipmapping
+            // so I'm just ignoring it completely
+            txt.MipmapLevels = 1;
 
             int dataSize = reader.ReadInt32();
             txt.TextureData = reader.ReadBytes(dataSize);
