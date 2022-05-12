@@ -4,37 +4,33 @@ namespace FEZRepacker
 {
     class Program
     {
-        static bool VerifyArgs(string[] args, out string error)
+        static Dictionary<string, Action<string[]>> Commands = new Dictionary<string, Action<string[]>>()
         {
-            error = "";
+            {"?", CommandHelp },
+            {"help", CommandHelp },
+            {"/?", CommandHelp },
+            {"/help", CommandHelp },
 
-            if (args.Length > 0 && (args[0] == "/?" || args[0] == "help"))
-            {
-                error = "FEZPacker made by Krzyhau. Used to pack and unpack .pak files used in FEZ 1.12.";
-                return false;
-            }
-            else if (args.Length != 3)
-            {
-                error = "Incorrect number of parameters.";
-                return false;
-            }
-            if (args[0] != "unpack" && args[0] != "pack")
-            {
-                error = "Incorrect parameter.";
-                return false;
-            }
-
-            return true;
-        }
+            {"unpack", CommandUnpack},
+            {"pack", CommandPack},
+            {"add", CommandAdd },
+        };
 
         // unpacks PAK file located in given path into given directory location
-        static void CommandUnpack(string pakPath, string unpackPath)
+        static void CommandUnpack(string[] args)
         {
+            if(args.Length != 2)
+            {
+                throw new ArgumentException("Invalid number of parameters.");
+            }
+
+            string pakPath = args[0];
+            string unpackPath = args[1];
+
             PAKContainer pak = PAKContainer.LoadPak(pakPath);
             if (pak == null)
             {
-                Console.WriteLine("Failed to load PAK file.");
-                return;
+                throw new FileLoadException("Couldn't load PAK file.");
             }
 
             Console.WriteLine($"Loaded .pak package containing {pak.FileCount} files.\n");
@@ -50,11 +46,60 @@ namespace FEZRepacker
         }
 
         // packs directory in given location into a pak file with given name
-        static void CommandPack(string unpackPath, string pakPath)
+        static void CommandPack(string[] args)
         {
-            
+
         }
 
+
+        // packs files in given location and adds them into existing archive
+        static void CommandAdd(string[] args)
+        {
+            if (args.Length < 2 || args.Length > 3)
+            {
+                throw new ArgumentException("Invalid number of parameters.");
+            }
+
+            string pakPath = args[0];
+            string assetsPath = args[1];
+            string newPakPath = args.Length > 2 ? args[2] : pakPath;
+
+            PAKContainer pak = PAKContainer.LoadPak(pakPath);
+            if (pak == null)
+            {
+                throw new FileLoadException("Couldn't load PAK file.");
+            }
+            Console.WriteLine($"Loaded .pak package containing {pak.FileCount} files.");
+
+            Console.WriteLine($"Converting assets from {assetsPath} into PAK archive...");
+            pak.LoadContent(assetsPath);
+
+            Console.WriteLine("Saving PAK file...");
+            pak.SavePak(newPakPath);
+        }
+
+        static void CommandHelp(string[] args)
+        {
+            Console.WriteLine(
+                "To unpack files from FEZ's .pak file into specific directory, use:\n\n" +
+                "FEZRepacker.exe unpack <source> <destination>\n\n" +
+                "  source       Specifies the FEZ's .pak file to be unpacked.\n" +
+                "  destination  Specifies the directory where unpacked files will be saved.\n\n" +
+
+                "To pack files as FEZ's .pak file, use:\n\n" +
+                "FEZPacker.exe pack <source> <destination>\n\n" +
+                "  source       Specifies the directory where files to packed are located.\n" +
+                "  destination  Specifies the directory and filename for the packed file.\n\n" +
+
+                "To add files into FEZ's .pak file, use:\n\n" +
+                "FEZPacker.exe add <target> <source> [destination]\n\n" +
+                "  target       Specifies the FEZ's .pak file into which files will be added.\n" +
+                "  source       Specifies the directory where files to packed are located.\n" +
+                "  destination  Specifies the directory and filename for the new packed file. If not set, uses the target name (overrides it).\n\n"
+            );
+        }
+
+        
         static void Main(string[] args)
         {
             // keep number decimals consistent
@@ -67,31 +112,35 @@ namespace FEZRepacker
                 "==============================\n\n"
             );
 
-            // printing out help string if used program incorrectly
-            if (!VerifyArgs(args, out string error))
-            {
-                Console.WriteLine($"{error}\n\n");
-                Console.WriteLine(
-                    "To unpack files from FEZ's .pak file into specific directory, use:\n\n" +
-                    "FEZRepacker.exe unpack [source] [destination]\n\n" +
-                    "  source       Specifies the FEZ's .pak file to be unpacked.\n" +
-                    "  destination  Specifies the directory where unpacked files will be saved.\n\n" +
+            // handle commands
+            bool validCommand = false;
 
-                    "To pack files into FEZ's .pak file, use:\n\n" +
-                    "FEZPacker.exe pack [source] [destination]\n\n" +
-                    "  source       Specifies the directory where files to packed are located.\n" +
-                    "  destination  Specifies the directory and filename for the packed file.\n\n"
-                );
+            if (args.Length == 0)
+            {
+                Console.WriteLine("FEZPacker made by Krzyhau. Used to pack and unpack .pak files used in FEZ 1.12.\n");
+            }
+            else if (!Commands.ContainsKey(args[0]))
+            {
+                Console.WriteLine("Invalid command!");
+            }
+            else
+            {
+                string command = args[0].ToLower();
+                string[] arguments = args.Skip(1).ToArray();
+                try
+                {
+                    Commands[command](arguments);
+                    validCommand = true;
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine($"Error while trying to execute command \"{command}\": {ex.Message}");
+                }
             }
 
-            // execute proper command
-            if (args[0] == "pack")
+            if (!validCommand)
             {
-                CommandPack(args[1], args[2]);
-            } 
-            else if (args[0] == "unpack")
-            {
-                CommandUnpack(args[1], args[2]);
+                Console.WriteLine("Use \"FEZPacker.exe help\" for more help.");
             }
 
         }
