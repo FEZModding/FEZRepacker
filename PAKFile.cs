@@ -59,10 +59,16 @@ namespace FEZRepacker
         {
             PAKFile content = new PAKFile();
 
-            content.Identifier = Encoding.UTF8.GetString(data.Take(3).ToArray());
+            content.Identifier = GetIdentifierFromData(data);
             content.SetData(data);
 
             return content;
+        }
+
+        public static string GetIdentifierFromData(byte[] data)
+        {
+            if (data == null || data.Length < 3) return "";
+            return Encoding.UTF8.GetString(data.Take(3).ToArray());
         }
 
         public virtual void Write(BinaryWriter writer)

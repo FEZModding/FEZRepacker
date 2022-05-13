@@ -12,7 +12,7 @@
         public const char PLATFORM_MOBILE = 'm';
         public const char PLATFORM_XBOX = 'x';
 
-        public const int HEADER_SIZE = 6;
+        public const int HEADER_SIZE = 10;
 
         public const int COMPRESSED_PROLOGUE_SIZE = 14;
     }

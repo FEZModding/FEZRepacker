@@ -34,6 +34,7 @@ namespace FEZRepacker.XNB.Types.XNA
             writer.Write(txt.Width);
             writer.Write(txt.Height);
             writer.Write(txt.MipmapLevels);
+            writer.Write(txt.TextureData.Length);
             writer.Write(txt.TextureData);
         }
     }

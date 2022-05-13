@@ -116,7 +116,7 @@ namespace FEZRepacker
             if (IsForHiDef) flags |= XNBConstants.FLAG_HIDEF;
             writer.Write(flags);
 
-            writer.Write(_content.Length);
+            writer.Write(GetSize());
             writer.Write(_content);
         }
     }

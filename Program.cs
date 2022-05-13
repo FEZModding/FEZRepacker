@@ -14,18 +14,28 @@ namespace FEZRepacker
             {"unpack", CommandUnpack},
             {"pack", CommandPack},
             {"add", CommandAdd },
+            {"list", CommandList },
+            {"remove", CommandRemove },
         };
 
         // unpacks PAK file located in given path into given directory location
         static void CommandUnpack(string[] args)
         {
-            if(args.Length != 2)
+            if(args.Length < 2)
             {
                 throw new ArgumentException("Invalid number of parameters.");
             }
 
             string pakPath = args[0];
             string unpackPath = args[1];
+
+            // parse additional arguments that could affect unpacking mode
+            PAKUnpackMode mode = PAKUnpackMode.Convert;
+            for(var i = 2; i < args.Length; i++)
+            {
+                var arg = args[i];
+                if (arg == "-xnb") mode = PAKUnpackMode.DecompressedXNB;
+            }
 
             PAKContainer pak = PAKContainer.LoadPak(pakPath);
             if (pak == null)
@@ -35,20 +45,39 @@ namespace FEZRepacker
 
             Console.WriteLine($"Loaded .pak package containing {pak.FileCount} files.\n");
 
-            foreach ((var name, var file) in pak.Files)
-            {
-                Console.WriteLine($"\"{name}\" ({file.GetInfo()})");
-            }
-
             Console.WriteLine($"\nAttempting to save files to {unpackPath}.\n");
 
-            pak.SaveContent(unpackPath);
+            pak.SaveContent(unpackPath, mode);
         }
 
         // packs directory in given location into a pak file with given name
         static void CommandPack(string[] args)
         {
+            throw new NotImplementedException("Command hasn't been fully implemented yet!");
+        }
 
+        // list all files currently located in pak archive
+        static void CommandList(string[] args)
+        {
+            if (args.Length != 1)
+            {
+                throw new ArgumentException("Invalid number of parameters.");
+            }
+
+            string pakPath = args[0];
+
+            PAKContainer pak = PAKContainer.LoadPak(pakPath);
+            if (pak == null)
+            {
+                throw new FileLoadException("Couldn't load PAK file.");
+            }
+
+            Console.WriteLine($"Loaded .pak package containing {pak.FileCount} files.\n");
+
+            foreach (PAKRecord record in pak.Files)
+            {
+                Console.WriteLine($"\"{record.Name}\" ({record.File.GetInfo()})");
+            }
         }
 
 
@@ -78,6 +107,35 @@ namespace FEZRepacker
             pak.SavePak(newPakPath);
         }
 
+        static void CommandRemove(string[] args)
+        {
+            if (args.Length < 2 || args.Length > 3)
+            {
+                throw new ArgumentException("Invalid number of parameters.");
+            }
+
+            string pakPath = args[0];
+            string deleteAsset = args[1];
+            string newPakPath = args.Length > 2 ? args[2] : pakPath;
+
+            PAKContainer pak = PAKContainer.LoadPak(pakPath);
+            if (pak == null)
+            {
+                throw new FileLoadException("Couldn't load PAK file.");
+            }
+            Console.WriteLine($"Loaded .pak package containing {pak.FileCount} files.");
+
+            if (pak.Count(deleteAsset) == 0)
+            {
+                throw new InvalidDataException($"PAK doesn't contain asset \"{deleteAsset}\"");
+            }
+
+            //pak.Files.Remove(deleteAsset);
+
+            Console.WriteLine("Saving PAK file...");
+            pak.SavePak(newPakPath);
+        }
+
         static void CommandHelp(string[] args)
         {
             Console.WriteLine(
@@ -102,6 +160,13 @@ namespace FEZRepacker
         
         static void Main(string[] args)
         {
+            #if DEBUG
+                //args = new[] { "list", "Updates.pak" };
+                args = new[] { "add", "Updates_old.pak", "Export", "Updates.pak" };
+                //args = new[] { "unpack", "Updates_old.pak", "AAA", "-xnb"};
+                //args = new[] { "remove", "Updates_old.pak", "levels\\orrery_b", "Updates.pak" };
+            #endif
+
             // keep number decimals consistent
             Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-GB");
 
@@ -109,7 +174,7 @@ namespace FEZRepacker
             Console.WriteLine(
                 "==============================\n" +
                 "= FEZRepacker 0.1 by Krzyhau =\n" +
-                "==============================\n\n"
+                "==============================\n"
             );
 
             // handle commands
@@ -127,6 +192,10 @@ namespace FEZRepacker
             {
                 string command = args[0].ToLower();
                 string[] arguments = args.Skip(1).ToArray();
+#if DEBUG
+                Commands[command](arguments);
+                validCommand = true;
+#else
                 try
                 {
                     Commands[command](arguments);
@@ -134,8 +203,10 @@ namespace FEZRepacker
                 }
                 catch(Exception ex)
                 {
-                    Console.WriteLine($"Error while trying to execute command \"{command}\": {ex.Message}");
+                    Console.WriteLine($"Error while trying to execute command \"{command}\"!");
+                    Console.WriteLine(ex);
                 }
+#endif
             }
 
             if (!validCommand)

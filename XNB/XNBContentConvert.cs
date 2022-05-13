@@ -1,4 +1,5 @@
 ﻿using FEZRepacker.XNB.Converters.Files;
+using System.Linq;
 using System.Text;
 
 namespace FEZRepacker.XNB
@@ -24,6 +25,11 @@ namespace FEZRepacker.XNB
         {
             if (_convertersList.ContainsKey(typeName)) return _convertersList[typeName];
             else return null;
+        }
+
+        public static XNBContentConverter? GetConverterFor(string filetype)
+        {
+            return _convertersList.Values.FirstOrDefault(c => c.FileFormat == filetype);
         }
 
 
@@ -53,8 +59,8 @@ namespace FEZRepacker.XNB
                 typeReaderVersions.Add(readerVersion);
             }
 
-            // shared resource count + main resource
-            int resourceCount = xnbReader.Read7BitEncodedInt() + 1;
+            // main + shared resources count 
+            int resourceCount = 1 + xnbReader.Read7BitEncodedInt();
 
             // FEZ XNB files shouldn't have more than 1 resource
             if (resourceCount != 1)
@@ -83,6 +89,51 @@ namespace FEZRepacker.XNB
             using var fileWriter = new BinaryWriter(fileStream, Encoding.UTF8, false);
 
             converter.FromBinary(xnbReader, fileWriter);
+
+            return true;
+        }
+
+        public static bool TryLoad(string filepath, out XNBFile file)
+        {
+            file = new XNBFile();
+            if (!File.Exists(filepath)) return false;
+
+            // checking if we have a converter that can be used to read given file name
+            string fileFormat = Path.GetExtension(filepath).Replace(".", "");
+
+            var converter = GetConverterFor(fileFormat);
+            if (converter == null) return false;
+
+            // preparing data to read from later on
+            using var fileStream = new FileStream(filepath, FileMode.Open, FileAccess.Read);
+            using var fileReader = new BinaryReader(fileStream);
+
+            // preparing data stream to write to
+            using var xnbStream = new MemoryStream();
+            using var xnbWriter = new BinaryWriter(xnbStream);
+
+            // write all types into header
+            xnbWriter.Write7BitEncodedInt(converter.Types.Length);
+            foreach(var type in converter.Types)
+            {
+                xnbWriter.Write(type.Name.GetDisplayName(false));
+                xnbWriter.Write(0);
+            }
+
+            // number of shared resources (0)
+            xnbWriter.Write7BitEncodedInt(0);
+
+            // main resource id (in my system, first one is always the primary one)
+            xnbWriter.Write7BitEncodedInt(1);
+
+            // convert actual data
+            converter.ToBinary(fileReader, xnbWriter);
+
+            // put data into the file
+            byte[] data = new byte[xnbStream.Length];
+            xnbStream.Position = 0;
+            xnbStream.Read(data, 0, (int)xnbStream.Length);
+            file.SetData(data);
 
             return true;
         }

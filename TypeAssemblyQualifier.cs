@@ -5,11 +5,13 @@
         public string Namespace;
         public string Name;
         public TypeAssemblyQualifier[] Templates;
+        public string AdditionalData;
 
         public TypeAssemblyQualifier(string fullName)
         {
             // there's a bunch of info about version and such
-            // let's hope we don't need that in the future lmfao
+            // I'm not parsing it. let's hope just appending it works fine
+            AdditionalData = "";
             var noInfoFullName = fullName;
             var endOfTemplatesIndex = fullName.LastIndexOf(']');
 
@@ -17,6 +19,7 @@
             if(additionalInfoSplit != -1)
             {
                 noInfoFullName = fullName.Substring(0, additionalInfoSplit);
+                AdditionalData = fullName.Substring(additionalInfoSplit + 1);
             }
             
 
@@ -101,6 +104,10 @@
                     displayedName += (simplified) ? templateName : $"[{templateName}]";
                 }
                 displayedName += "]";
+            }
+            if (!simplified && AdditionalData.Length > 0)
+            {
+                displayedName += "," + AdditionalData;
             }
 
             return displayedName;
