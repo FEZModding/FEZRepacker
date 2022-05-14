@@ -163,7 +163,7 @@ namespace FEZRepacker
             #if DEBUG
                 //args = new[] { "list", "Updates.pak" };
                 args = new[] { "add", "Updates_old.pak", "Export", "Updates.pak" };
-                //args = new[] { "unpack", "Updates_old.pak", "AAA", "-xnb"};
+                //args = new[] { "unpack", "Updates.pak", "RawDecomp", "-xnb"};
                 //args = new[] { "remove", "Updates_old.pak", "levels\\orrery_b", "Updates.pak" };
             #endif
 

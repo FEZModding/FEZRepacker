@@ -6,7 +6,7 @@ namespace FEZRepacker.XNB.Types.FEZ
     {
         public TrileEmplacementContentType(XNBContentConverter converter) : base(converter) { }
 
-        public override TypeAssemblyQualifier Name => "FezEngine.Readers.TrileEmplacementReader";
+        public override FEZAssemblyQualifier Name => "FezEngine.Readers.TrileEmplacementReader";
 
         public override object Read(BinaryReader reader)
         {

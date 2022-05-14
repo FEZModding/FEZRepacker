@@ -2,7 +2,7 @@
 {
     class EnumContentType<T> : XNBContentType<T> where T : Enum
     {
-        private TypeAssemblyQualifier _name;
+        private FEZAssemblyQualifier _name;
 
         public EnumContentType(XNBContentConverter converter) : base(converter)
         {
@@ -12,7 +12,7 @@
             _name.Name = "EnumReader";
         }
 
-        public override TypeAssemblyQualifier Name => _name;
+        public override FEZAssemblyQualifier Name => _name;
 
         public override object Read(BinaryReader reader)
         {

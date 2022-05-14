@@ -6,7 +6,7 @@ namespace FEZRepacker.XNB.Types.FEZ
     class TrileFaceContentType : XNBContentType<TrileFace>
     {
         public TrileFaceContentType(XNBContentConverter converter) : base(converter){}
-        public override TypeAssemblyQualifier Name => "FezEngine.Readers.TrileFaceReader";
+        public override FEZAssemblyQualifier Name => "FezEngine.Readers.TrileFaceReader";
 
         public override object Read(BinaryReader reader)
         {

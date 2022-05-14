@@ -5,7 +5,7 @@
         private XNBContentConverter _converter;
 
         public XNBContentConverter Converter => _converter;
-        public abstract TypeAssemblyQualifier Name { get; }
+        public abstract FEZAssemblyQualifier Name { get; }
         public abstract Type BasicType { get; }
 
         public XNBContentType(XNBContentConverter converter)

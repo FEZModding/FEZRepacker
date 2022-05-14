@@ -7,7 +7,7 @@ namespace FEZRepacker.XNB.Types.XNA
     class Texture2DContentType : XNBContentType<Texture2D>
     {
         public Texture2DContentType(XNBContentConverter converter) : base(converter) { }
-        public override TypeAssemblyQualifier Name => "Microsoft.Xna.Framework.Content.Texture2DReader";
+        public override FEZAssemblyQualifier Name => "Microsoft.Xna.Framework.Content.Texture2DReader";
 
         public override object Read(BinaryReader reader)
         {

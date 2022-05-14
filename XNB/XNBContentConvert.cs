@@ -6,7 +6,7 @@ namespace FEZRepacker.XNB
 {
     static class XNBContentConvert
     {
-        private static Dictionary<TypeAssemblyQualifier, XNBContentConverter> _convertersList = new();
+        private static Dictionary<FEZAssemblyQualifier, XNBContentConverter> _convertersList = new();
         static XNBContentConvert()
         {
             AddConverter(new TextStorageConverter());
@@ -21,7 +21,7 @@ namespace FEZRepacker.XNB
             _convertersList.Add(converter.Types[0].Name, converter);
         }
 
-        public static XNBContentConverter? GetConverterFor(TypeAssemblyQualifier typeName)
+        public static XNBContentConverter? GetConverterFor(FEZAssemblyQualifier typeName)
         {
             if (_convertersList.ContainsKey(typeName)) return _convertersList[typeName];
             else return null;
@@ -45,7 +45,7 @@ namespace FEZRepacker.XNB
 
             int readerCount = xnbReader.Read7BitEncodedInt();
 
-            List<TypeAssemblyQualifier> usedTypes = new List<TypeAssemblyQualifier>();
+            List<FEZAssemblyQualifier> usedTypes = new List<FEZAssemblyQualifier>();
             List<int> typeReaderVersions = new List<int>();
 
             for (var i = 0; i < readerCount; i++)
@@ -53,7 +53,7 @@ namespace FEZRepacker.XNB
                 string readerName = xnbReader.ReadString();
                 int readerVersion = xnbReader.ReadInt32();
 
-                var qualifier = new TypeAssemblyQualifier(readerName);
+                var qualifier = new FEZAssemblyQualifier(readerName);
 
                 usedTypes.Add(qualifier);
                 typeReaderVersions.Add(readerVersion);
@@ -69,7 +69,7 @@ namespace FEZRepacker.XNB
             }
 
             int resourceTypeID = xnbReader.Read7BitEncodedInt();
-            TypeAssemblyQualifier mainType = usedTypes[resourceTypeID - 1];
+            FEZAssemblyQualifier mainType = usedTypes[resourceTypeID - 1];
             int mainTypeVersion = typeReaderVersions[resourceTypeID - 1];
 
             Console.WriteLine($"====MAIN TYPE: {mainType}, Version: {mainTypeVersion}====");

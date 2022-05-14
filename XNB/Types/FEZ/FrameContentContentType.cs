@@ -7,7 +7,7 @@ namespace FEZRepacker.XNB.Types.XNA
     class FrameContentContentType : XNBContentType<FrameContent>
     {
         public FrameContentContentType(XNBContentConverter converter) : base(converter) { }
-        public override TypeAssemblyQualifier Name => "FezEngine.Readers.FrameReader";
+        public override FEZAssemblyQualifier Name => "FezEngine.Readers.FrameReader";
 
         public override object Read(BinaryReader reader)
         {

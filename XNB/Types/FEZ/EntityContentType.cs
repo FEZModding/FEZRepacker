@@ -5,7 +5,7 @@ namespace FEZRepacker.XNB.Types.FEZ
     class EntityContentType : XNBContentType<Entity>
     {
         public EntityContentType(XNBContentConverter converter) : base(converter) { }
-        public override TypeAssemblyQualifier Name => "FezEngine.Readers.EntityReader";
+        public override FEZAssemblyQualifier Name => "FezEngine.Readers.EntityReader";
 
         public override object Read(BinaryReader reader)
         {

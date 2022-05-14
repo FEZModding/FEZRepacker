@@ -6,7 +6,7 @@ namespace FEZRepacker.XNB.Types.FEZ
     class DotDialogueLineContentType : XNBContentType<DotDialogueLine>
     {
         public DotDialogueLineContentType(XNBContentConverter converter) : base(converter){}
-        public override TypeAssemblyQualifier Name => "FezEngine.Readers.DotDialogueLineReader";
+        public override FEZAssemblyQualifier Name => "FezEngine.Readers.DotDialogueLineReader";
 
         public override object Read(BinaryReader reader)
         {

@@ -1,13 +1,13 @@
 ﻿namespace FEZRepacker
 {
-    struct TypeAssemblyQualifier
+    struct FEZAssemblyQualifier
     {
         public string Namespace;
         public string Name;
-        public TypeAssemblyQualifier[] Templates;
+        public FEZAssemblyQualifier[] Templates;
         public string AdditionalData;
 
-        public TypeAssemblyQualifier(string fullName)
+        public FEZAssemblyQualifier(string fullName)
         {
             // there's a bunch of info about version and such
             // I'm not parsing it. let's hope just appending it works fine
@@ -19,7 +19,7 @@
             if(additionalInfoSplit != -1)
             {
                 noInfoFullName = fullName.Substring(0, additionalInfoSplit);
-                AdditionalData = fullName.Substring(additionalInfoSplit + 1);
+                AdditionalData = fullName.Substring(additionalInfoSplit + 2);
             }
             
 
@@ -75,21 +75,21 @@
                     }
                 }
 
-                Templates = new TypeAssemblyQualifier[templateCount];
+                Templates = new FEZAssemblyQualifier[templateCount];
                 for(var i = 0; i < templateCount; i++)
                 {
-                    Templates[i] = new TypeAssemblyQualifier(templates[i]);
+                    Templates[i] = new FEZAssemblyQualifier(templates[i]);
                 }
             }
             else
             {
-                Templates = new TypeAssemblyQualifier[0];
+                Templates = new FEZAssemblyQualifier[0];
             }
         }
 
-        public static implicit operator TypeAssemblyQualifier(string s)
+        public static implicit operator FEZAssemblyQualifier(string s)
         {
-            return new TypeAssemblyQualifier(s);
+            return new FEZAssemblyQualifier(s);
         }
         public string GetDisplayName(bool simplified=false)
         {
@@ -105,10 +105,10 @@
                 }
                 displayedName += "]";
             }
-            if (!simplified && AdditionalData.Length > 0)
-            {
-                displayedName += "," + AdditionalData;
-            }
+            //if (!simplified && AdditionalData.Length > 0)
+            //{
+            //    displayedName += ", " + AdditionalData;
+            //}
 
             return displayedName;
         }
@@ -120,9 +120,9 @@
 
         public override bool Equals(object? obj)
         {
-            if (obj is TypeAssemblyQualifier)
+            if (obj is FEZAssemblyQualifier)
             {
-                TypeAssemblyQualifier taq = (TypeAssemblyQualifier)obj;
+                FEZAssemblyQualifier taq = (FEZAssemblyQualifier)obj;
                 return (Namespace == taq.Namespace) && (Name == taq.Name) && Templates.SequenceEqual(taq.Templates);
             }
             else

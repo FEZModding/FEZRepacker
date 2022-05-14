@@ -2,7 +2,7 @@
 {
     class DictionaryContentType<K,V> : XNBContentType<Dictionary<K,V>> where K : notnull
     {
-        private TypeAssemblyQualifier _name;
+        private FEZAssemblyQualifier _name;
 
         public DictionaryContentType(XNBContentConverter converter) : base(converter) {
             // creating type assembly qualifier name, since we're using own types
@@ -11,7 +11,7 @@
             _name.Name = "DictionaryReader";
         }
 
-        public override TypeAssemblyQualifier Name => _name;
+        public override FEZAssemblyQualifier Name => _name;
 
         public override object Read(BinaryReader reader)
         {

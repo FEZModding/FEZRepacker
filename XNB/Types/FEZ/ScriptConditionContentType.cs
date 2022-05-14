@@ -5,7 +5,7 @@ namespace FEZRepacker.XNB.Types.FEZ
     class ScriptConditionContentType : XNBContentType<ScriptCondition>
     {
         public ScriptConditionContentType(XNBContentConverter converter) : base(converter) { }
-        public override TypeAssemblyQualifier Name => "FezEngine.Readers.ScriptConditionReader";
+        public override FEZAssemblyQualifier Name => "FezEngine.Readers.ScriptConditionReader";
 
         public override object Read(BinaryReader reader)
         {

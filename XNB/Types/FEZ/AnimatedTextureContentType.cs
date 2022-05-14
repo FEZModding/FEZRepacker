@@ -7,7 +7,7 @@ namespace FEZRepacker.XNB.Types.XNA
     class AnimatedTextureContentType : XNBContentType<AnimatedTexture>
     {
         public AnimatedTextureContentType(XNBContentConverter converter) : base(converter) { }
-        public override TypeAssemblyQualifier Name => "FezEngine.Readers.AnimatedTextureReader";
+        public override FEZAssemblyQualifier Name => "FezEngine.Readers.AnimatedTextureReader";
 
         public override object Read(BinaryReader reader)
         {

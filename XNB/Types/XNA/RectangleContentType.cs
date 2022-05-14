@@ -6,7 +6,7 @@ namespace FEZRepacker.XNB.Types.XNA
     class RectangleContentReader : XNBContentType<Rectangle>
     {
         public RectangleContentReader(XNBContentConverter converter) : base(converter) { }
-        public override TypeAssemblyQualifier Name => "Microsoft.Xna.Framework.Content.RectangleReader";
+        public override FEZAssemblyQualifier Name => "Microsoft.Xna.Framework.Content.RectangleReader";
 
         public override object Read(BinaryReader reader)
         {

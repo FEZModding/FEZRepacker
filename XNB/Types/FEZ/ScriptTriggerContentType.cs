@@ -5,7 +5,7 @@ namespace FEZRepacker.XNB.Types.FEZ
     class ScriptTriggerContentType : XNBContentType<ScriptTrigger>
     {
         public ScriptTriggerContentType(XNBContentConverter converter) : base(converter) { }
-        public override TypeAssemblyQualifier Name => "FezEngine.Readers.ScriptTriggerReader";
+        public override FEZAssemblyQualifier Name => "FezEngine.Readers.ScriptTriggerReader";
 
         public override object Read(BinaryReader reader)
         {

@@ -2,7 +2,7 @@
 {
     class ArrayContentType<T> : XNBContentType<T[]> where T : notnull
     {
-        private TypeAssemblyQualifier _name;
+        private FEZAssemblyQualifier _name;
         private bool _skipElementType;
         public ArrayContentType(XNBContentConverter converter, bool skipElementType = true) : base(converter)
         {
@@ -16,7 +16,7 @@
             _skipElementType = skipElementType;
         }
 
-        public override TypeAssemblyQualifier Name => _name;
+        public override FEZAssemblyQualifier Name => _name;
 
         public override object Read(BinaryReader reader)
         {

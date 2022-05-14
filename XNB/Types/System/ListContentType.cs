@@ -2,7 +2,7 @@
 {
     class ListContentType<T> : XNBContentType<List<T>> where T : notnull
     {
-        private TypeAssemblyQualifier _name;
+        private FEZAssemblyQualifier _name;
         public ListContentType(XNBContentConverter converter) : base(converter)
         {
             // creating type assembly qualifier name
@@ -11,7 +11,7 @@
             _name.Name = "ListReader";
         }
 
-        public override TypeAssemblyQualifier Name => _name;
+        public override FEZAssemblyQualifier Name => _name;
 
         public override object Read(BinaryReader reader)
         {

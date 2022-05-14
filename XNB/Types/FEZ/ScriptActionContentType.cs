@@ -5,7 +5,7 @@ namespace FEZRepacker.XNB.Types.FEZ
     class ScriptActionContentType : XNBContentType<ScriptAction>
     {
         public ScriptActionContentType(XNBContentConverter converter) : base(converter) { }
-        public override TypeAssemblyQualifier Name => "FezEngine.Readers.ScriptActionReader";
+        public override FEZAssemblyQualifier Name => "FezEngine.Readers.ScriptActionReader";
 
         public override object Read(BinaryReader reader)
         {

@@ -3,7 +3,7 @@
     class TimeSpanContentType : XNBContentType<TimeSpan>
     {
         public TimeSpanContentType(XNBContentConverter converter) : base(converter) { }
-        public override TypeAssemblyQualifier Name => "Microsoft.Xna.Framework.Content.TimeSpanReader";
+        public override FEZAssemblyQualifier Name => "Microsoft.Xna.Framework.Content.TimeSpanReader";
 
         public override object Read(BinaryReader reader)
         {

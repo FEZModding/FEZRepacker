@@ -8,7 +8,7 @@ namespace FEZRepacker.XNB.Types.FEZ
     {
         public VolumeContentType(XNBContentConverter converter) : base(converter) { }
 
-        public override TypeAssemblyQualifier Name => "FezEngine.Readers.VolumeReader";
+        public override FEZAssemblyQualifier Name => "FezEngine.Readers.VolumeReader";
 
         public override object Read(BinaryReader reader)
         {

@@ -8,7 +8,7 @@ namespace FEZRepacker.XNB.Types.FEZ
     {
         public LevelContentType(XNBContentConverter converter) : base(converter) { }
 
-        public override TypeAssemblyQualifier Name => "FezEngine.Readers.LevelReader";
+        public override FEZAssemblyQualifier Name => "FezEngine.Readers.LevelReader";
 
         public override object Read(BinaryReader reader)
         {

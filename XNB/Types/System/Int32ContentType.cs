@@ -3,7 +3,7 @@
     class Int32ContentType : XNBContentType<int>
     {
         public Int32ContentType(XNBContentConverter converter) : base(converter) { }
-        public override TypeAssemblyQualifier Name => "Microsoft.Xna.Framework.Content.Int32Reader";
+        public override FEZAssemblyQualifier Name => "Microsoft.Xna.Framework.Content.Int32Reader";
 
         public override object Read(BinaryReader reader)
         {
