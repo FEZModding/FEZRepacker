@@ -64,15 +64,14 @@
         {
             if (typeof(T).IsPrimitive) skipIdentifier = true;
 
-            XNBContentType? type = Types.ToList().Find(t => t.BasicType == typeof(T));
-            if (type != null && data != null)
+            int typeID = Types.ToList().FindIndex(t => t.BasicType == typeof(T));
+            if (typeID >= 0 && data != null)
             {
                 if (!skipIdentifier)
                 {
-                    var typeID = Types.ToList().IndexOf(type);
                     writer.Write7BitEncodedInt(typeID + 1);
                 }
-                type.Write(data, writer);
+                Types[typeID].Write(data, writer);
             }
             else
             {

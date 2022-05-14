@@ -17,7 +17,7 @@ namespace FEZRepacker
             Platform = XNBConstants.PLATFORM_WINDOWS;
             Version = XNBConstants.VERSION;
             IsCompressed = false;
-            IsForHiDef = false;
+            IsForHiDef = true;
 
             // empty file, no data until it's passed by external stuff
             Validate();
