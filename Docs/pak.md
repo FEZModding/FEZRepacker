@@ -1,4 +1,4 @@
-# Unofficial FEZ `.pak` archive file documentation
+# FEZ `.pak` archive file description
 
 ## Overview
 
@@ -41,9 +41,8 @@ Header of each XNB file has following structure:
 |`byte`|XNB format version. FEZ uses `5` - XNA Game Studio 4.0.|
 |`byte`|Flag bits. `0x01` - content is for HiDef profile (used for FEZ assets), `0x40` - data is compressed (LZ4, unused for FEZ), `0x80` - data is compressed (LZX, used for all FEZ assets).|
 |`uint32`|Compressed file size, including header.|
-|`uing32`|Optional; is present only when compression flag is set. Represents the size of the file after decompression without this header.|
 
-If compression flag is set, the rest of the file is compressed. In case of FEZ, slightly modified LZX algorithm is used. For details, visit [XNB reader code from open source implementation of MonoGame](https://github.com/labnation/MonoGame/blob/d270be3e800a3955886e817cdd06133743a7e043/MonoGame.Framework/Content/ContentManager.cs#L405).
+If compression flag is set, the rest of the file is compressed and prefixed with `uint32` representing the size of this data after decompression. In case of FEZ, slightly modified LZX algorithm is used for compression. For details, visit [XNB reader code from open source implementation of MonoGame](https://github.com/labnation/MonoGame/blob/d270be3e800a3955886e817cdd06133743a7e043/MonoGame.Framework/Content/ContentManager.cs#L405).
 
 Decompressed/uncompressed file content after header should look like this:
 |Field Type|Description|
@@ -60,30 +59,15 @@ Eath Type Reader Info Array entry stores information about the `ContentTypeReade
 |`string`|Type reader name - .NET assembly qualified name of a subclass.|
 |`int32`|Version number, usually zero.|
 
+In original XNB files, type reader name includes assembly name specification (which contains assembly identifier, version and public key token). However, they're not required by the game to read content properly.
+
 Each Object is a reference to a type reader, followed by a raw data.
 |Field Type|Description|
 |-|-|
 |`7BitEncodedInt`|Object type. If non-zero, then `(type - 1)`th entry of Type Reader Info Array is used.|
 |`byte[]`|Raw object data. Empty if object type is zero.|
 
-## `XNB` resource types.
-FEZ contains 13 main resource types (that is, resource which is primary for given XNB file):
-
-- AnimatedTexture (FezEngine)
-- ArtObject (FezEngine)
-- Level (FezEngine)
-- MapTree (FezEngine)
-- NpcMetadata (FezEngine)
-- Sky (FezEngine)
-- TrackedSong (FezEngine)
-- TrileSet (FezEngine)
-- Dictionary (Microsoft.XNA.Framework)
-- Effect (Microsoft.XNA.Framework)
-- SoundEffect (Microsoft.XNA.Framework)
-- SpriteFont (Microsoft.XNA.Framework)
-- Texture2D (Microsoft.XNA.Framework)
-
-### **[to be continued. I'll fill this in as I go.]**
+### **[to be continued. I'll fill this in as I go... I hope]**
 
 ## Sources
 Sources used in a process of writing this documentation:

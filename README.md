@@ -1,0 +1,1 @@
+**FEZ Repacker** is a tool created for unpacking and packing FEZ's `.pak` asset packages. It allows two-way conversion of game assets into easily modifiable file formats, which makes modding of FEZ more accessible. Currently, this tool is in development.
