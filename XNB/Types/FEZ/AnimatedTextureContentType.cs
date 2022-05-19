@@ -1,5 +1,5 @@
 ﻿using System.Drawing;
-using FezEngine.Structure;
+using FezEngine.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace FEZRepacker.XNB.Types.XNA
@@ -32,7 +32,16 @@ namespace FEZRepacker.XNB.Types.XNA
         {
             AnimatedTexture txt = (AnimatedTexture)data;
 
+            writer.Write(txt.Texture.Width);
+            writer.Write(txt.Texture.Height);
 
+            writer.Write(txt.FrameWidth);
+            writer.Write(txt.FrameHeight);
+
+            writer.Write(txt.Texture.TextureData.Length);
+            writer.Write(txt.Texture.TextureData);
+
+            Converter.WriteType(txt.Frames, writer);
         }
     }
 }

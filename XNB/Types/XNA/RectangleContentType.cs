@@ -1,5 +1,5 @@
 ﻿using System.Drawing;
-using FezEngine.Structure;
+using FezEngine.Content;
 
 namespace FEZRepacker.XNB.Types.XNA
 {

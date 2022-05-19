@@ -66,6 +66,18 @@ namespace FEZRepacker.XNB.Converters.Files
             return image;
         }
 
+        public static Texture2D MagickImageToTexture2D(MagickImage img)
+        {
+            Texture2D texture = new Texture2D();
+            texture.Format = SurfaceFormat.Color;
+            texture.MipmapLevels = 1;
+            texture.Width = img.Width;
+            texture.Height = img.Height;
+            texture.TextureData = img.ToByteArray(MagickFormat.Rgba);
+
+            return texture;
+        }
+
 
         public override void FromBinary(BinaryReader xnbReader, BinaryWriter outWriter)
         {
@@ -81,14 +93,9 @@ namespace FEZRepacker.XNB.Converters.Files
             MagickReadSettings mr = new MagickReadSettings();
             mr.Format = MagickFormat.Png;
 
-            var importedImage = new MagickImage(inReader.BaseStream, mr);
+            using var importedImage = new MagickImage(inReader.BaseStream, mr);
 
-            Texture2D texture = new Texture2D();
-            texture.Format = SurfaceFormat.Color;
-            texture.MipmapLevels = 1;
-            texture.Width = importedImage.Width;
-            texture.Height = importedImage.Height;
-            texture.TextureData = importedImage.ToByteArray(MagickFormat.Rgba);
+            Texture2D texture = MagickImageToTexture2D(importedImage);
 
             PrimaryType.Write(texture, xnbWriter);
         }

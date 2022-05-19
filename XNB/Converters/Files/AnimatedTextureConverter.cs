@@ -1,4 +1,4 @@
-﻿using FezEngine.Structure;
+﻿using FezEngine.Content;
 using FEZRepacker.XNB.Types.System;
 using FEZRepacker.XNB.Types.XNA;
 using ImageMagick;
@@ -50,7 +50,73 @@ namespace FEZRepacker.XNB.Converters.Files
 
         public override void ToBinary(BinaryReader inReader, BinaryWriter xnbWriter)
         {
+            AnimatedTexture animatedTexture = new AnimatedTexture();
 
+            MagickReadSettings mr = new MagickReadSettings();
+            mr.Format = MagickFormat.WebP;
+
+            using var importedAnim = new MagickImageCollection(inReader.BaseStream, mr);
+            importedAnim.Coalesce();
+
+            // calculate texture atlas size (least size when using powers of two)
+            // why powers of two you may ask? idk, original textures seem to do that,
+            // gpu like powers of two, so why not
+            int frameWidth = importedAnim[0].Width;
+            int frameHeight = importedAnim[0].Height;
+            int frameCount = importedAnim.Count;
+
+            int atlasWidth = 0;
+            int atlasHeight = 0;
+            int atlasArea = Int32.MaxValue; 
+
+            for(int i=1; i <= frameCount; i++)
+            {
+                //calculating minimum size
+                int newAtlasWidth = frameWidth * i;
+                int newAtlasHeight = frameHeight * (int)(Math.Ceiling(frameCount / (float)i));
+
+                // rounding the size up to nearest power of two
+                newAtlasWidth = (int)Math.Pow(2, Math.Ceiling(Math.Log2(newAtlasWidth)));
+                newAtlasHeight = (int)Math.Pow(2, Math.Ceiling(Math.Log2(newAtlasHeight)));
+
+                if (newAtlasWidth > newAtlasHeight) break;
+
+                int newArea = newAtlasWidth * newAtlasHeight;
+                if(newArea <= atlasArea)
+                {
+                    atlasArea = newArea;
+                    atlasWidth = newAtlasWidth;
+                    atlasHeight = newAtlasHeight;
+                }
+            }
+
+            // constructing the animated texture along with atlas
+            using MagickImage atlasImage = new MagickImage(new MagickColor(0,0,0,0), atlasWidth, atlasHeight);
+
+            int framePosX = 0;
+            int framePosY = 0;
+            for(int i=0; i< frameCount; i++)
+            {
+                atlasImage.Composite(importedAnim[i], framePosX, framePosY);
+
+                FrameContent frame = new FrameContent();
+                frame.Duration = TimeSpan.FromMilliseconds(importedAnim[i].AnimationDelay * 10);
+                frame.Rectangle = new Rectangle(framePosX, framePosY, frameWidth, frameHeight);
+                animatedTexture.Frames.Add(frame);
+
+                framePosX += frameWidth;
+                if(framePosX > atlasWidth - frameWidth)
+                {
+                    framePosX = 0;
+                    framePosY += frameHeight;
+                }
+            }
+
+            animatedTexture.Texture = TextureConverter.MagickImageToTexture2D(atlasImage);
+            animatedTexture.FrameWidth = frameWidth;
+            animatedTexture.FrameHeight = frameHeight;
+
+            PrimaryType.Write(animatedTexture, xnbWriter);
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace FezEngine.Structure
+namespace FezEngine.Content
 {
     class FrameContent
     {

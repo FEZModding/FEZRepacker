@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 
-namespace FezEngine.Structure
+namespace FezEngine.Content
 {
     class AnimatedTexture
     {
