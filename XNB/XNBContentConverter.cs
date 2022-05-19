@@ -75,7 +75,11 @@
             }
             else
             {
-                if(!skipIdentifier) writer.Write((byte)0x00);
+                if(!skipIdentifier)
+                {
+                    Console.WriteLine($"WARNING! Couldn't assign type for {data} in {this.GetType()}");
+                    writer.Write((byte)0x00);
+                }
             }
         }
     }

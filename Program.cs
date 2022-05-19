@@ -130,7 +130,7 @@ namespace FEZRepacker
                 throw new InvalidDataException($"PAK doesn't contain asset \"{deleteAsset}\"");
             }
 
-            //pak.Files.Remove(deleteAsset);
+            pak.Remove(deleteAsset);
 
             Console.WriteLine("Saving PAK file...");
             pak.SavePak(newPakPath);
@@ -161,10 +161,10 @@ namespace FEZRepacker
         static void Main(string[] args)
         {
             #if DEBUG
-                //args = new[] { "list", "Updates.pak" };
-                args = new[] { "add", "Updates_old.pak", "Export", "Updates.pak" };
-                //args = new[] { "unpack", "Updates.pak", "RawDecomp", "-xnb"};
-                //args = new[] { "remove", "Updates_old.pak", "levels\\orrery_b", "Updates.pak" };
+                //args = new[] { "list", "Essentials.pak" };
+                //args = new[] { "add", "Updates_old.pak", "Export", "Updates.pak" };
+                args = new[] { "unpack", "Updates.pak", "TestDecomp2", "-xnb"};
+                //args = new[] { "remove", "Essentials_old.pak", "fonts\\zuish", "Essentials.pak" };
             #endif
 
             // keep number decimals consistent
