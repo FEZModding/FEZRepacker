@@ -5,13 +5,13 @@
         public string Namespace;
         public string Name;
         public FEZAssemblyQualifier[] Templates;
-        public string AdditionalData;
+        public string Specification;
 
         public FEZAssemblyQualifier(string fullName)
         {
             // there's a bunch of info about version and such
             // I'm not parsing it. let's hope just appending it works fine
-            AdditionalData = "";
+            Specification = "";
             var noInfoFullName = fullName;
             var endOfTemplatesIndex = fullName.LastIndexOf(']');
 
@@ -19,7 +19,7 @@
             if(additionalInfoSplit != -1)
             {
                 noInfoFullName = fullName.Substring(0, additionalInfoSplit);
-                AdditionalData = fullName.Substring(additionalInfoSplit + 2);
+                Specification = fullName.Substring(additionalInfoSplit + 2);
             }
             
 
@@ -85,6 +85,17 @@
             {
                 Templates = new FEZAssemblyQualifier[0];
             }
+
+            // forcing specification to match FEZ's ones - providing namespace seems to be mandatory
+            if (Namespace.Contains("FezEngine"))
+            {
+                Specification = "FezEngine";
+            }
+            // in any other case, specification is not needed
+            else
+            {
+                Specification = "";
+            }
         }
 
         public static implicit operator FEZAssemblyQualifier(string s)
@@ -105,10 +116,10 @@
                 }
                 displayedName += "]";
             }
-            //if (!simplified && AdditionalData.Length > 0)
-            //{
-            //    displayedName += ", " + AdditionalData;
-            //}
+            if (!simplified && Specification.Length > 0)
+            {
+                displayedName += ", " + Specification;
+            }
 
             return displayedName;
         }

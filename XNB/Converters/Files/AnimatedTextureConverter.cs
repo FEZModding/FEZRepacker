@@ -29,9 +29,10 @@ namespace FEZRepacker.XNB.Converters.Files
             using var image = TextureConverter.MagickImageFromTexture2D(txt.Texture);
 
             using var animation = new MagickImageCollection();
-            
-            foreach(var frame in txt.Frames)
+
+            for (int i = 0; i < txt.Frames.Count; i++)
             {
+                var frame = txt.Frames[i];
                 var frameImg = image.Clone();
                 var rect = frame.Rectangle;
                 frameImg.Crop(new MagickGeometry(rect.X, rect.Y, rect.Width, rect.Height));
@@ -44,7 +45,7 @@ namespace FEZRepacker.XNB.Converters.Files
             animation.Write(outWriter.BaseStream, new WebPWriteDefines
             {
                 Lossless = true,
-                Method = 6,
+                Method = 0,
             });
         }
 
@@ -61,6 +62,7 @@ namespace FEZRepacker.XNB.Converters.Files
             // calculate texture atlas size (least size when using powers of two)
             // why powers of two you may ask? idk, original textures seem to do that,
             // gpu like powers of two, so why not
+            
             int frameWidth = importedAnim[0].Width;
             int frameHeight = importedAnim[0].Height;
             int frameCount = importedAnim.Count;
@@ -72,8 +74,8 @@ namespace FEZRepacker.XNB.Converters.Files
             for(int i=1; i <= frameCount; i++)
             {
                 //calculating minimum size
-                int newAtlasWidth = frameWidth * i;
-                int newAtlasHeight = frameHeight * (int)(Math.Ceiling(frameCount / (float)i));
+                int newAtlasWidth = (frameWidth+1) * i;
+                int newAtlasHeight = (frameHeight+1) * (int)(Math.Ceiling(frameCount / (float)i));
 
                 // rounding the size up to nearest power of two
                 newAtlasWidth = (int)Math.Pow(2, Math.Ceiling(Math.Log2(newAtlasWidth)));
@@ -97,18 +99,18 @@ namespace FEZRepacker.XNB.Converters.Files
             int framePosY = 0;
             for(int i=0; i< frameCount; i++)
             {
-                atlasImage.Composite(importedAnim[i], framePosX, framePosY);
+                atlasImage.Composite(importedAnim[i], framePosX, framePosY, CompositeOperator.Copy);
 
                 FrameContent frame = new FrameContent();
                 frame.Duration = TimeSpan.FromMilliseconds(importedAnim[i].AnimationDelay * 10);
                 frame.Rectangle = new Rectangle(framePosX, framePosY, frameWidth, frameHeight);
                 animatedTexture.Frames.Add(frame);
 
-                framePosX += frameWidth;
+                framePosX += frameWidth + 1; // pixel padding between sprites
                 if(framePosX > atlasWidth - frameWidth)
                 {
                     framePosX = 0;
-                    framePosY += frameHeight;
+                    framePosY += frameHeight + 1;
                 }
             }
 

@@ -59,7 +59,8 @@ Eath Type Reader Info Array entry stores information about the `ContentTypeReade
 |`string`|Type reader name - .NET assembly qualified name of a subclass.|
 |`int32`|Version number, usually zero.|
 
-In original XNB files, type reader name includes assembly name specification (which contains assembly identifier, version and public key token). However, they're not required by the game to read content properly.
+In original XNB files, type reader name includes assembly name specification (which contains assembly identifier, version, culture and public key token). In most cases, they're not required by the game to read the asset file.
+However, sometimes it is necessary to include it, especially for readers and types in FezEngine namespace.
 
 Each Object is a reference to a type reader, followed by a raw data.
 |Field Type|Description|
