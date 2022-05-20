@@ -157,15 +157,16 @@ namespace FEZRepacker
             );
         }
 
-        
+
         static void Main(string[] args)
         {
-            #if DEBUG
+            if (args.Length==1 && args[0] == "debug") {
+                Console.WriteLine("Running debug command!");
                 //args = new[] { "list", "Essentials.pak" };
-                //args = new[] { "add", "Updates_old.pak", "Export", "Updates.pak" };
-                args = new[] { "unpack", "Updates.pak", "TestDecomp2", "-xnb"};
+                args = new[] { "add", "Updates_old.pak", "Export", "Updates.pak" };
+                //args = new[] { "unpack", "Updates.pak", "TestDecomp2", "-xnb"};
                 //args = new[] { "remove", "Essentials_old.pak", "fonts\\zuish", "Essentials.pak" };
-            #endif
+            }
 
             // keep number decimals consistent
             Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-GB");
