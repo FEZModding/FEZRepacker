@@ -42,6 +42,9 @@ namespace FEZRepacker.XNB.Converters.Files
                 animation.Add(frameImg);
             }
 
+            // BUG: if animation has two identical frames, one is abandoned. I have no idea why.
+            // doesn't seem like a big problem, since if frames are identical, no information is lost,
+            // but it's something I wish to figure out in the future.
             animation.Write(outWriter.BaseStream, new WebPWriteDefines
             {
                 Lossless = true,
