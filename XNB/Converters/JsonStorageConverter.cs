@@ -1,10 +1,10 @@
 ﻿using System.Text;
 
-using FEZRepacker.Dependencies.Yaml;
+using FEZRepacker.Dependencies.Json;
 
 namespace FEZRepacker.XNB.Converters
 {
-    abstract class YamlStorageConverter<T> : XNBContentConverter where T : notnull
+    abstract class JsonStorageConverter<T> : XNBContentConverter where T : notnull
     {
         protected override void ValidateType()
         {
@@ -12,7 +12,7 @@ namespace FEZRepacker.XNB.Converters
             if (PrimaryType != null && PrimaryType.BasicType != typeof(T))
             {
                 throw new InvalidDataException(
-                    $"YamlStorageConverter uses type {typeof(T).Name}, while primary type is {Types[0].BasicType.Name}."
+                    $"JsonStorageConverter uses type {typeof(T).Name}, while primary type is {Types[0].BasicType.Name}."
                 );
             }
         }
@@ -23,16 +23,16 @@ namespace FEZRepacker.XNB.Converters
             
             T data = (T)primaryType.Read(xnbReader);
 
-            var yaml = YamlSerializer.Serialize(data);
+            var json = CustomJsonSerializer.Serialize(data);
 
-            outWriter.Write(Encoding.UTF8.GetBytes(yaml));
+            outWriter.Write(Encoding.UTF8.GetBytes(json));
             
         }
 
         public override void ToBinary(BinaryReader inReader, BinaryWriter xnbWriter)
         {
-            string yaml = new string(inReader.ReadChars((int)inReader.BaseStream.Length));
-            T data = YamlSerializer.Deserialize<T>(yaml);
+            string json = new string(inReader.ReadChars((int)inReader.BaseStream.Length));
+            T data = CustomJsonSerializer.Deserialize<T>(json);
 
             PrimaryType.Write(data, xnbWriter);
         }

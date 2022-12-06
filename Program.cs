@@ -163,8 +163,8 @@ namespace FEZRepacker
             if (args.Length==1 && args[0] == "debug") {
                 Console.WriteLine("Running debug command!");
                 //args = new[] { "list", "Essentials.pak" };
-                args = new[] { "add", "Updates_old.pak", "Export", "Updates.pak" };
-                //args = new[] { "unpack", "Updates.pak", "TestDecomp2", "-xnb"};
+                //args = new[] { "add", "Updates_old.pak", "Export", "Updates.pak" };
+                args = new[] { "unpack", "Other.pak", "TestDecomp"};
                 //args = new[] { "remove", "Essentials_old.pak", "fonts\\zuish", "Essentials.pak" };
             }
 

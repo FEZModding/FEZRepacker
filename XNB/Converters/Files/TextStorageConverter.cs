@@ -3,7 +3,7 @@ using FEZRepacker.XNB.Types.System;
 
 namespace FEZRepacker.XNB.Converters.Files
 {
-    class TextStorageConverter : YamlStorageConverter<Dictionary<string, Dictionary<string, string>>>
+    class TextStorageConverter : JsonStorageConverter<Dictionary<string, Dictionary<string, string>>>
     {
         public override XNBContentType[] Types => new XNBContentType[]
         {

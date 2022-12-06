@@ -40,16 +40,16 @@ namespace FEZRepacker.XNB.Types.FEZ
         {
             VolumeActorSettings settings = (VolumeActorSettings)data;
 
-            writer.Write(settings.FarawayPlaneOffset.GetValueOrDefault().X);
-            writer.Write(settings.FarawayPlaneOffset.GetValueOrDefault().Y);
+            writer.Write(settings.FarawayPlaneOffset.X);
+            writer.Write(settings.FarawayPlaneOffset.Y);
 
-            writer.Write(settings.IsPointOfInterest.GetValueOrDefault());
+            writer.Write(settings.IsPointOfInterest);
             Converter.WriteType(settings.DotDialogue, writer);
-            writer.Write(settings.WaterLocked.GetValueOrDefault());
+            writer.Write(settings.WaterLocked);
             Converter.WriteType(settings.CodePattern, writer);
-            writer.Write(settings.IsBlackHole.GetValueOrDefault());
-            writer.Write(settings.NeedsTrigger.GetValueOrDefault());
-            writer.Write(settings.IsSecretPassage.GetValueOrDefault());
+            writer.Write(settings.IsBlackHole);
+            writer.Write(settings.NeedsTrigger);
+            writer.Write(settings.IsSecretPassage);
         }
     }
 }

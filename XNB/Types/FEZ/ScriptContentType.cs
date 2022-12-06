@@ -16,12 +16,12 @@ namespace FEZRepacker.XNB.Types.FEZ
             script.Triggers = Converter.ReadType<List<ScriptTrigger>>(reader) ?? script.Triggers;
             script.Conditions = Converter.ReadType<List<ScriptCondition>>(reader) ?? script.Conditions;
             script.Actions = Converter.ReadType<List<ScriptAction>>(reader) ?? script.Actions;
-            if (reader.ReadBoolean()) script.OneTime = true;
-            if (reader.ReadBoolean()) script.Triggerless = true;
-            if (reader.ReadBoolean()) script.IgnoreEndTriggers = true;
-            if (reader.ReadBoolean()) script.LevelWideOneTime = true;
-            if (reader.ReadBoolean()) script.Disabled = true;
-            if (reader.ReadBoolean()) script.IsWinCondition = true;
+            script.OneTime = reader.ReadBoolean();
+            script.Triggerless = reader.ReadBoolean();
+            script.IgnoreEndTriggers = reader.ReadBoolean();
+            script.LevelWideOneTime = reader.ReadBoolean();
+            script.Disabled = reader.ReadBoolean();
+            script.IsWinCondition = reader.ReadBoolean();
 
             return script;
         }
@@ -40,12 +40,12 @@ namespace FEZRepacker.XNB.Types.FEZ
             Converter.WriteType(script.Triggers, writer);
             Converter.WriteType(script.Conditions, writer);
             Converter.WriteType(script.Actions, writer);
-            writer.Write(script.OneTime.GetValueOrDefault());
-            writer.Write(script.Triggerless.GetValueOrDefault());
-            writer.Write(script.IgnoreEndTriggers.GetValueOrDefault());
-            writer.Write(script.LevelWideOneTime.GetValueOrDefault());
-            writer.Write(script.Disabled.GetValueOrDefault());
-            writer.Write(script.IsWinCondition.GetValueOrDefault());
+            writer.Write(script.OneTime);
+            writer.Write(script.Triggerless);
+            writer.Write(script.IgnoreEndTriggers);
+            writer.Write(script.LevelWideOneTime);
+            writer.Write(script.Disabled);
+            writer.Write(script.IsWinCondition);
         }
     }
 }

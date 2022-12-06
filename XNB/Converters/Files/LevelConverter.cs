@@ -8,7 +8,7 @@ using FEZRepacker.XNB.Types.System;
 
 namespace FEZRepacker.XNB.Converters.Files
 {
-    class LevelConverter : YamlStorageConverter<Level>
+    class LevelConverter : JsonStorageConverter<Level>
     {
         public override XNBContentType[] Types => new XNBContentType[]
         {
