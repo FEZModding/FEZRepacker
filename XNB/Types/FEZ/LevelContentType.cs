@@ -14,7 +14,7 @@ namespace FEZRepacker.XNB.Types.FEZ
         {
             Level level = new Level();
 
-            level.Name = Converter.ReadType<string>(reader);
+            level.Name = Converter.ReadType<string>(reader) ?? "";
             level.Size = new Vector3(
                 reader.ReadSingle(),
                 reader.ReadSingle(),
@@ -39,6 +39,11 @@ namespace FEZRepacker.XNB.Types.FEZ
             level.SongName = Converter.ReadType<string>(reader) ?? "";
             level.FarAwayPlaceFadeOutStart = reader.ReadInt32();
             level.FarAwayPlaceFadeOutLength = reader.ReadInt32();
+
+            level.Triles = Converter.ReadType<Dictionary<TrileEmplacement, TrileInstance>>(reader) ?? level.Triles;
+            level.ArtObjects = Converter.ReadType<Dictionary<int, ArtObjectInstance>>(reader) ?? level.ArtObjects;
+            level.BackgroundPlanes = Converter.ReadType<Dictionary<int, BackgroundPlane>>(reader) ?? level.BackgroundPlanes;
+
             return level;
         }
 

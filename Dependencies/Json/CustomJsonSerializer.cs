@@ -18,10 +18,13 @@ namespace FEZRepacker.Dependencies.Json
                 Converters = {
                     new JsonStringEnumConverter(),
                     new VectorJsonConverter(),
-                    new TripleEmplacementJsonConverter(),
+                    new QuaternionJsonConverter(),
+                    new ColorJsonConverter(),
+                    new TrileEmplacementJsonConverter(),
                     new ScriptTriggerJsonConverter(),
                     new ScriptConditionJsonConverter(),
                     new ScriptActionJsonConverter(),
+                    new TrileListJsonConverter()
                 }
             };
         }

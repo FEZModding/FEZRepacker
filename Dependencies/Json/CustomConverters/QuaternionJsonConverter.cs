@@ -5,29 +5,29 @@ using System.Text.Json.Serialization;
 
 namespace FEZRepacker.Dependencies.Json.CustomConverters
 {
-    public class VectorJsonConverter : JsonConverter<Vector3>
+    public class QuaternionJsonConverter : JsonConverter<Quaternion>
     {
-        public override Vector3 Read(
+        public override Quaternion Read(
             ref Utf8JsonReader reader,
             Type typeToConvert,
             JsonSerializerOptions options)
         {
             if(reader.TokenType != JsonTokenType.StartArray) throw new JsonException();
 
-            Vector3 v = new Vector3(reader.GetSingle(), reader.GetSingle(), reader.GetSingle());
+            Quaternion q = new Quaternion(reader.GetSingle(), reader.GetSingle(), reader.GetSingle(), reader.GetSingle());
 
             reader.Read();
             if (reader.TokenType != JsonTokenType.EndArray) throw new JsonException();
             
-            return v;
+            return q;
         }
 
         public override void Write(
             Utf8JsonWriter writer,
-            Vector3 vector,
+            Quaternion quaternion,
             JsonSerializerOptions options)
         {
-            writer.WriteRawValue($"[{vector.X}, {vector.Y}, {vector.Z}]");
+            writer.WriteRawValue($"[{quaternion.X}, {quaternion.Y}, {quaternion.Z}, {quaternion.W}]");
         }
     }
 }

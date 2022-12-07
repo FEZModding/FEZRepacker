@@ -37,7 +37,26 @@ namespace FEZRepacker.XNB.Converters.Files
             new EnumContentType<ComparisonOperator>(this),
             new ListContentType<ScriptAction>(this),
             new ScriptActionContentType(this),
-            new ArrayContentType<string>(this, false)
+            new ArrayContentType<string>(this, false),
+            new DictionaryContentType<TrileEmplacement, TrileInstance>(this, true, false),
+            new TrileInstanceContentType(this),
+            new InstanceActorSettingsContentType(this),
+            new ListContentType<TrileInstance>(this),
+            new BooleanContentType(this),
+            new ArrayContentType<bool>(this, true),
+            new DictionaryContentType<int, ArtObjectInstance>(this),
+            new ArtObjectInstanceContentType(this),
+            new ArtObjectActorSettingsContentType(this),
+            new EnumContentType<ActorType>(this),
+            new EnumContentType<Viewpoint>(this),
+            new ArrayContentType<VibrationMotor>(this),
+            new EnumContentType<VibrationMotor>(this),
+            new PathSegmentContentType(this),
+            new TimeSpanContentType(this),
+            new CameraNodeDataContentType(this),
+            new DictionaryContentType<int, BackgroundPlane>(this),
+            new BackgroundPlaneContentType(this),
+            new EnumContentType<ActorType>(this),
         };
         public override string FileFormat => "fezlvl";
     }

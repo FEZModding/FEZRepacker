@@ -3,12 +3,20 @@
     class DictionaryContentType<K,V> : XNBContentType<Dictionary<K,V>> where K : notnull
     {
         private FEZAssemblyQualifier _name;
+        private bool skipKeyIdentifier;
+        private bool skipValueIdentifier;
 
-        public DictionaryContentType(XNBContentConverter converter) : base(converter) {
+        public DictionaryContentType(
+            XNBContentConverter converter, 
+            bool skipKeyIdentifier = false, 
+            bool skipValueIdentifier = false
+        ) : base(converter){
             // creating type assembly qualifier name, since we're using own types
             _name = BasicType.FullName ?? "";
             _name.Namespace = "Microsoft.Xna.Framework.Content";
             _name.Name = "DictionaryReader";
+            this.skipKeyIdentifier = skipKeyIdentifier;
+            this.skipValueIdentifier = skipValueIdentifier;
         }
 
         public override FEZAssemblyQualifier Name => _name;
@@ -19,8 +27,8 @@
             int dataCount = reader.ReadInt32();
             for(int i = 0; i < dataCount; i++)
             {
-                K? key = Converter.ReadType<K>(reader);
-                V? value = Converter.ReadType<V>(reader);
+                K? key = Converter.ReadType<K>(reader, skipKeyIdentifier);
+                V? value = Converter.ReadType<V>(reader, skipValueIdentifier);
                 if(key != null && value != null) data[key] = value;
             }
             return data;
@@ -33,8 +41,8 @@
             writer.Write(dict.Count);
             foreach((K k, V v) in dict)
             {
-                Converter.WriteType<K>(k, writer);
-                Converter.WriteType<V>(v, writer);
+                Converter.WriteType<K>(k, writer, skipKeyIdentifier);
+                Converter.WriteType<V>(v, writer, skipValueIdentifier);
             }
         }
     }

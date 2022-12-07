@@ -26,5 +26,9 @@ namespace FEZEngine.Structure
         public string SongName = "";
         public int FarAwayPlaceFadeOutStart;
         public int FarAwayPlaceFadeOutLength;
+
+        public Dictionary<TrileEmplacement, TrileInstance> Triles = new();
+        public Dictionary<int, ArtObjectInstance> ArtObjects = new();
+        public Dictionary<int, BackgroundPlane> BackgroundPlanes = new();
     }
 }

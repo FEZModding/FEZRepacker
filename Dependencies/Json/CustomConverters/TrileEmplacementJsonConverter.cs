@@ -6,7 +6,7 @@ using FEZEngine.Structure;
 
 namespace FEZRepacker.Dependencies.Json.CustomConverters
 {
-    public class TripleEmplacementJsonConverter : JsonConverter<TrileEmplacement>
+    public class TrileEmplacementJsonConverter : JsonConverter<TrileEmplacement>
     {
         public override TrileEmplacement Read(
             ref Utf8JsonReader reader,
@@ -14,10 +14,12 @@ namespace FEZRepacker.Dependencies.Json.CustomConverters
             JsonSerializerOptions options)
         {
             if(reader.TokenType != JsonTokenType.StartArray) throw new JsonException();
-            reader.Read();
+
             TrileEmplacement trile = new TrileEmplacement(reader.GetInt32(), reader.GetInt32(), reader.GetInt32());
-            if(reader.TokenType != JsonTokenType.EndArray) throw new JsonException();
+
             reader.Read();
+            if (reader.TokenType != JsonTokenType.EndArray) throw new JsonException();
+            
             return trile;
         }
 
