@@ -30,5 +30,16 @@ namespace FEZEngine.Structure
         public Dictionary<TrileEmplacement, TrileInstance> Triles = new();
         public Dictionary<int, ArtObjectInstance> ArtObjects = new();
         public Dictionary<int, BackgroundPlane> BackgroundPlanes = new();
+        public Dictionary<int, TrileGroup> Groups = new();
+        public Dictionary<int, NpcInstance> NonPlayerCharacters = new();
+        public Dictionary<int, MovementPath> Paths = new();
+
+        public bool Descending;
+        public bool Rainy;
+        public bool LowPass;
+        public List<string> MutedLoops = new();
+        public List<AmbienceTrack> AmbienceTracks = new();
+        public LevelNodeType NodeType;
+        public bool Quantum;
     }
 }

@@ -57,6 +57,23 @@ namespace FEZRepacker.XNB.Converters.Files
             new DictionaryContentType<int, BackgroundPlane>(this),
             new BackgroundPlaneContentType(this),
             new EnumContentType<ActorType>(this),
+            new DictionaryContentType<int, TrileGroup>(this),
+            new TrileGroupContentType(this),
+            new MovementPathContentType(this),
+            new ListContentType<PathSegment>(this),
+            new EnumContentType<PathEndBehavior>(this),
+            new SpeechLineContentType(this),
+            new DictionaryContentType<int, NpcInstance>(this),
+            new NpcInstanceContentType(this),
+            new NpcActionContentContentType(this),
+            new ListContentType<SpeechLine>(this),
+            new DictionaryContentType<NpcAction, NpcActionContent>(this, true, false),
+            new EnumContentType<NpcAction>(this),
+            new DictionaryContentType<int, MovementPath>(this),
+            new ListContentType<string>(this),
+            new ListContentType<AmbienceTrack>(this),
+            new AmbienceTrackContentType(this),
+            new EnumContentType<LevelNodeType>(this),
         };
         public override string FileFormat => "fezlvl";
     }

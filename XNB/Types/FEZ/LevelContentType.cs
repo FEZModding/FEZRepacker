@@ -1,4 +1,5 @@
-﻿using FEZEngine.Structure;
+﻿using FEZEngine;
+using FEZEngine.Structure;
 using FEZEngine.Structure.Scripting;
 using System.Numerics;
 
@@ -40,9 +41,20 @@ namespace FEZRepacker.XNB.Types.FEZ
             level.FarAwayPlaceFadeOutStart = reader.ReadInt32();
             level.FarAwayPlaceFadeOutLength = reader.ReadInt32();
 
-            level.Triles = Converter.ReadType<Dictionary<TrileEmplacement, TrileInstance>>(reader) ?? level.Triles;
-            level.ArtObjects = Converter.ReadType<Dictionary<int, ArtObjectInstance>>(reader) ?? level.ArtObjects;
-            level.BackgroundPlanes = Converter.ReadType<Dictionary<int, BackgroundPlane>>(reader) ?? level.BackgroundPlanes;
+            level.Triles = Converter.ReadType<Dictionary<TrileEmplacement, TrileInstance>>(reader) ?? new();
+            level.ArtObjects = Converter.ReadType<Dictionary<int, ArtObjectInstance>>(reader) ?? new();
+            level.BackgroundPlanes = Converter.ReadType<Dictionary<int, BackgroundPlane>>(reader) ?? new();
+            level.Groups = Converter.ReadType<Dictionary<int, TrileGroup>>(reader) ?? new();
+            level.NonPlayerCharacters = Converter.ReadType<Dictionary<int, NpcInstance>>(reader) ?? new();
+            level.Paths = Converter.ReadType<Dictionary<int, MovementPath>>(reader) ?? new();
+
+            level.Descending = reader.ReadBoolean();
+            level.Rainy = reader.ReadBoolean();
+            level.LowPass = reader.ReadBoolean();
+            level.MutedLoops = Converter.ReadType<List<string>>(reader) ?? new();
+            level.AmbienceTracks = Converter.ReadType<List<AmbienceTrack>>(reader) ?? new();
+            level.NodeType = Converter.ReadType<LevelNodeType>(reader);
+            level.Quantum = reader.ReadBoolean();
 
             return level;
         }
