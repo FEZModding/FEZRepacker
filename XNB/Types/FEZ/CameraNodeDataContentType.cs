@@ -18,7 +18,7 @@ namespace FEZRepacker.XNB.Types.FEZ
 
             data.Perspective = reader.ReadBoolean();
             data.PixelsPerTrixel = reader.ReadInt32();
-            data.SoundName = Converter.ReadType<string>(reader) ?? "";
+            data.SoundName = Converter.ReadType<string>(reader) ?? data.SoundName;
 
             return data;
         }

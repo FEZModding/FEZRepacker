@@ -14,7 +14,7 @@ namespace FEZRepacker.XNB.Types.FEZ
         {
             AmbienceTrack ambience = new AmbienceTrack();
 
-            ambience.Name = Converter.ReadType<string>(reader) ?? "";
+            ambience.Name = Converter.ReadType<string>(reader) ?? ambience.Name;
             ambience.Dawn = reader.ReadBoolean();
             ambience.Day = reader.ReadBoolean();
             ambience.Dusk = reader.ReadBoolean();

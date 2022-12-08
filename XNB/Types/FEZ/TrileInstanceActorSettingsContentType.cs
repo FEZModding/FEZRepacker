@@ -1,24 +1,21 @@
-﻿using System.Numerics;
-
-using FEZEngine;
-using FEZEngine.Structure;
+﻿using FEZEngine.Structure;
 
 namespace FEZRepacker.XNB.Types.FEZ
 {
-    class InstanceActorSettingsContentType : XNBContentType<InstanceActorSettings>
+    class TrileInstanceActorSettingsContentType : XNBContentType<TrileInstanceActorSettings>
     {
-        public InstanceActorSettingsContentType(XNBContentConverter converter) : base(converter) { }
+        public TrileInstanceActorSettingsContentType(XNBContentConverter converter) : base(converter) { }
 
         public override FEZAssemblyQualifier Name => "FezEngine.Readers.InstanceActorSettingsReader";
 
         public override object Read(BinaryReader reader)
         {
-            var settings = new InstanceActorSettings();
+            var settings = new TrileInstanceActorSettings();
             if (reader.ReadBoolean()) settings.ContainedTrile = reader.ReadInt32();
-            settings.SignText = Converter.ReadType<string>(reader) ?? "";
-            settings.Sequence = Converter.ReadType<bool[]>(reader) ?? new bool[0];
-            settings.SequenceSampleName = Converter.ReadType<string>(reader) ?? "";
-            settings.SequenceAlternateSampleName = Converter.ReadType<string>(reader) ?? "";
+            settings.SignText = Converter.ReadType<string>(reader) ?? settings.SignText;
+            settings.Sequence = Converter.ReadType<bool[]>(reader) ?? settings.Sequence;
+            settings.SequenceSampleName = Converter.ReadType<string>(reader) ?? settings.SequenceSampleName;
+            settings.SequenceAlternateSampleName = Converter.ReadType<string>(reader) ?? settings.SequenceAlternateSampleName;
             if (reader.ReadBoolean()) settings.HostVolume = reader.ReadInt32();
 
             return settings;
@@ -26,7 +23,7 @@ namespace FEZRepacker.XNB.Types.FEZ
 
         public override void Write(object data, BinaryWriter writer)
         {
-            InstanceActorSettings settings = (InstanceActorSettings)data;
+            TrileInstanceActorSettings settings = (TrileInstanceActorSettings)data;
 
             writer.Write(settings.ContainedTrile.HasValue);
             if (settings.ContainedTrile.HasValue) writer.Write(settings.ContainedTrile.GetValueOrDefault());

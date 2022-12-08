@@ -1,6 +1,4 @@
-﻿using System.Numerics;
-
-using FEZEngine;
+﻿using FEZEngine;
 using FEZEngine.Structure;
 using FEZEngine.Structure.Input;
 using FEZRepacker.Dependencies;
@@ -25,13 +23,13 @@ namespace FEZRepacker.XNB.Types.FEZ
             settings.SpinOffset = reader.ReadSingle();
             settings.OffCenter = reader.ReadBoolean();
             settings.RotationCenter = reader.ReadVector3();
-            settings.VibrationPattern = Converter.ReadType<VibrationMotor[]>(reader);
-            settings.CodePattern = Converter.ReadType<CodeInput[]>(reader);
-            settings.Segment = Converter.ReadType<PathSegment>(reader);
+            settings.VibrationPattern = Converter.ReadType<VibrationMotor[]>(reader) ?? settings.VibrationPattern;
+            settings.CodePattern = Converter.ReadType<CodeInput[]>(reader) ?? settings.CodePattern;
+            settings.Segment = Converter.ReadType<PathSegment>(reader) ?? settings.Segment;
             if (reader.ReadBoolean()) settings.NextNode = reader.ReadInt32();
-            settings.DestinationLevel = Converter.ReadType<string>(reader) ?? "";
-            settings.TreasureMapName = Converter.ReadType<string>(reader) ?? "";
-            settings.InvisibleSides = Converter.ReadType<FaceOrientation[]>(reader);
+            settings.DestinationLevel = Converter.ReadType<string>(reader) ?? settings.DestinationLevel;
+            settings.TreasureMapName = Converter.ReadType<string>(reader) ?? settings.TreasureMapName;
+            settings.InvisibleSides = Converter.ReadType<FaceOrientation[]>(reader) ?? settings.InvisibleSides;
             settings.TimeswitchWindBackSpeed = reader.ReadSingle();
 
             return settings;

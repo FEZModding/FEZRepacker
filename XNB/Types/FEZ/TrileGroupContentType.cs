@@ -15,8 +15,8 @@ namespace FEZRepacker.XNB.Types.FEZ
         {
             TrileGroup trileGroup = new TrileGroup();
 
-            trileGroup.Triles = Converter.ReadType<List<TrileInstance>>(reader);
-            trileGroup.Path = Converter.ReadType<MovementPath>(reader);
+            trileGroup.Triles = Converter.ReadType<List<TrileInstance>>(reader) ?? trileGroup.Triles;
+            trileGroup.Path = Converter.ReadType<MovementPath>(reader) ?? trileGroup.Path;
             trileGroup.Heavy = reader.ReadBoolean();
             trileGroup.ActorType = Converter.ReadType<ActorType>(reader);
             trileGroup.GeyserOffset = reader.ReadSingle();
@@ -30,7 +30,7 @@ namespace FEZRepacker.XNB.Types.FEZ
             trileGroup.Spin180Degrees = reader.ReadBoolean();
             trileGroup.FallOnRotate = reader.ReadBoolean();
             trileGroup.SpinOffset = reader.ReadSingle();
-            trileGroup.AssociatedSound = Converter.ReadType<string>(reader) ?? "";
+            trileGroup.AssociatedSound = Converter.ReadType<string>(reader) ?? trileGroup.AssociatedSound;
 
             return trileGroup;
         }

@@ -1,5 +1,4 @@
-﻿using FEZEngine;
-using FEZEngine.Structure;
+﻿using FEZEngine.Structure;
 
 namespace FEZRepacker.XNB.Types.FEZ
 {
@@ -11,7 +10,7 @@ namespace FEZRepacker.XNB.Types.FEZ
         public override object Read(BinaryReader reader)
         {
             DotDialogueLine line = new DotDialogueLine();
-            line.ResourceText = Converter.ReadType<string>(reader);
+            line.ResourceText = Converter.ReadType<string>(reader) ?? line.ResourceText;
             line.Grouped = reader.ReadBoolean();
 
             return line;

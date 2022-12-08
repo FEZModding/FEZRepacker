@@ -4,7 +4,7 @@ namespace FezEngine.Content
 {
     class FrameContent
     {
-        public TimeSpan Duration;
-        public Rectangle Rectangle;
+        public TimeSpan Duration { get; set; }
+        public Rectangle Rectangle { get; set; }
     }
 }

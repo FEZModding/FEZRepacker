@@ -1,6 +1,4 @@
-﻿using FEZEngine;
-using FEZEngine.Structure;
-using System.Numerics;
+﻿using FEZEngine.Structure;
 
 namespace FEZRepacker.XNB.Types.FEZ
 {
@@ -14,8 +12,8 @@ namespace FEZRepacker.XNB.Types.FEZ
         {
             NpcActionContent content = new NpcActionContent();
 
-            content.AnimationName = Converter.ReadType<string>(reader) ?? "";
-            content.SoundName = Converter.ReadType<string>(reader) ?? "";
+            content.AnimationName = Converter.ReadType<string>(reader) ?? content.AnimationName;
+            content.SoundName = Converter.ReadType<string>(reader) ?? content.SoundName;
 
             return content;
         }

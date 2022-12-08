@@ -1,7 +1,5 @@
-﻿using FEZEngine;
-using FEZEngine.Structure;
+﻿using FEZEngine.Structure;
 using FEZRepacker.Dependencies;
-using System.Numerics;
 
 namespace FEZRepacker.XNB.Types.FEZ
 {

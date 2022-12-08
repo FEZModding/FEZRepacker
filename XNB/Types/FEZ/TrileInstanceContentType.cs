@@ -1,5 +1,6 @@
 ﻿using FEZEngine;
 using FEZEngine.Structure;
+using FEZRepacker.Dependencies;
 using System.Numerics;
 
 namespace FEZRepacker.XNB.Types.FEZ
@@ -14,17 +15,10 @@ namespace FEZRepacker.XNB.Types.FEZ
         {
             TrileInstance trile = new TrileInstance();
 
-            trile.Position = new Vector3(
-                reader.ReadSingle(),
-                reader.ReadSingle(),
-                reader.ReadSingle()
-            );
+            trile.Position = reader.ReadVector3();
             trile.TrileId = reader.ReadInt32();
             trile.PhiLight = reader.ReadByte();
-            if (reader.ReadBoolean())
-            {
-                trile.ActorSettings = Converter.ReadType<InstanceActorSettings>(reader);
-            }
+            if (reader.ReadBoolean()) trile.ActorSettings = Converter.ReadType<TrileInstanceActorSettings>(reader);
             trile.OverlappedTriples = Converter.ReadType<List<TrileInstance>>(reader) ?? new List<TrileInstance>();
 
             return trile;
@@ -33,9 +27,7 @@ namespace FEZRepacker.XNB.Types.FEZ
         public override void Write(object data, BinaryWriter writer)
         {
             TrileInstance trile = (TrileInstance)data;
-            writer.Write(trile.Position.X);
-            writer.Write(trile.Position.Y);
-            writer.Write(trile.Position.Z);
+            writer.Write(trile.Position);
             writer.Write(trile.TrileId);
             writer.Write(trile.PhiLight);
 

@@ -1,6 +1,4 @@
-﻿using FEZEngine;
-using FEZEngine.Structure;
-using System.Numerics;
+﻿using FEZEngine.Structure;
 
 namespace FEZRepacker.XNB.Types.FEZ
 {
@@ -14,7 +12,7 @@ namespace FEZRepacker.XNB.Types.FEZ
         {
             SpeechLine line = new SpeechLine();
 
-            line.Text = Converter.ReadType<string>(reader) ?? "";
+            line.Text = Converter.ReadType<string>(reader) ?? line.Text;
             line.OverrideContent = Converter.ReadType<NpcActionContent>(reader) ?? line.OverrideContent;
 
             return line;

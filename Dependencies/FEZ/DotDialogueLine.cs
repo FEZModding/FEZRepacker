@@ -2,7 +2,13 @@
 {
     class DotDialogueLine
     {
-        public string? ResourceText;
-        public bool Grouped;
+        public string ResourceText { get; set; }
+        public bool Grouped { get; set; }
+
+
+        public DotDialogueLine()
+        {
+            ResourceText = "";
+        }
     }
 }

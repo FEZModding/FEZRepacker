@@ -1,6 +1,4 @@
-﻿using FEZEngine;
-using FEZEngine.Structure;
-using System.Numerics;
+﻿using FEZEngine.Structure;
 
 namespace FEZRepacker.XNB.Types.FEZ
 {
@@ -14,10 +12,10 @@ namespace FEZRepacker.XNB.Types.FEZ
         {
             MovementPath path = new MovementPath();
 
-            path.Segments = Converter.ReadType<List<PathSegment>>(reader) ?? new();
+            path.Segments = Converter.ReadType<List<PathSegment>>(reader) ?? path.Segments;
             path.NeedsTrigger = reader.ReadBoolean();
             path.EndBehavior = Converter.ReadType<PathEndBehavior>(reader);
-            path.SoundName = Converter.ReadType<string>(reader) ?? "";
+            path.SoundName = Converter.ReadType<string>(reader) ?? path.SoundName;
             path.IsSpline = reader.ReadBoolean();
             path.OffsetSeconds = reader.ReadSingle();
             path.SaveTrigger = reader.ReadBoolean();

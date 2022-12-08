@@ -2,9 +2,18 @@
 {
     class ScriptCondition
     {
-        public Entity Object = new Entity();
-        public ComparisonOperator Operator;
-        public string Property = "";
-        public string Value = "";
+        public Entity Object { get; set; }
+        public ComparisonOperator Operator { get; set; }
+        public string Property { get; set; }
+        public string Value { get; set; }
+
+        
+        public ScriptCondition()
+        {
+            Object = new();
+            Operator = ComparisonOperator.None;
+            Property = "";
+            Value = "";
+        }
     }
 }

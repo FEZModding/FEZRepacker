@@ -16,19 +16,14 @@ namespace FEZRepacker.XNB.Types.FEZ
         {
             VolumeActorSettings settings = new VolumeActorSettings();
 
-            Vector2 farawayPlaneOffset = new Vector2(
+            settings.FarawayPlaneOffset = new Vector2(
                 reader.ReadSingle(),
                 reader.ReadSingle()
             );
-            if(farawayPlaneOffset.Length() > 0)
-            {
-                settings.FarawayPlaneOffset = farawayPlaneOffset;
-            }
             if (reader.ReadBoolean()) settings.IsPointOfInterest = true;
-            List<DotDialogueLine>? dialogue = Converter.ReadType<List<DotDialogueLine>>(reader);
-            if (dialogue != null && dialogue.Count > 0) settings.DotDialogue = dialogue;
+            settings.DotDialogue = Converter.ReadType<List<DotDialogueLine>>(reader) ?? settings.DotDialogue;
             if(reader.ReadBoolean()) settings.WaterLocked = true;
-            settings.CodePattern = Converter.ReadType<CodeInput[]>(reader);
+            settings.CodePattern = Converter.ReadType<CodeInput[]>(reader) ?? settings.CodePattern;
             if (reader.ReadBoolean()) settings.IsBlackHole = true;
             if (reader.ReadBoolean()) settings.NeedsTrigger = true;
             if (reader.ReadBoolean()) settings.IsSecretPassage = true;

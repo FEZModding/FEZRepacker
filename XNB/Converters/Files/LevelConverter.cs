@@ -40,7 +40,7 @@ namespace FEZRepacker.XNB.Converters.Files
             new ArrayContentType<string>(this, false),
             new DictionaryContentType<TrileEmplacement, TrileInstance>(this, true, false),
             new TrileInstanceContentType(this),
-            new InstanceActorSettingsContentType(this),
+            new TrileInstanceActorSettingsContentType(this),
             new ListContentType<TrileInstance>(this),
             new BooleanContentType(this),
             new ArrayContentType<bool>(this, true),

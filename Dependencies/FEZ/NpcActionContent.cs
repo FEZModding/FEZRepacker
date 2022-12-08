@@ -2,7 +2,14 @@
 {
 	public class NpcActionContent
 	{
-		public string AnimationName = "";
-		public string SoundName = "";
+		public string AnimationName { get; set; }
+		public string SoundName { get; set; }
+
+		
+		public NpcActionContent()
+        {
+			AnimationName = "";
+			SoundName = "";
+        }
 	}
 }

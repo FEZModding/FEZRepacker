@@ -11,7 +11,7 @@ namespace FEZRepacker.XNB.Types.FEZ
         public override object Read(BinaryReader reader)
         {
             TrileFace face = new TrileFace();
-            face.Id = Converter.ReadType<TrileEmplacement>(reader);
+            face.Id = Converter.ReadType<TrileEmplacement>(reader) ?? face.Id;
             face.Face = Converter.ReadType<FaceOrientation>(reader);
 
             return face;

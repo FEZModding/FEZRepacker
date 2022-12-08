@@ -4,21 +4,29 @@ namespace FEZEngine.Structure
 {
 	public class TrileGroup
 	{
-		public List<TrileInstance>? Triles;
-		public MovementPath? Path;
-		public bool Heavy;
-		public ActorType ActorType;
-        public float GeyserOffset;
-        public float GeyserPauseFor;
-        public float GeyserLiftFor;
-        public float GeyserApexHeight;
-        public Vector3 SpinCenter;
-        public bool SpinClockwise;
-        public float SpinFrequency;
-        public bool SpinNeedsTriggering;
-        public bool Spin180Degrees;
-        public bool FallOnRotate;
-        public float SpinOffset;
-        public string AssociatedSound = "";
+		public List<TrileInstance> Triles { get; set; }
+		public MovementPath Path { get; set; }
+        public bool Heavy { get; set; }
+        public ActorType ActorType { get; set; }
+        public float GeyserOffset { get; set; }
+        public float GeyserPauseFor { get; set; }
+        public float GeyserLiftFor { get; set; }
+        public float GeyserApexHeight { get; set; }
+        public Vector3 SpinCenter { get; set; }
+        public bool SpinClockwise { get; set; }
+        public float SpinFrequency { get; set; }
+        public bool SpinNeedsTriggering { get; set; }
+        public bool Spin180Degrees { get; set; }
+        public bool FallOnRotate { get; set; }
+        public float SpinOffset { get; set; }
+        public string AssociatedSound { get; set; }
+
+
+        public TrileGroup()
+        {
+            Triles = new List<TrileInstance>();
+            Path = new();
+            AssociatedSound = "";
+        }
     }
 }

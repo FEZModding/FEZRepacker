@@ -2,9 +2,9 @@
 {
     public class TrileEmplacement
     {
-        public int X;
-        public int Y;
-        public int Z;
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int Z { get; set; }
 
         public TrileEmplacement() {}
 

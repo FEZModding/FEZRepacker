@@ -2,10 +2,16 @@
 {
 	public class AmbienceTrack
 	{
-		public string Name = "";
-		public bool Day;
-		public bool Dusk;
-		public bool Night;
-		public bool Dawn;
+		public string Name { get; set; }
+		public bool Day { get; set; }
+		public bool Dusk { get; set; }
+		public bool Night { get; set; }
+		public bool Dawn { get; set; }
+
+
+		public AmbienceTrack()
+        {
+			Name = "";
+        }
 	}
 }

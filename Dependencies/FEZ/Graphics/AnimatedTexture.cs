@@ -4,9 +4,16 @@ namespace FezEngine.Content
 {
     class AnimatedTexture
     {
-        public Texture2D Texture = new Texture2D();
-        public int FrameWidth;
-        public int FrameHeight;
-        public List<FrameContent> Frames = new List<FrameContent>();
+        public Texture2D Texture { get; set; }
+        public int FrameWidth { get; set; }
+        public int FrameHeight { get; set; }
+        public List<FrameContent> Frames { get; set; }
+
+
+        public AnimatedTexture()
+        {
+            Texture = new();
+            Frames = new();
+        }
     }
 }

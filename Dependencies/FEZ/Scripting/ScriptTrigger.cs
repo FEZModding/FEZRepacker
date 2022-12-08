@@ -2,7 +2,14 @@
 {
     class ScriptTrigger
     {
-        public Entity Object = new Entity();
-        public string Event = "";
+        public Entity Object { get; set; }
+        public string Event { get; set; }
+
+
+        public ScriptTrigger()
+        {
+            Object = new();
+            Event = "";
+        }
     }
 }

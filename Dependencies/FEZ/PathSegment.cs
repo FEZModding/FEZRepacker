@@ -4,14 +4,22 @@ namespace FEZEngine.Structure
 {
     public class PathSegment
     {
-        public Vector3 Destination;
-        public TimeSpan Duration;
-        public TimeSpan WaitTimeOnStart;
-        public TimeSpan WaitTimeOnFinish;
-        public float Acceleration;
-        public float Deceleration;
-        public float JitterFactor;
-        public Quaternion Orientation;
-        public CameraNodeData? CustomData;
+        public Vector3 Destination { get; set; }
+        public TimeSpan Duration { get; set; }
+        public TimeSpan WaitTimeOnStart { get; set; }
+        public TimeSpan WaitTimeOnFinish { get; set; }
+        public float Acceleration { get; set; }
+        public float Deceleration { get; set; }
+        public float JitterFactor { get; set; }
+        public Quaternion Orientation { get; set; }
+        public CameraNodeData? CustomData { get; set; }
+
+
+        public PathSegment()
+        {
+            CustomData = null;
+            Duration = TimeSpan.FromSeconds(1.0f);
+            Orientation = Quaternion.Identity;
+        }
     }
 }

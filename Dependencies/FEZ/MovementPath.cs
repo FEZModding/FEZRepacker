@@ -2,12 +2,19 @@
 {
 	public class MovementPath
 	{
-		public List<PathSegment>? Segments;
-		public bool NeedsTrigger;
-		public PathEndBehavior EndBehavior;
-		public string SoundName = "";
-		public bool IsSpline;
-		public float OffsetSeconds;
-		public bool SaveTrigger;
+		public List<PathSegment> Segments { get; set; }
+		public bool NeedsTrigger { get; set; }
+		public PathEndBehavior EndBehavior { get; set; }
+		public string SoundName { get; set; }
+		public bool IsSpline { get; set; }
+		public float OffsetSeconds { get; set; }
+		public bool SaveTrigger { get; set; }
+
+		
+		public MovementPath()
+        {
+			Segments = new();
+			SoundName = "";
+		}
 	}
 }

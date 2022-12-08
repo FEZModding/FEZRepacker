@@ -5,29 +5,39 @@ namespace FEZEngine.Structure
 {
 	public class BackgroundPlane
 	{
-		public Vector3 Position;
-		public Quaternion Rotation;
-		public Vector3 Scale;
-		public Vector3 Size;
-		public string TextureName = "";
-		public bool LightMap;
-		public bool AllowOverbrightness;
-		public Color Filter;
-		public bool Animated;
-		public bool Doublesided;
-		public float Opacity;
-		public int? AttachedGroup;
-		public bool Billboard;
-		public bool SyncWithSamples;
-		public bool Crosshatch;
-		public bool AlwaysOnTop;
-		public bool Fullbright;
-		public bool PixelatedLightmap;
-		public bool XTextureRepeat;
-		public bool YTextureRepeat;
-		public bool ClampTexture;
-		public ActorType ActorType;
-		public int? AttachedPlane;
-		public float ParallaxFactor;
+		public Vector3 Position { get; set; }
+		public Quaternion Rotation { get; set; }
+		public Vector3 Scale { get; set; }
+		public Vector3 Size { get; set; }
+		public string TextureName { get; set; }
+		public bool LightMap { get; set; }
+		public bool AllowOverbrightness { get; set; }
+		public Color Filter { get; set; }
+		public bool Animated { get; set; }
+		public bool Doublesided { get; set; }
+		public float Opacity { get; set; }
+		public int? AttachedGroup { get; set; }
+		public bool Billboard { get; set; }
+		public bool SyncWithSamples { get; set; }
+		public bool Crosshatch { get; set; }
+		public bool AlwaysOnTop { get; set; }
+		public bool Fullbright { get; set; }
+		public bool PixelatedLightmap { get; set; }
+		public bool XTextureRepeat { get; set; }
+		public bool YTextureRepeat { get; set; }
+		public bool ClampTexture { get; set; }
+		public ActorType ActorType { get; set; }
+		public int? AttachedPlane { get; set; }
+		public float ParallaxFactor { get; set; }
+
+		
+		public BackgroundPlane()
+        {
+			Scale = new Vector3(1.0f);
+			Opacity = 1.0f;
+			Filter = Color.White;
+			Rotation = Quaternion.Identity;
+			TextureName = "";
+		}
 	}
 }

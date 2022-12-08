@@ -31,12 +31,8 @@ namespace FEZRepacker.XNB.Types.FEZ
             Script script = (Script)data;
 
             writer.Write(script.Name);
-            if (!script.Timeout.HasValue) writer.Write(false);
-            else
-            {
-                writer.Write(true);
-                writer.Write(script.Timeout.GetValueOrDefault().Ticks);
-            }
+            writer.Write(script.Timeout.HasValue);
+            if(script.Timeout.HasValue) writer.Write(script.Timeout.GetValueOrDefault().Ticks);
             Converter.WriteType(script.Triggers, writer);
             Converter.WriteType(script.Conditions, writer);
             Converter.WriteType(script.Actions, writer);

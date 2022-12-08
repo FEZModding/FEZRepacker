@@ -1,5 +1,6 @@
 ﻿using FEZEngine;
 using FEZEngine.Structure;
+using FEZRepacker.Dependencies;
 using System.Numerics;
 
 namespace FEZRepacker.XNB.Types.FEZ
@@ -14,18 +15,10 @@ namespace FEZRepacker.XNB.Types.FEZ
         {
             Volume volume = new Volume();
 
-            volume.Orientations = Converter.ReadType<FaceOrientation[]>(reader);
-            volume.From = new Vector3(
-                reader.ReadSingle(),
-                reader.ReadSingle(),
-                reader.ReadSingle()
-            );
-            volume.To = new Vector3(
-                reader.ReadSingle(),
-                reader.ReadSingle(),
-                reader.ReadSingle()
-            );
-            volume.ActorSettings = Converter.ReadType<VolumeActorSettings>(reader);
+            volume.Orientations = Converter.ReadType<FaceOrientation[]>(reader) ?? volume.Orientations;
+            volume.From = reader.ReadVector3();
+            volume.To = reader.ReadVector3();
+            volume.ActorSettings = Converter.ReadType<VolumeActorSettings>(reader) ?? volume.ActorSettings;
 
             return volume;
         }
@@ -34,12 +27,8 @@ namespace FEZRepacker.XNB.Types.FEZ
         {
             Volume volume = (Volume)data;
             Converter.WriteType(volume.Orientations, writer);
-            writer.Write(volume.From.X);
-            writer.Write(volume.From.Y);
-            writer.Write(volume.From.Z);
-            writer.Write(volume.To.X);
-            writer.Write(volume.To.Y);
-            writer.Write(volume.To.Z);
+            writer.Write(volume.From);
+            writer.Write(volume.To);
             Converter.WriteType(volume.ActorSettings, writer);
         }
     }

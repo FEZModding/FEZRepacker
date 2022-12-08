@@ -23,8 +23,8 @@ namespace FEZRepacker.XNB.Types.FEZ
             npc.SayFirstSpeechLineOnce = reader.ReadBoolean();
             npc.AvoidsGomez = reader.ReadBoolean();
             npc.ActorType = Converter.ReadType<ActorType>(reader);
-            npc.Speech = Converter.ReadType<List<SpeechLine>>(reader) ?? new();
-            npc.Actions = Converter.ReadType<Dictionary<NpcAction, NpcActionContent>>(reader) ?? new();
+            npc.Speech = Converter.ReadType<List<SpeechLine>>(reader) ?? npc.Speech;
+            npc.Actions = Converter.ReadType<Dictionary<NpcAction, NpcActionContent>>(reader) ?? npc.Actions;
 
             return npc;
         }

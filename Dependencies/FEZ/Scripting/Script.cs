@@ -2,16 +2,24 @@
 {
     class Script
     {
-        public string Name = "";
-        public TimeSpan? Timeout;
-        public List<ScriptTrigger> Triggers = new();
-        public List<ScriptCondition> Conditions = new();
-        public List<ScriptAction> Actions = new();
-        public bool OneTime;
-        public bool Triggerless;
-        public bool IgnoreEndTriggers;
-        public bool LevelWideOneTime;
-        public bool Disabled;
-        public bool IsWinCondition;
+        public string Name { get; set; }
+        public TimeSpan? Timeout { get; set; }
+        public List<ScriptTrigger> Triggers { get; set; }
+        public List<ScriptCondition> Conditions { get; set; }
+        public List<ScriptAction> Actions { get; set; }
+        public bool OneTime { get; set; }
+        public bool Triggerless { get; set; }
+        public bool IgnoreEndTriggers { get; set; }
+        public bool LevelWideOneTime { get; set; }
+        public bool Disabled { get; set; }
+        public bool IsWinCondition { get; set; }
+
+        public Script()
+        {
+            Name = "Untitled";
+            Triggers = new();
+            Conditions = new();
+            Actions = new();
+        }
     }
 }

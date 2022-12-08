@@ -12,10 +12,7 @@ namespace FEZRepacker.XNB.Types.FEZ
             Entity entity = new Entity();
 
             entity.Type = reader.ReadString();
-            if (reader.ReadBoolean())
-            {
-                entity.Identifier = reader.ReadInt32();
-            }
+            if (reader.ReadBoolean()) entity.Identifier = reader.ReadInt32();
 
             return entity;
         }
@@ -25,15 +22,8 @@ namespace FEZRepacker.XNB.Types.FEZ
             Entity entity = (Entity)data;
 
             writer.Write(entity.Type);
-            if (entity.Identifier.HasValue)
-            {
-                writer.Write(true);
-                writer.Write(entity.Identifier.Value);
-            }
-            else
-            {
-                writer.Write(false);
-            }
+            writer.Write(entity.Identifier.HasValue);
+            if (entity.Identifier.HasValue) writer.Write(entity.Identifier.Value);
 
         }
     }
