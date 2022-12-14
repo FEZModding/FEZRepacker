@@ -3,9 +3,9 @@ using FezEngine.Content;
 
 namespace FEZRepacker.XNB.Types.XNA
 {
-    class RectangleContentReader : XNBContentType<Rectangle>
+    class RectangleContentType : XNBContentType<Rectangle>
     {
-        public RectangleContentReader(XNBContentConverter converter) : base(converter) { }
+        public RectangleContentType(XNBContentConverter converter) : base(converter) { }
         public override FEZAssemblyQualifier Name => "Microsoft.Xna.Framework.Content.RectangleReader";
 
         public override object Read(BinaryReader reader)

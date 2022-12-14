@@ -1,24 +1,24 @@
 ﻿using FezEngine.Content;
+using FEZRepacker.XNB.Types;
 using FEZRepacker.XNB.Types.System;
 using FEZRepacker.XNB.Types.XNA;
 using ImageMagick;
 using ImageMagick.Formats;
 using Microsoft.Xna.Framework.Graphics;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
 
 namespace FEZRepacker.XNB.Converters.Files
 {
     class AnimatedTextureConverter : XNBContentConverter
     {
-        public override XNBContentType[] Types => new XNBContentType[]
+        public override XNBContentType[] TypesFactory => new XNBContentType[]
         {
-            new AnimatedTextureContentType(this),
+            new GenericContentType<AnimatedTexture>(this),
+            new ByteArrayContentType(this),
             new ListContentType<FrameContent>(this),
-            new FrameContentContentType(this),
+            new GenericContentType<FrameContent>(this),
             new TimeSpanContentType(this),
-            new RectangleContentReader(this)
+            new RectangleContentType(this)
         };
         public override string FileFormat => "webp";
 
@@ -26,7 +26,14 @@ namespace FEZRepacker.XNB.Converters.Files
         {
             AnimatedTexture txt = (AnimatedTexture)Types[0].Read(xnbReader);
 
-            using var image = TextureConverter.MagickImageFromTexture2D(txt.Texture);
+            Texture2D atlas = new Texture2D();
+            atlas.Format = SurfaceFormat.Color;
+            atlas.MipmapLevels = 1;
+            atlas.Width = txt.AtlasWidth;
+            atlas.Height = txt.AtlasHeight;
+            atlas.TextureData = txt.TextureData;
+
+            using var image = TextureConverter.MagickImageFromTexture2D(atlas);
 
             using var animation = new MagickImageCollection();
 
@@ -117,7 +124,11 @@ namespace FEZRepacker.XNB.Converters.Files
                 }
             }
 
-            animatedTexture.Texture = TextureConverter.MagickImageToTexture2D(atlasImage);
+            var atlas = TextureConverter.MagickImageToTexture2D(atlasImage);
+            animatedTexture.AtlasWidth = atlas.Width;
+            animatedTexture.AtlasHeight = atlas.Height;
+            animatedTexture.TextureData = atlas.TextureData;
+
             animatedTexture.FrameWidth = frameWidth;
             animatedTexture.FrameHeight = frameHeight;
 

@@ -2,7 +2,14 @@
 {
     abstract class XNBContentConverter
     {
-        public abstract XNBContentType[] Types { get; }
+        private XNBContentType[] _cachedTypes;
+        public XNBContentType[] Types { 
+            get { 
+                if(_cachedTypes == null) _cachedTypes = TypesFactory;
+                return _cachedTypes;
+            }
+        }
+        public abstract XNBContentType[] TypesFactory { get; }
         public XNBContentType PrimaryType => Types[0];
         public abstract string FileFormat { get; }
 
@@ -24,19 +31,25 @@
 
         public T? ReadType<T>(BinaryReader reader, bool skipIdentifier = false)
         {
-            if (typeof(T).IsPrimitive) skipIdentifier = true;
+            object? read = ReadType(typeof(T), reader, skipIdentifier);
+            return read != null ? (T)read : default(T);
+        }
+
+        public object? ReadType(Type T, BinaryReader reader, bool skipIdentifier = false)
+        {
+            if (T.IsPrimitive) skipIdentifier = true;
 
             int type = skipIdentifier ? 0 : reader.Read7BitEncodedInt();
             // if (type > 0 && type <= Types.Length)
             // {
             //     var typeConverter = Types[type - 1];
-            //     if (typeConverter.BasicType == typeof(T))
+            //     if (typeConverter.BasicType == T)
             //     {
-            //         return (T)typeConverter.Read(reader);
+            //         return typeConverter.Read(reader);
             //     }
             //     else
             //     {
-            //         throw new InvalidDataException($"Tried to read {typeof(T).Name}, found {typeConverter.BasicType} instead.");
+            //         throw new InvalidDataException($"Tried to read {T.Name}, found {typeConverter.BasicType} instead.");
             //     }
             // }
 
@@ -45,26 +58,30 @@
 
             if (type > 0 || skipIdentifier)
             {
-                XNBContentType? typeConverter = Types.ToList().Find(t => t.BasicType == typeof(T));
+                XNBContentType? typeConverter = Types.ToList().Find(t => t.BasicType == T);
                 if (typeConverter != null)
                 {
-                    return (T)typeConverter.Read(reader);
+                    return typeConverter.Read(reader);
                 }
                 else
                 {
-                    throw new InvalidDataException($"Cannot convert value of type {typeof(T).Name}");
+                    throw new InvalidDataException($"Cannot convert value of type {T.Name}");
                 }
             }
 
-            // type is either null or invalid
-            return default(T);
+            return null;
         }
 
         public void WriteType<T>(T data, BinaryWriter writer, bool skipIdentifier = false)
         {
-            if (typeof(T).IsPrimitive) skipIdentifier = true;
+            WriteType(typeof(T), data, writer, skipIdentifier);
+        }
 
-            int typeID = Types.ToList().FindIndex(t => t.BasicType == typeof(T));
+        public void WriteType(Type T, object? data, BinaryWriter writer, bool skipIdentifier = false)
+        {
+            if (T.IsPrimitive) skipIdentifier = true;
+
+            int typeID = Types.ToList().FindIndex(t => t.BasicType == T);
             if (typeID >= 0 && data != null)
             {
                 if (!skipIdentifier)
@@ -75,7 +92,7 @@
             }
             else
             {
-                if(!skipIdentifier)
+                if (!skipIdentifier)
                 {
                     Console.WriteLine($"WARNING! Couldn't assign type for {data} in {this.GetType()}");
                     writer.Write((byte)0x00);

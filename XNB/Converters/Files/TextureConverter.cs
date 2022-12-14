@@ -1,4 +1,6 @@
-﻿using FEZRepacker.XNB.Types.XNA;
+﻿using FEZRepacker.XNB.Types;
+using FEZRepacker.XNB.Types.System;
+using FEZRepacker.XNB.Types.XNA;
 using ImageMagick;
 using ImageMagick.Formats;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,9 +12,11 @@ namespace FEZRepacker.XNB.Converters.Files
 {
     class TextureConverter : XNBContentConverter
     {
-        public override XNBContentType[] Types => new XNBContentType[]
+        public override XNBContentType[] TypesFactory => new XNBContentType[]
         {
-            new Texture2DContentType(this)
+            new GenericContentType<Texture2D>(this),
+            new EnumContentType<SurfaceFormat>(this),
+            new ByteArrayContentType(this)
         };
         public override string FileFormat => "png";
 
