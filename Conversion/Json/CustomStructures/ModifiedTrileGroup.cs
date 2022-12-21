@@ -25,8 +25,14 @@ namespace FEZRepacker.Conversion.Json.CustomStructures
         public float SpinOffset { get; set; }
         public string AssociatedSound { get; set; }
 
+        public ModifiedTrileGroup()
+        {
+            Triles = new();
+            Path = new MovementPath();
+            AssociatedSound = "";
+        }
 
-        public ModifiedTrileGroup(TrileGroup trileGroup)
+            public ModifiedTrileGroup(TrileGroup trileGroup)
         {
             // copy over unchanged parameters 
             Path = trileGroup.Path;

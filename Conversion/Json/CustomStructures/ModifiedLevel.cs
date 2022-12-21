@@ -13,7 +13,7 @@ namespace FEZRepacker.Conversion.Json.CustomStructures
         public string Name { get; set; }
         public LevelNodeType NodeType { get; set; }
         public Vector3 Size { get; set; }
-        public TrileFace StartingFace { get; set; }
+        public TrileFace StartingPosition { get; set; }
 
         public bool Flat { get; set; }
         public bool Quantum { get; set; }
@@ -34,22 +34,45 @@ namespace FEZRepacker.Conversion.Json.CustomStructures
 
         // music and sound related
         public string SongName { get; set; }
-        public int FarAwayPlaceFadeOutStart { get; set; }
-        public int FarAwayPlaceFadeOutLength { get; set; }
         public List<string> MutedLoops { get; set; }
         public List<AmbienceTrack> AmbienceTracks { get; set; }
         public string SequenceSamplesPath { get; set; }
         public bool LowPass { get; set; }
 
+        // these are presumably unused
+        //public int FarAwayPlaceFadeOutStart { get; set; }
+        //public int FarAwayPlaceFadeOutLength { get; set; }
+
         public string TrileSetName { get; set; }
         public List<ModifiedTrile> Triles { get; set; }
-        public Dictionary<int, Volume> Volumes { get; set; }
-        public Dictionary<int, Script> Scripts { get; set; }
-        public Dictionary<int, ArtObjectInstance> ArtObjects { get; set; }
-        public Dictionary<int, BackgroundPlane> BackgroundPlanes { get; set; }
         public Dictionary<int, ModifiedTrileGroup> Groups { get; set; }
+        public Dictionary<int, ModifiedVolume> Volumes { get; set; }
+        public Dictionary<int, Script> Scripts { get; set; }
+        public Dictionary<int, ModifiedArtObject> ArtObjects { get; set; }
+        public Dictionary<int, BackgroundPlane> BackgroundPlanes { get; set; }
         public Dictionary<int, MovementPath> Paths { get; set; }
         public Dictionary<int, NpcInstance> NonPlayerCharacters { get; set; }
+
+        public ModifiedLevel()
+        {
+            Name = "";
+            StartingPosition = new();
+            SkyName = "";
+            GomezHaloName = "";
+            SongName = "";
+            MutedLoops = new();
+            AmbienceTracks = new();
+            SequenceSamplesPath = "";
+            TrileSetName = "";
+            Triles = new();
+            Groups = new();
+            Volumes = new();
+            Scripts = new();
+            ArtObjects = new();
+            BackgroundPlanes = new();
+            Paths = new();
+            NonPlayerCharacters = new();
+        }
 
         public ModifiedLevel(Level level)
         {
@@ -57,7 +80,7 @@ namespace FEZRepacker.Conversion.Json.CustomStructures
             Name = level.Name;
             NodeType = level.NodeType;
             Size = level.Size;
-            StartingFace = level.StartingFace;
+            StartingPosition = level.StartingFace;
             Flat = level.Flat;
             Quantum = level.Quantum;
             Descending = level.Descending;
@@ -73,16 +96,14 @@ namespace FEZRepacker.Conversion.Json.CustomStructures
             WaterHeight = level.WaterHeight;
             WaterType = level.WaterType;
             SongName = level.SongName;
-            FarAwayPlaceFadeOutStart = level.FarAwayPlaceFadeOutStart;
-            FarAwayPlaceFadeOutLength = level.FarAwayPlaceFadeOutLength;
+            //FarAwayPlaceFadeOutStart = level.FarAwayPlaceFadeOutStart;
+            //FarAwayPlaceFadeOutLength = level.FarAwayPlaceFadeOutLength;
             MutedLoops = level.MutedLoops;
             AmbienceTracks = level.AmbienceTracks;
             SequenceSamplesPath = level.SequenceSamplesPath;
             LowPass = level.LowPass;
             TrileSetName = level.TrileSetName;
-            Volumes = level.Volumes;
             Scripts = level.Scripts;
-            ArtObjects = level.ArtObjects;
             BackgroundPlanes = level.BackgroundPlanes;
             Paths = level.Paths;
             NonPlayerCharacters = level.NonPlayerCharacters;
@@ -100,6 +121,12 @@ namespace FEZRepacker.Conversion.Json.CustomStructures
 
             // create groups of modified paths
             Groups = level.Groups.ToDictionary(pair=>pair.Key, pair=>new ModifiedTrileGroup(pair.Value));
+
+            // convert volumes
+            Volumes = level.Volumes.ToDictionary(pair => pair.Key, pair => new ModifiedVolume(pair.Value));
+
+            // convert art objects
+            ArtObjects = level.ArtObjects.ToDictionary(pair => pair.Key, pair => new ModifiedArtObject(pair.Value));
         }
 
         public Level ToOriginal()
@@ -110,7 +137,7 @@ namespace FEZRepacker.Conversion.Json.CustomStructures
             level.Name = Name;
             level.NodeType = NodeType;
             level.Size = Size;
-            level.StartingFace = StartingFace;
+            level.StartingFace = StartingPosition;
             level.Flat = Flat;
             level.Quantum = Quantum;
             level.Descending = Descending;
@@ -126,16 +153,14 @@ namespace FEZRepacker.Conversion.Json.CustomStructures
             level.WaterHeight = WaterHeight;
             level.WaterType = WaterType;
             level.SongName = SongName;
-            level.FarAwayPlaceFadeOutStart = FarAwayPlaceFadeOutStart;
-            level.FarAwayPlaceFadeOutLength = FarAwayPlaceFadeOutLength;
+            //level.FarAwayPlaceFadeOutStart = FarAwayPlaceFadeOutStart;
+            //level.FarAwayPlaceFadeOutLength = FarAwayPlaceFadeOutLength;
             level.MutedLoops = MutedLoops;
             level.AmbienceTracks = AmbienceTracks;
             level.SequenceSamplesPath = SequenceSamplesPath;
             level.LowPass = LowPass;
             level.TrileSetName = TrileSetName;
-            level.Volumes = Volumes;
             level.Scripts = Scripts;
-            level.ArtObjects = ArtObjects;
             level.BackgroundPlanes = BackgroundPlanes;
             level.Paths = Paths;
             level.NonPlayerCharacters = NonPlayerCharacters;
@@ -156,6 +181,12 @@ namespace FEZRepacker.Conversion.Json.CustomStructures
 
             // put trile instances back into groups
             level.Groups = Groups.ToDictionary(pair => pair.Key, pair => pair.Value.ToOriginal(level));
+
+            // convert volumes back
+            level.Volumes = Volumes.ToDictionary(pair => pair.Key, pair => pair.Value.ToOriginal());
+
+            // convert art objects back
+            level.ArtObjects = ArtObjects.ToDictionary(pair => pair.Key, pair => pair.Value.ToOriginal());
 
             return level;
         }

@@ -18,7 +18,8 @@ namespace FEZRepacker.Conversion.Json
                 Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
                 Converters = {
                     new JsonStringEnumConverter(),
-                    new VectorJsonConverter(),
+                    new Vector2JsonConverter(),
+                    new Vector3JsonConverter(),
                     new QuaternionJsonConverter(),
                     new ColorJsonConverter(),
                     new TimeSpanJsonConverter(),

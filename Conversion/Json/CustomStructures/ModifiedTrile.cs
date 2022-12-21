@@ -22,6 +22,11 @@ namespace FEZRepacker.Conversion.Json.CustomStructures
 			FaceOrientation.Right
         };
 
+        public ModifiedTrile()
+        {
+            Position = new();
+        }
+
         public ModifiedTrile(TrileEmplacement position, TrileInstance instance)
         {
             Position = position;
@@ -36,7 +41,7 @@ namespace FEZRepacker.Conversion.Json.CustomStructures
             TrileInstance instance = new TrileInstance();
 
             instance.Position = new Vector3(Position.X, Position.Y, Position.Z);
-            instance.PhiLight = (byte)Orientation;
+            instance.PhiLight = (byte)Array.IndexOf(OrientationLookup, Orientation);
             instance.TrileId = Id;
 
             if (Settings != null)

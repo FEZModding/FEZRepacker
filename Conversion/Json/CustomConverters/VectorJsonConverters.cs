@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace FEZRepacker.Conversion.Json.CustomConverters
 {
-    public class VectorJsonConverter : JsonConverter<Vector3>
+    public class Vector3JsonConverter : JsonConverter<Vector3>
     {
         public override Vector3 Read(
             ref Utf8JsonReader reader,
@@ -28,6 +28,32 @@ namespace FEZRepacker.Conversion.Json.CustomConverters
             JsonSerializerOptions options)
         {
             writer.WriteRawValue($"[{vector.X}, {vector.Y}, {vector.Z}]");
+        }
+    }
+
+    public class Vector2JsonConverter : JsonConverter<Vector2>
+    {
+        public override Vector2 Read(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options)
+        {
+            if (reader.TokenType != JsonTokenType.StartArray) throw new JsonException();
+
+            Vector2 v = new Vector2(reader.GetSingle(), reader.GetSingle());
+
+            reader.Read();
+            if (reader.TokenType != JsonTokenType.EndArray) throw new JsonException();
+
+            return v;
+        }
+
+        public override void Write(
+            Utf8JsonWriter writer,
+            Vector2 vector,
+            JsonSerializerOptions options)
+        {
+            writer.WriteRawValue($"[{vector.X}, {vector.Y}]");
         }
     }
 }
