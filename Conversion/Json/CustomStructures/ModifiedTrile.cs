@@ -12,6 +12,7 @@ namespace FEZRepacker.Conversion.Json.CustomStructures
         public TrileEmplacement Position { get; set; }
         public FaceOrientation Orientation { get; set; }
         public int Id { get; set; }
+        public ModifiedTrileInstanceSettings? Settings { get; set; }
 
         private static FaceOrientation[] OrientationLookup = new FaceOrientation[4]
 		{
@@ -26,9 +27,11 @@ namespace FEZRepacker.Conversion.Json.CustomStructures
             Position = position;
             Id = instance.TrileId;
             Orientation = OrientationLookup[instance.PhiLight];
+            Settings = new ModifiedTrileInstanceSettings(position, instance);
+            if (Settings.IsUnnecessary()) Settings = null;
         }
 
-        public TrileInstance ToOriginal(ModifiedTrileInstanceSettings? settings)
+        public TrileInstance ToOriginal()
         {
             TrileInstance instance = new TrileInstance();
 
@@ -36,10 +39,10 @@ namespace FEZRepacker.Conversion.Json.CustomStructures
             instance.PhiLight = (byte)Orientation;
             instance.TrileId = Id;
 
-            if (settings != null)
+            if (Settings != null)
             {
-                instance.Position += settings.Offset;
-                instance.ActorSettings = settings.ToOriginal();
+                instance.Position += Settings.Offset;
+                instance.ActorSettings = Settings.ToOriginal();
             }
 
             return instance;
@@ -48,7 +51,6 @@ namespace FEZRepacker.Conversion.Json.CustomStructures
 
     class ModifiedTrileInstanceSettings
     {
-        public TrileEmplacement Position { get; set; }
         public Vector3 Offset { get; set; }
 
         // Assuming it's unused, haven't seen it used anywhere in the
@@ -63,7 +65,6 @@ namespace FEZRepacker.Conversion.Json.CustomStructures
 
         public ModifiedTrileInstanceSettings(TrileEmplacement position, TrileInstance instance)
         {
-            Position = position;
             Vector3 trilePos = new Vector3(position.X, position.Y, position.Z);
             Offset = instance.Position - trilePos;
 

@@ -43,7 +43,6 @@ namespace FEZRepacker.Conversion.Json.CustomStructures
 
         public string TrileSetName { get; set; }
         public List<ModifiedTrile> Triles { get; set; }
-        public List<ModifiedTrileInstanceSettings> TrileSettings { get; set; }
         public Dictionary<int, Volume> Volumes { get; set; }
         public Dictionary<int, Script> Scripts { get; set; }
         public Dictionary<int, ArtObjectInstance> ArtObjects { get; set; }
@@ -90,19 +89,12 @@ namespace FEZRepacker.Conversion.Json.CustomStructures
 
             // sort tiles into modified structures
             Triles = new();
-            TrileSettings = new();
             foreach((var pos, var instance) in level.Triles)
             {
                 Triles.Add(new ModifiedTrile(pos, instance));
                 foreach(var overlapping in instance.OverlappedTriples)
                 {
                     Triles.Add(new ModifiedTrile(pos, overlapping));
-                }
-
-                var settings = new ModifiedTrileInstanceSettings(pos, instance);
-                if (!settings.IsUnnecessary(true))
-                {
-                    TrileSettings.Add(settings);
                 }
             }
 
@@ -151,17 +143,14 @@ namespace FEZRepacker.Conversion.Json.CustomStructures
             // parse triles back into their original structure
             foreach(var modTrile in Triles)
             {
+                var trile = modTrile.ToOriginal();
                 if (!level.Triles.ContainsKey(modTrile.Position))
                 {
-                    var settings = TrileSettings.Find(setting => setting.Position == modTrile.Position);
-                    var trile = modTrile.ToOriginal(settings);
                     level.Triles[modTrile.Position] = trile;
                 }
                 else
                 {
-                    var overlapped = modTrile.ToOriginal(null);
-                    level.Triles[modTrile.Position].OverlappedTriples.Add(overlapped);
-                    continue;
+                    level.Triles[modTrile.Position].OverlappedTriples.Add(trile);
                 }
             }
 
