@@ -1,4 +1,4 @@
-# FEZ `.pak` archive file description
+# FEZ assets data structure
 
 ## Overview
 

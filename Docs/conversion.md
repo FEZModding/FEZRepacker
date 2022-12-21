@@ -34,7 +34,7 @@ A way of converting `SpriteFont` type is currently not defined.
 
 ## Level type
 
-XNB files containing primary type of `Level` will be converted into a JSON file with an altered structure. The structure itself isn't yet defined, but it'll aim for optimizing file size and readability. Once it's ready, a detailed documentation will be linked here. As of right now, the structure is similar to the data structure in XNB file.
+XNB files containing primary type of `Level` is converted into a JSON file with an altered structure. More on that can be read [here](formats/level.md)
 
 ## MapTree type
 
