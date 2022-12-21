@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 using FEZEngine.Structure;
 using FEZEngine.Structure.Scripting;
 
-namespace FEZRepacker.Dependencies.Json.CustomConverters
+namespace FEZRepacker.Conversion.Json.CustomConverters
 {
     internal static class EntityJsonConverter
     {

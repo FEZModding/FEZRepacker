@@ -2,12 +2,15 @@
 using FEZEngine.Structure;
 using FEZEngine.Structure.Input;
 using FEZEngine.Structure.Scripting;
+using FEZRepacker.Conversion.Json;
+using FEZRepacker.Conversion.Json.CustomStructures;
 using FEZRepacker.XNB.Types;
 using FEZRepacker.XNB.Types.System;
+using System.Text;
 
 namespace FEZRepacker.XNB.Converters.Files
 {
-    class LevelConverter : JsonStorageConverter<Level>
+    class LevelConverter : XNBContentConverter
     {
         public override XNBContentType[] TypesFactory => new XNBContentType[]
         {
@@ -76,5 +79,29 @@ namespace FEZRepacker.XNB.Converters.Files
             new EnumContentType<LevelNodeType>(this),
         };
         public override string FileFormat => "fezlvl";
+
+        public override void FromBinary(BinaryReader xnbReader, BinaryWriter outWriter)
+        {
+            XNBContentType primaryType = Types[0];
+
+            Level data = (Level)primaryType.Read(xnbReader);
+
+            ModifiedLevel level = new ModifiedLevel(data);
+
+            var json = CustomJsonSerializer.Serialize(level);
+
+            outWriter.Write(Encoding.UTF8.GetBytes(json));
+
+        }
+
+        public override void ToBinary(BinaryReader inReader, BinaryWriter xnbWriter)
+        {
+            string json = new string(inReader.ReadChars((int)inReader.BaseStream.Length));
+            ModifiedLevel level = CustomJsonSerializer.Deserialize<ModifiedLevel>(json);
+
+            Level data = level.ToOriginal();
+
+            PrimaryType.Write(data, xnbWriter);
+        }
     }
 }

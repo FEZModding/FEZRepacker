@@ -3,31 +3,31 @@ using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace FEZRepacker.Dependencies.Json.CustomConverters
+namespace FEZRepacker.Conversion.Json.CustomConverters
 {
-    public class QuaternionJsonConverter : JsonConverter<Quaternion>
+    public class VectorJsonConverter : JsonConverter<Vector3>
     {
-        public override Quaternion Read(
+        public override Vector3 Read(
             ref Utf8JsonReader reader,
             Type typeToConvert,
             JsonSerializerOptions options)
         {
             if(reader.TokenType != JsonTokenType.StartArray) throw new JsonException();
 
-            Quaternion q = new Quaternion(reader.GetSingle(), reader.GetSingle(), reader.GetSingle(), reader.GetSingle());
+            Vector3 v = new Vector3(reader.GetSingle(), reader.GetSingle(), reader.GetSingle());
 
             reader.Read();
             if (reader.TokenType != JsonTokenType.EndArray) throw new JsonException();
             
-            return q;
+            return v;
         }
 
         public override void Write(
             Utf8JsonWriter writer,
-            Quaternion quaternion,
+            Vector3 vector,
             JsonSerializerOptions options)
         {
-            writer.WriteRawValue($"[{quaternion.X}, {quaternion.Y}, {quaternion.Z}, {quaternion.W}]");
+            writer.WriteRawValue($"[{vector.X}, {vector.Y}, {vector.Z}]");
         }
     }
 }

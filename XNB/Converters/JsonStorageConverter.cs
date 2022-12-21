@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-using FEZRepacker.Dependencies.Json;
+using FEZRepacker.Conversion.Json;
 
 namespace FEZRepacker.XNB.Converters
 {

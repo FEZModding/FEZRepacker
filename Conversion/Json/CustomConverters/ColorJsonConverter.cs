@@ -4,7 +4,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Drawing;
 
-namespace FEZRepacker.Dependencies.Json.CustomConverters
+namespace FEZRepacker.Conversion.Json.CustomConverters
 {
     public class ColorJsonConverter : JsonConverter<Color>
     {

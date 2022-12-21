@@ -1,8 +1,8 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
-using FEZRepacker.Dependencies.Json.CustomConverters;
+using FEZRepacker.Conversion.Json.CustomConverters;
 
-namespace FEZRepacker.Dependencies.Json
+namespace FEZRepacker.Conversion.Json
 {
     public static class CustomJsonSerializer
     {
@@ -15,16 +15,18 @@ namespace FEZRepacker.Dependencies.Json
             {
                 IncludeFields = true,
                 WriteIndented = true,
+                Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
                 Converters = {
                     new JsonStringEnumConverter(),
                     new VectorJsonConverter(),
                     new QuaternionJsonConverter(),
                     new ColorJsonConverter(),
+                    new TimeSpanJsonConverter(),
                     new TrileEmplacementJsonConverter(),
+                    new TrileEmplacementListJsonConverter(),
                     new ScriptTriggerJsonConverter(),
                     new ScriptConditionJsonConverter(),
                     new ScriptActionJsonConverter(),
-                    new TrileListJsonConverter()
                 }
             };
         }
