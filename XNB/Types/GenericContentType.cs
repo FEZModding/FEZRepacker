@@ -111,24 +111,34 @@ namespace FEZRepacker.XNB.Types
 
                 if (attribute.Optional)
                 {
-                    writer.Write(writeValue != null);
+                    int typeID = Converter.Types.ToList().FindIndex(t => t.BasicType == propertyType) + 1;
+                    if(writeValue != null)
+                    {
+                        if(typeID > 0) writer.Write7BitEncodedInt(typeID);
+                        else writer.Write(true);
+                    }
+                    else writer.Write(false);
+
                 }
 
-                if (attribute.UseConverter)
+                if(writeValue != null)
                 {
-                    Converter.WriteType(propertyType, writeValue, writer, attribute.SkipIdentifier);
+                    if (attribute.UseConverter)
+                    {
+                        Converter.WriteType(propertyType, writeValue, writer, attribute.SkipIdentifier);
+                    }
+                    else if (propertyType == typeof(bool)) writer.Write((bool)writeValue!);
+                    else if (propertyType == typeof(int)) writer.Write((int)writeValue!);
+                    else if (propertyType == typeof(byte)) writer.Write((byte)writeValue!);
+                    else if (propertyType == typeof(float)) writer.Write((float)writeValue!);
+                    else if (propertyType == typeof(string)) writer.Write((string)writeValue!);
+                    else if (propertyType == typeof(Vector2)) writer.Write((Vector2)writeValue!);
+                    else if (propertyType == typeof(Vector3)) writer.Write((Vector3)writeValue!);
+                    else if (propertyType == typeof(Quaternion)) writer.Write((Quaternion)writeValue!);
+                    else if (propertyType == typeof(Color)) writer.Write((Color)writeValue!);
+                    else if (propertyType == typeof(TimeSpan)) writer.Write(((TimeSpan)writeValue!).Ticks);
+                    else throw new NotSupportedException($"Type {propertyType.FullName} is not supported");
                 }
-                else if (propertyType == typeof(bool)) writer.Write((bool)writeValue!);
-                else if (propertyType == typeof(int)) writer.Write((int)writeValue!);
-                else if (propertyType == typeof(byte)) writer.Write((byte)writeValue!);
-                else if (propertyType == typeof(float)) writer.Write((float)writeValue!);
-                else if (propertyType == typeof(string)) writer.Write((string)writeValue!);
-                else if (propertyType == typeof(Vector2)) writer.Write((Vector2)writeValue!);
-                else if (propertyType == typeof(Vector3)) writer.Write((Vector3)writeValue!);
-                else if (propertyType == typeof(Quaternion)) writer.Write((Quaternion)writeValue!);
-                else if (propertyType == typeof(Color)) writer.Write((Color)writeValue!);
-                else if (propertyType == typeof(TimeSpan)) writer.Write(((TimeSpan)writeValue!).Ticks);
-                else throw new NotSupportedException($"Type {propertyType.FullName} is not supported");
             }
         }
     }

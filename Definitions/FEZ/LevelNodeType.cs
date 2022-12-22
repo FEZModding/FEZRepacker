@@ -1,4 +1,4 @@
-﻿namespace FEZEngine
+﻿namespace FezEngine
 {
 	public enum LevelNodeType
 	{

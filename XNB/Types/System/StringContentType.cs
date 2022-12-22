@@ -14,5 +14,10 @@
         {
             writer.Write((string)data);
         }
+
+        public override bool IsEmpty(object data)
+        {
+            return ((string)data).Length == 0;
+        }
     }
 }

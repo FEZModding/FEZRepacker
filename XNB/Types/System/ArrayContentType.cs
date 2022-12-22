@@ -1,14 +1,19 @@
 ﻿namespace FEZRepacker.XNB.Types.System
 {
-    class ByteArrayContentType : XNBContentType<byte[]>
+    class ArrayContentType<T> : XNBContentType<T[]> where T : notnull
     {
         private FEZAssemblyQualifier _name;
         private bool _skipElementType;
-        public ByteArrayContentType(XNBContentConverter converter) : base(converter)
+        public ArrayContentType(XNBContentConverter converter, bool skipElementType = true) : base(converter)
         {
-            _name = typeof(ArrayContentType<byte>).FullName ?? "";
+            // creating type assembly qualifier name
+            _name = typeof(ArrayContentType<T>).FullName ?? "";
             _name.Namespace = "Microsoft.Xna.Framework.Content";
             _name.Name = "ArrayReader";
+
+            // some arrays have element type prefixes, some dont.
+            // i have no idea what's the rule here, im just making it a variable
+            _skipElementType = skipElementType;
         }
 
         public override FEZAssemblyQualifier Name => _name;
@@ -16,16 +21,24 @@
         public override object Read(BinaryReader reader)
         {
             int dataCount = reader.ReadInt32();
-            byte[] data = reader.ReadBytes(dataCount);
+            T[] data = new T[dataCount];
+            for (int i = 0; i < dataCount; i++)
+            {
+                T? value = Converter.ReadType<T>(reader, _skipElementType);
+                if (value != null) data[i] = value;
+            }
             return data;
         }
 
         public override void Write(object data, BinaryWriter writer)
         {
-            byte[] array = (byte[])data;
+            T[] array = (T[])data;
 
             writer.Write(array.Length);
-            writer.Write(array);
+            foreach (T value in array)
+            {
+                Converter.WriteType<T>(value, writer, _skipElementType);
+            }
         }
     }
 }

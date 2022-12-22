@@ -1,8 +1,8 @@
-﻿using FEZEngine.Structure.Scripting;
+﻿using FezEngine.Structure.Scripting;
 using FEZRepacker.XNB.Attributes;
 using System.Numerics;
 
-namespace FEZEngine.Structure
+namespace FezEngine.Structure
 {
     [XNBType("FezEngine.Readers.LevelReader")]
     class Level

@@ -1,4 +1,4 @@
-﻿using FEZEngine.Structure;
+﻿using FezEngine.Structure;
 using System.Linq;
 using System.Numerics;
 
@@ -32,7 +32,7 @@ namespace FEZRepacker.Conversion.Json.CustomStructures
             AssociatedSound = "";
         }
 
-            public ModifiedTrileGroup(TrileGroup trileGroup)
+        public ModifiedTrileGroup(TrileGroup trileGroup)
         {
             // copy over unchanged parameters 
             Path = trileGroup.Path;

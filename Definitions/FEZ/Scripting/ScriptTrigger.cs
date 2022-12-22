@@ -1,6 +1,6 @@
 ﻿using FEZRepacker.XNB.Attributes;
 
-namespace FEZEngine.Structure.Scripting
+namespace FezEngine.Structure.Scripting
 {
     [XNBType("FezEngine.Readers.ScriptTriggerReader")]
     class ScriptTrigger

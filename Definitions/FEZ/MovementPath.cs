@@ -1,6 +1,6 @@
 ﻿using FEZRepacker.XNB.Attributes;
 
-namespace FEZEngine.Structure
+namespace FezEngine.Structure
 {
 	[XNBType("FezEngine.Readers.MovementPathReader")]
 	public class MovementPath

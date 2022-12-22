@@ -1,6 +1,6 @@
-﻿using FEZEngine;
-using FEZEngine.Structure;
-using FEZEngine.Structure.Scripting;
+﻿using FezEngine;
+using FezEngine.Structure;
+using FezEngine.Structure.Scripting;
 using System.Numerics;
 
 namespace FEZRepacker.Conversion.Json.CustomStructures
@@ -67,6 +67,14 @@ namespace FEZRepacker.Conversion.Json.CustomStructures
         public string SequenceSampleName { get; set; }
         public string SequenceAlternateSampleName { get; set; }
         public int? HostVolume { get; set; }
+
+        public ModifiedTrileInstanceSettings()
+        {
+            SignText = "";
+            Sequence = new bool[0];
+            SequenceSampleName = "";
+            SequenceAlternateSampleName = "";
+        }
 
         public ModifiedTrileInstanceSettings(TrileEmplacement position, TrileInstance instance)
         {

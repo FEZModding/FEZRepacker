@@ -14,9 +14,17 @@ namespace FEZRepacker.Conversion.Json.CustomConverters
         {
             if(reader.TokenType != JsonTokenType.StartArray) throw new JsonException();
 
-            Quaternion q = new Quaternion(reader.GetSingle(), reader.GetSingle(), reader.GetSingle(), reader.GetSingle());
-
             reader.Read();
+            float x = reader.GetSingle();
+            reader.Read();
+            float y = reader.GetSingle();
+            reader.Read();
+            float z = reader.GetSingle();
+            reader.Read();
+            float w = reader.GetSingle();
+            Quaternion q = new Quaternion(x,y,z,w);
+            reader.Read();
+
             if (reader.TokenType != JsonTokenType.EndArray) throw new JsonException();
             
             return q;

@@ -1,7 +1,7 @@
 ﻿using FEZRepacker.XNB.Attributes;
 using System.Numerics;
 
-namespace FEZEngine.Structure
+namespace FezEngine.Structure
 {
     [XNBType("FezEngine.Readers.TrileEmplacementReader")]
     public class TrileEmplacement : IEquatable<TrileEmplacement>, IComparable<TrileEmplacement>

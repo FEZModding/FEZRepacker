@@ -126,7 +126,16 @@ namespace FEZRepacker
                     using var fileStream = new FileStream(filepath, FileMode.Open, FileAccess.Read);
                     byte[] data = new byte[fileStream.Length];
                     fileStream.Read(data, 0, data.Length);
-                    file = PAKFile.FromData(data);
+
+                    string fileFormat = Path.GetExtension(filepath).Replace(".", "").ToLower();
+                    if(fileFormat == "xnb")
+                    {
+                        file = XNBFile.FromData(data);
+                    }
+                    else
+                    {
+                        file = PAKFile.FromData(data);
+                    }
                 }
 
                 Remove(actualName, (file is XNBFile) ? PAKRemoveMode.XnbOnly : PAKRemoveMode.RawOnly);

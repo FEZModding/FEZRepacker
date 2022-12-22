@@ -1,4 +1,4 @@
-﻿namespace FEZEngine.Structure.Scripting
+﻿namespace FezEngine.Structure.Scripting
 {
     public enum ComparisonOperator
     {

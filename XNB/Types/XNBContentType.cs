@@ -16,6 +16,11 @@
         public abstract object Read(BinaryReader reader);
 
         public abstract void Write(object data, BinaryWriter writer);
+
+        public virtual bool IsEmpty(object data)
+        {
+            return false;
+        }
     }
 
     // a little helper generalized class, so I don't have to override BasicType

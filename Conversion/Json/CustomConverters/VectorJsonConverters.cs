@@ -14,9 +14,15 @@ namespace FEZRepacker.Conversion.Json.CustomConverters
         {
             if(reader.TokenType != JsonTokenType.StartArray) throw new JsonException();
 
-            Vector3 v = new Vector3(reader.GetSingle(), reader.GetSingle(), reader.GetSingle());
-
             reader.Read();
+            float x = reader.GetSingle();
+            reader.Read();
+            float y = reader.GetSingle();
+            reader.Read();
+            float z = reader.GetSingle();
+            Vector3 v = new Vector3(x,y,z);
+            reader.Read();
+
             if (reader.TokenType != JsonTokenType.EndArray) throw new JsonException();
             
             return v;
@@ -40,9 +46,13 @@ namespace FEZRepacker.Conversion.Json.CustomConverters
         {
             if (reader.TokenType != JsonTokenType.StartArray) throw new JsonException();
 
-            Vector2 v = new Vector2(reader.GetSingle(), reader.GetSingle());
-
             reader.Read();
+            float x = reader.GetSingle();
+            reader.Read();
+            float y = reader.GetSingle();
+            Vector2 v = new Vector2(x,y);
+            reader.Read();
+
             if (reader.TokenType != JsonTokenType.EndArray) throw new JsonException();
 
             return v;

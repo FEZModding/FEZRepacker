@@ -35,5 +35,10 @@
                 Converter.WriteType<T>(value, writer);
             }
         }
+
+        public override bool IsEmpty(object data)
+        {
+            return ((List<T>)data).Count == 0;
+        }
     }
 }

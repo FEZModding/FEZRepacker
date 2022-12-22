@@ -1,7 +1,7 @@
 ﻿using FEZRepacker.XNB.Attributes;
 using System.Numerics;
 
-namespace FEZEngine.Structure
+namespace FezEngine.Structure
 {
     [XNBType("FezEngine.Readers.TrileGroupReader")]
     public class TrileGroup
@@ -9,8 +9,8 @@ namespace FEZEngine.Structure
         [XNBProperty(UseConverter = true)]
 		public List<TrileInstance> Triles { get; set; }
 
-        [XNBProperty(UseConverter = true)] 
-        public MovementPath Path { get; set; }
+        [XNBProperty(UseConverter = true, Optional = true, SkipIdentifier = true)] 
+        public MovementPath? Path { get; set; }
         
         [XNBProperty]
         public bool Heavy { get; set; }
@@ -58,7 +58,7 @@ namespace FEZEngine.Structure
         public TrileGroup()
         {
             Triles = new List<TrileInstance>();
-            Path = new();
+            Path = null;
             AssociatedSound = "";
         }
     }

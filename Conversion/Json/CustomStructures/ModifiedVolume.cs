@@ -1,6 +1,6 @@
-﻿using FEZEngine;
-using FEZEngine.Structure;
-using FEZEngine.Structure.Input;
+﻿using FezEngine;
+using FezEngine.Structure;
+using FezEngine.Structure.Input;
 using System.Linq;
 using System.Numerics;
 

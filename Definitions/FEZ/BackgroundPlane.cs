@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Numerics;
 
-namespace FEZEngine.Structure
+namespace FezEngine.Structure
 {
 	[XNBType("FezEngine.Readers.BackgroundPlaneReader")]
 	public class BackgroundPlane

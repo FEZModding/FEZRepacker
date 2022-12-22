@@ -84,11 +84,18 @@
             int typeID = Types.ToList().FindIndex(t => t.BasicType == T);
             if (typeID >= 0 && data != null)
             {
-                if (!skipIdentifier)
+                if(!skipIdentifier && Types[typeID].IsEmpty(data))
                 {
-                    writer.Write7BitEncodedInt(typeID + 1);
+                    writer.Write((byte)0x00);
                 }
-                Types[typeID].Write(data, writer);
+                else
+                {
+                    if (!skipIdentifier)
+                    {
+                        writer.Write7BitEncodedInt(typeID + 1);
+                    }
+                    Types[typeID].Write(data, writer);
+                }
             }
             else
             {

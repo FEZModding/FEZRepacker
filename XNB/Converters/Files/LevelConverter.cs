@@ -1,7 +1,7 @@
-﻿using FEZEngine;
-using FEZEngine.Structure;
-using FEZEngine.Structure.Input;
-using FEZEngine.Structure.Scripting;
+﻿using FezEngine;
+using FezEngine.Structure;
+using FezEngine.Structure.Input;
+using FezEngine.Structure.Scripting;
 using FEZRepacker.Conversion.Json;
 using FEZRepacker.Conversion.Json.CustomStructures;
 using FEZRepacker.XNB.Types;
@@ -21,6 +21,7 @@ namespace FEZRepacker.XNB.Converters.Files
             new GenericContentType<TrileEmplacement>(this),
             new EnumContentType<FaceOrientation>(this),
             new Int32ContentType(this),
+            new BooleanContentType(this),
             new EnumContentType<LiquidType>(this),
             new DictionaryContentType<int, Volume>(this),
             new GenericContentType<Volume>(this),
@@ -45,7 +46,6 @@ namespace FEZRepacker.XNB.Converters.Files
             new GenericContentType<TrileInstance>(this),
             new GenericContentType<TrileInstanceActorSettings>(this),
             new ListContentType<TrileInstance>(this),
-            new BooleanContentType(this),
             new ArrayContentType<bool>(this, true),
             new DictionaryContentType<int, ArtObjectInstance>(this),
             new GenericContentType<ArtObjectInstance>(this),
@@ -59,7 +59,6 @@ namespace FEZRepacker.XNB.Converters.Files
             new GenericContentType<CameraNodeData>(this),
             new DictionaryContentType<int, BackgroundPlane>(this),
             new GenericContentType<BackgroundPlane>(this),
-            new EnumContentType<ActorType>(this),
             new DictionaryContentType<int, TrileGroup>(this),
             new GenericContentType<TrileGroup>(this),
             new GenericContentType<MovementPath>(this),

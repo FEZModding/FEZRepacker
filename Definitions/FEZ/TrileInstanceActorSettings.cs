@@ -1,6 +1,6 @@
 ﻿using FEZRepacker.XNB.Attributes;
 
-namespace FEZEngine.Structure
+namespace FezEngine.Structure
 {
     [XNBType("FezEngine.Readers.InstanceActorSettingsReader")]
     public class TrileInstanceActorSettings // Original name in FezEngine: InstanceActorSettings

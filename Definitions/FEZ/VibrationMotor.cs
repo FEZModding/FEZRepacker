@@ -1,4 +1,4 @@
-﻿namespace FEZEngine.Structure.Input
+﻿namespace FezEngine.Structure.Input
 {
 	public enum VibrationMotor
 	{
