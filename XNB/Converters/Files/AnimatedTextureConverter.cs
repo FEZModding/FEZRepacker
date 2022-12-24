@@ -91,7 +91,7 @@ namespace FEZRepacker.XNB.Converters.Files
                 newAtlasWidth = (int)Math.Pow(2, Math.Ceiling(Math.Log2(newAtlasWidth)));
                 newAtlasHeight = (int)Math.Pow(2, Math.Ceiling(Math.Log2(newAtlasHeight)));
 
-                if (newAtlasWidth > newAtlasHeight) break;
+                if (newAtlasWidth > newAtlasHeight && atlasWidth > 0 && atlasHeight > 0) break;
 
                 int newArea = newAtlasWidth * newAtlasHeight;
                 if(newArea <= atlasArea)
