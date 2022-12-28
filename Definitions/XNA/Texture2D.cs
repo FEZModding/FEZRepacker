@@ -17,6 +17,9 @@ namespace Microsoft.Xna.Framework.Graphics
         [XNBProperty]
         public int MipmapLevels { get; set; }
 
+        // the format technically supports multiple mipmaps levels, which would alter how
+        // this data is stored, but none of FEZ's original assets are using additional
+        // mipmap levels, so I'm dropping support for it completely.
         [XNBProperty(UseConverter = true, SkipIdentifier = true)]
         public byte[] TextureData { get; set; }
 

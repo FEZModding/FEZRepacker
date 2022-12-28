@@ -8,7 +8,7 @@ namespace FEZRepacker.Conversion.Json.CustomStructures
 {
     // Every art object has actor settings anyway, so
     // I'm just making them a part of the art object structure
-    class ModifiedArtObject
+    class ModifiedArtObjectInstance
     {
         public string Name { get; set; }
         public Vector3 Position { get; set; }
@@ -32,7 +32,7 @@ namespace FEZRepacker.Conversion.Json.CustomStructures
         public float TimeswitchWindBackSpeed { get; set; }
         public ActorType ContainedTrile { get; set; }
 
-        public ModifiedArtObject()
+        public ModifiedArtObjectInstance()
         {
             Name = "";
             VibrationPattern = new VibrationMotor[0];
@@ -43,7 +43,7 @@ namespace FEZRepacker.Conversion.Json.CustomStructures
             InvisibleSides = new FaceOrientation[0];
         }
 
-        public ModifiedArtObject(ArtObjectInstance artObject)
+        public ModifiedArtObjectInstance(ArtObjectInstance artObject)
         {
             // copy over unchanged parameters 
             Name = artObject.Name;

@@ -48,7 +48,7 @@ namespace FEZRepacker.Conversion.Json.CustomStructures
         public Dictionary<int, ModifiedTrileGroup> Groups { get; set; }
         public Dictionary<int, ModifiedVolume> Volumes { get; set; }
         public Dictionary<int, Script> Scripts { get; set; }
-        public Dictionary<int, ModifiedArtObject> ArtObjects { get; set; }
+        public Dictionary<int, ModifiedArtObjectInstance> ArtObjects { get; set; }
         public Dictionary<int, BackgroundPlane> BackgroundPlanes { get; set; }
         public Dictionary<int, MovementPath> Paths { get; set; }
         public Dictionary<int, NpcInstance> NonPlayerCharacters { get; set; }
@@ -126,7 +126,7 @@ namespace FEZRepacker.Conversion.Json.CustomStructures
             Volumes = level.Volumes.ToDictionary(pair => pair.Key, pair => new ModifiedVolume(pair.Value));
 
             // convert art objects
-            ArtObjects = level.ArtObjects.ToDictionary(pair => pair.Key, pair => new ModifiedArtObject(pair.Value));
+            ArtObjects = level.ArtObjects.ToDictionary(pair => pair.Key, pair => new ModifiedArtObjectInstance(pair.Value));
         }
 
         public Level ToOriginal()
