@@ -7,15 +7,15 @@ namespace FEZRepacker
         static Dictionary<string, Action<string[]>> Commands = new Dictionary<string, Action<string[]>>()
         {
             {"?", CommandHelp },
+            {"--help", CommandHelp },
             {"help", CommandHelp },
-            {"/?", CommandHelp },
-            {"/help", CommandHelp },
+            {"-?", CommandHelp },
 
-            {"unpack", CommandUnpack},
-            {"pack", CommandPack},
-            {"add", CommandAdd },
-            {"list", CommandList },
-            {"remove", CommandRemove },
+            {"--unpack", CommandUnpack},
+            {"--pack", CommandPack},
+            {"--add", CommandAdd },
+            {"--list", CommandList },
+            {"--remove", CommandRemove },
         };
 
         // unpacks PAK file located in given path into given directory location
@@ -140,30 +140,30 @@ namespace FEZRepacker
         {
             Console.WriteLine(
                 "To unpack files from FEZ's .pak file into specific directory, use:\n" +
-                "FEZRepacker.exe unpack <source> <destination> [-xnb]\n" +
+                "FEZRepacker.exe --unpack <source> <destination> [-xnb]\n" +
                 "  source       Specifies the FEZ's .pak file to be unpacked.\n" +
                 "  destination  Specifies the directory where unpacked files will be saved.\n" +
                 "  -xnb         If used, raw XNB filed will be saved instead of their converted versions.\n\n" +
 
                 "To pack files as FEZ's .pak file, use:\n" +
-                "FEZPacker.exe pack <source> <destination>\n" +
+                "FEZPacker.exe --pack <source> <destination>\n" +
                 "  source       Specifies the directory where files to packed are located.\n" +
                 "  destination  Specifies the directory and filename for the packed file.\n\n" +
 
                 "To add files into FEZ's .pak file, use:\n" +
-                "FEZPacker.exe add <target> <source> [destination]\n" +
+                "FEZPacker.exe --add <target> <source> [destination]\n" +
                 "  target       Specifies the FEZ's .pak file into which files will be added.\n" +
                 "  source       Specifies the directory where files to packed are located.\n" +
                 "  destination  Specifies the directory and filename for the new packed file. If not set, uses the target name (overrides it).\n\n" +
 
                 "To delete a file from FEZ's .pak file, use:\n" +
-                "FEZPacker.exe remove <target> <name> [destination]\n" +
+                "FEZPacker.exe --remove <target> <name> [destination]\n" +
                 "  target       Specifies the FEZ's .pak file from which a file will be deleted.\n" +
                 "  name         Specifies the full file name of the file that will be deteled.\n" +
                 "  destination  Specifies the directory and filename for the new packed file. If not set, uses the source name (overrides it).\n\n" +
 
                 "To list all files packed within the .pak file, use:\n" +
-                "FEZPacker.exe list <package>\n" +
+                "FEZPacker.exe --list <package>\n" +
                 "  package      Specifies the FEZ's .pak file to list files from.\n\n"
             );
         }
@@ -173,12 +173,12 @@ namespace FEZRepacker
         {
             if (args.Length==1 && args[0] == "debug") {
                 Console.WriteLine("Running debug command!");
-                //args = new[] { "list", "Other.pak" };
-                //args = new[] { "add", "Updates_old.pak", "Export", "Updates.pak" };
-                // args = new[] { "unpack", "Other.pak", "TestDecomp"};
-                //args = new[] { "unpack", "Updates.pak", "TestDecomp2"};
-                // args = new[] { "unpack", "Updates.pak", "TestDecomp2", "-xnb"};
-                //args = new[] { "remove", "Essentials_old.pak", "fonts\\zuish", "Essentials.pak" };
+                // args = new[] { "--list", "Other.pak" };
+                args = new[] { "--add", "Updates_old.pak", "Export", "Updates.pak" };
+                // args = new[] { "--unpack", "Other.pak", "TestDecomp"};
+                // args = new[] { "--unpack", "Updates.pak", "TestDecomp2"};
+                // args = new[] { "--unpack", "Updates.pak", "TestDecomp2", "-xnb"};
+                // args = new[] { "--remove", "Essentials_old.pak", "fonts\\zuish", "Essentials.pak" };
             }
 
             // keep number decimals consistent
@@ -225,7 +225,7 @@ namespace FEZRepacker
 
             if (!validCommand)
             {
-                Console.WriteLine("Use \"FEZPacker.exe help\" for more help.");
+                Console.WriteLine("Use \"FEZPacker.exe --help\" for more help.");
             }
 
         }
