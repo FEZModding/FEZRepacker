@@ -1,11 +1,13 @@
 ﻿using FEZRepacker.XNB.Types;
 using FEZRepacker.XNB.Types.System;
 using FEZRepacker.XNB.Types.XNA;
-using ImageMagick;
-using ImageMagick.Formats;
 using Microsoft.Xna.Framework.Graphics;
-using System.Drawing;
-using System.Drawing.Imaging;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Png;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Textures;
+using SixLabors.ImageSharp.Textures.Formats.Dds;
+using SixLabors.ImageSharp.Textures.TextureFormats;
 using System.Runtime.InteropServices;
 
 namespace FEZRepacker.XNB.Converters.Files
@@ -20,20 +22,16 @@ namespace FEZRepacker.XNB.Converters.Files
         };
         public override string FileFormat => "png";
 
-        public static MagickImage MagickImageFromTexture2D(Texture2D txt)
+        public static Image<Rgba32> ImageFromTexture2D(Texture2D txt)
         {
-            MagickReadSettings mr = new MagickReadSettings();
-            mr.Width = txt.Width;
-            mr.Height = txt.Height;
-            mr.Format = MagickFormat.Rgba;
-
             // most of FEZ textures are saved in raw format
             // some of them are not. try to convert them.
             if (txt.Format != SurfaceFormat.Color)
             {
                 if (txt.Format == SurfaceFormat.Dxt1 || txt.Format == SurfaceFormat.Dxt5)
                 {
-                    // Magick can convert DXT1 and DXT5 compressed textures, but it requires DDS header in the data.
+                    // We can convert DXT1 and DXT5 compressed textures using ImageSharp.Textures,
+                    // but it requires DDS header in the data.
                     // we're manually building it so the reader doesn't complain
                     byte[] newData = new byte[txt.TextureData.Length + 128];
                     var writer = new BinaryWriter(new MemoryStream(newData));
@@ -56,28 +54,33 @@ namespace FEZRepacker.XNB.Converters.Files
                     writer.Seek(4 * 4, SeekOrigin.Current); // cubic map flags and three reserved DWORDs, skip
                     writer.Write(txt.TextureData); // actual data.
 
-                    txt.TextureData = newData;
-                    mr.Format = MagickFormat.Dxt1;
+                    // decode DXT data and write it into byte array
+                    var decoder = new DdsDecoder();
+                    var config = SixLabors.ImageSharp.Textures.Configuration.Default;
+                    FlatTexture texture = (FlatTexture) decoder.DecodeTexture(config, new MemoryStream(newData));
+                    return texture.MipMaps[0].GetImage().CloneAs<Rgba32>();
                 }
                 else
                 {
                     throw new InvalidDataException($"Texture2D has unsupported format ({txt.Format})");
                 }
-                txt.Format = SurfaceFormat.Color;
             }
-
-            var image = new MagickImage(txt.TextureData, mr);
-            return image;
+            else
+            {
+                return Image.LoadPixelData<Rgba32>(txt.TextureData, txt.Width, txt.Height);
+            }
         }
 
-        public static Texture2D MagickImageToTexture2D(MagickImage img)
+        public static Texture2D ImageToTexture2D(Image<Rgba32> img)
         {
             Texture2D texture = new Texture2D();
             texture.Format = SurfaceFormat.Color;
             texture.MipmapLevels = 1;
             texture.Width = img.Width;
             texture.Height = img.Height;
-            texture.TextureData = img.ToByteArray(MagickFormat.Rgba);
+
+            texture.TextureData = new byte[img.Width * img.Height * 4];
+            img.CopyPixelDataTo(texture.TextureData);
 
             return texture;
         }
@@ -87,19 +90,16 @@ namespace FEZRepacker.XNB.Converters.Files
         {
             Texture2D texture = (Texture2D)Types[0].Read(xnbReader);
 
-            using var image = MagickImageFromTexture2D(texture);
+            using var image = ImageFromTexture2D(texture);
 
-            image.Write(outWriter.BaseStream, MagickFormat.Png);
+            image.Save(outWriter.BaseStream, new PngEncoder());
         }
 
         public override void ToBinary(BinaryReader inReader, BinaryWriter xnbWriter)
         {
-            MagickReadSettings mr = new MagickReadSettings();
-            mr.Format = MagickFormat.Png;
+            using var importedImage = Image.Load<Rgba32>(inReader.BaseStream);
 
-            using var importedImage = new MagickImage(inReader.BaseStream, mr);
-
-            Texture2D texture = MagickImageToTexture2D(importedImage);
+            Texture2D texture = ImageToTexture2D(importedImage);
 
             PrimaryType.Write(texture, xnbWriter);
         }
