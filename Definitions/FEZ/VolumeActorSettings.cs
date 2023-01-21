@@ -1,8 +1,8 @@
-﻿using FezEngine.Structure.Input;
+﻿using FEZRepacker.Definitions.FezEngine.Structure.Input;
 using FEZRepacker.XNB.Attributes;
 using System.Numerics;
 
-namespace FezEngine.Structure
+namespace FEZRepacker.Definitions.FezEngine.Structure
 {
     [XNBType("FezEngine.Readers.VolumeActorSettingsReader")]
     class VolumeActorSettings

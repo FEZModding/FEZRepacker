@@ -1,7 +1,7 @@
-﻿using FEZRepacker.XNB.Types;
+﻿using FEZRepacker.Definitions.MicrosoftXna;
+using FEZRepacker.XNB.Types;
 using FEZRepacker.XNB.Types.System;
 using FEZRepacker.XNB.Types.XNA;
-using Microsoft.Xna.Framework.Graphics;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;

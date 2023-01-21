@@ -1,6 +1,6 @@
 ﻿using FEZRepacker.XNB.Attributes;
 
-namespace FezEngine.Structure.Scripting
+namespace FEZRepacker.Definitions.FezEngine.Structure.Scripting
 {
     [XNBType("FezEngine.Readers.EntityReader")]
     class Entity

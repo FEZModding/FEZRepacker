@@ -1,4 +1,4 @@
-﻿namespace FezEngine.Structure.Input
+﻿namespace FEZRepacker.Definitions.FezEngine.Structure.Input
 {
     [Flags]
     public enum CodeInput

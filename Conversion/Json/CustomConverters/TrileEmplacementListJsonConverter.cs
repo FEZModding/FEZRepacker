@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using FezEngine.Structure;
+using FEZRepacker.Definitions.FezEngine.Structure;
 
 namespace FEZRepacker.Conversion.Json.CustomConverters
 {

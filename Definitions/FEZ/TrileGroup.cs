@@ -1,7 +1,7 @@
 ﻿using FEZRepacker.XNB.Attributes;
 using System.Numerics;
 
-namespace FezEngine.Structure
+namespace FEZRepacker.Definitions.FezEngine.Structure
 {
     [XNBType("FezEngine.Readers.TrileGroupReader")]
     public class TrileGroup

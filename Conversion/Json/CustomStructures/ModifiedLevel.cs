@@ -1,6 +1,6 @@
-﻿using FezEngine;
-using FezEngine.Structure;
-using FezEngine.Structure.Scripting;
+﻿using FEZRepacker.Definitions.FezEngine;
+using FEZRepacker.Definitions.FezEngine.Structure;
+using FEZRepacker.Definitions.FezEngine.Structure.Scripting;
 using System.Numerics;
 
 namespace FEZRepacker.Conversion.Json.CustomStructures

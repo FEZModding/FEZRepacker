@@ -1,6 +1,6 @@
 ﻿using FEZRepacker.XNB.Attributes;
 
-namespace FezEngine.Structure
+namespace FEZRepacker.Definitions.FezEngine.Structure
 {
 	[XNBType("FezEngine.Readers.SpeechLineReader")]
 	public class SpeechLine

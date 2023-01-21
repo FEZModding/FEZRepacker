@@ -1,4 +1,4 @@
-﻿using FezEngine.Structure;
+﻿using FEZRepacker.Definitions.FezEngine.Structure;
 using System.Linq;
 using System.Numerics;
 

@@ -1,7 +1,7 @@
 ﻿using FEZRepacker.XNB.Attributes;
 using System.Drawing;
 
-namespace FezEngine.Content
+namespace FEZRepacker.Definitions.FezEngine.Content
 {
     [XNBType("FezEngine.Readers.FrameReader")]
     class FrameContent

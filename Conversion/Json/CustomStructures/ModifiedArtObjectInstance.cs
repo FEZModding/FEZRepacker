@@ -1,6 +1,6 @@
-﻿using FezEngine;
-using FezEngine.Structure;
-using FezEngine.Structure.Input;
+﻿using FEZRepacker.Definitions.FezEngine;
+using FEZRepacker.Definitions.FezEngine.Structure;
+using FEZRepacker.Definitions.FezEngine.Structure.Input;
 using System.Linq;
 using System.Numerics;
 

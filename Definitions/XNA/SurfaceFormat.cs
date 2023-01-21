@@ -1,4 +1,4 @@
-﻿namespace Microsoft.Xna.Framework.Graphics
+﻿namespace FEZRepacker.Definitions.MicrosoftXna
 {
     public enum SurfaceFormat
     {

@@ -1,4 +1,4 @@
-﻿namespace FezEngine.Structure
+﻿namespace FEZRepacker.Definitions.FezEngine.Structure
 {
 	public enum ActorType
 	{

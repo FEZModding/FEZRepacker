@@ -1,8 +1,8 @@
-﻿using FezEngine.Content;
+﻿using FEZRepacker.Definitions.FezEngine.Content;
 using FEZRepacker.XNB.Types;
 using FEZRepacker.XNB.Types.System;
 using FEZRepacker.XNB.Types.XNA;
-using Microsoft.Xna.Framework.Graphics;
+using FEZRepacker.Definitions.MicrosoftXna;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Gif;
 using SixLabors.ImageSharp.Formats.Webp;

@@ -1,6 +1,6 @@
 ﻿using FEZRepacker.XNB.Attributes;
 
-namespace Microsoft.Xna.Framework.Graphics
+namespace FEZRepacker.Definitions.MicrosoftXna
 {
     [XNBType("Microsoft.Xna.Framework.Content.Texture2DReader")]
     class Texture2D

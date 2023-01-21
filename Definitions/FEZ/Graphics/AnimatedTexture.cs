@@ -1,7 +1,6 @@
 ﻿using FEZRepacker.XNB.Attributes;
-using Microsoft.Xna.Framework.Graphics;
 
-namespace FezEngine.Content
+namespace FEZRepacker.Definitions.FezEngine.Content
 {
     [XNBType("FezEngine.Readers.AnimatedTextureReader")]
     class AnimatedTexture

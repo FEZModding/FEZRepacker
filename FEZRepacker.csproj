@@ -23,6 +23,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Conversion\ImageSharp\" />
     <Folder Include="Docs\" />
   </ItemGroup>
 
