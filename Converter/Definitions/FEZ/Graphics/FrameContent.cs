@@ -1,0 +1,14 @@
+﻿using System.Drawing;
+
+namespace FEZRepacker.Converter.Definitions.FezEngine.Content
+{
+    [XnbType("FezEngine.Readers.FrameReader")]
+    internal class FrameContent
+    {
+        [XnbProperty(UseConverter = true)]
+        public TimeSpan Duration { get; set; }
+
+        [XnbProperty(UseConverter = true)]
+        public Rectangle Rectangle { get; set; }
+    }
+}
