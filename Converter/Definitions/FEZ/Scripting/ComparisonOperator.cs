@@ -1,6 +1,6 @@
 ﻿namespace FEZRepacker.Converter.Definitions.FezEngine.Structure.Scripting
 {
-    [XnbEnumType("FezEngine.Structure.Scripting.ComparisonOperator")]
+    [XnbType("FezEngine.Structure.Scripting.ComparisonOperator")]
     public enum ComparisonOperator
     {
         None = -1,

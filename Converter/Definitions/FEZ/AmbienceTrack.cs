@@ -1,6 +1,7 @@
 ﻿namespace FEZRepacker.Converter.Definitions.FezEngine.Structure
 {
-	[XnbType("FezEngine.Readers.AmbienceTrackReader")]
+	[XnbType("FezEngine.Structure.AmbienceTrack")]
+	[XnbReaderType("FezEngine.Readers.AmbienceTrackReader")]
 	internal class AmbienceTrack
 	{
 		[XnbProperty(UseConverter = true)]

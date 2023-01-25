@@ -1,6 +1,6 @@
 ﻿namespace FEZRepacker.Converter.Definitions.FezEngine
 {
-	[XnbEnumType("FezEngine.Viewpoint")]
+	[XnbType("FezEngine.Viewpoint")]
 	internal enum Viewpoint
 	{
 		None,

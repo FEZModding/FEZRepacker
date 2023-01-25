@@ -1,6 +1,7 @@
 ﻿namespace FEZRepacker.Converter.Definitions.FezEngine.Structure
 {
-	[XnbType("FezEngine.Readers.MovementPathReader")]
+	[XnbType("FezEngine.Structure.MovementPath")]
+	[XnbReaderType("FezEngine.Readers.MovementPathReader")]
 	internal class MovementPath
 	{
 		[XnbProperty(UseConverter = true)]

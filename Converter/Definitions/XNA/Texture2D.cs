@@ -1,6 +1,7 @@
 ﻿namespace FEZRepacker.Converter.Definitions.MicrosoftXna
 {
-    [XnbType("Microsoft.Xna.Framework.Content.Texture2DReader")]
+    [XnbType("Microsoft.Xna.Framework.Graphics.Texture2D")]
+    [XnbReaderType("Microsoft.Xna.Framework.Content.Texture2DReader")]
     internal class Texture2D
     {
         [XnbProperty(UseConverter = true, SkipIdentifier = true)]

@@ -3,7 +3,8 @@ using System.Numerics;
 
 namespace FEZRepacker.Converter.Definitions.FezEngine.Structure
 {
-    [XnbType("FezEngine.Readers.LevelReader")]
+    [XnbType("FezEngine.Structure.Level")]
+    [XnbReaderType("FezEngine.Readers.LevelReader")]
     internal class Level
     {
         [XnbProperty(UseConverter = true)]

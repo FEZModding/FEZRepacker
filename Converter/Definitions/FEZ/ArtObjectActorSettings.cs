@@ -3,7 +3,8 @@ using System.Numerics;
 
 namespace FEZRepacker.Converter.Definitions.FezEngine.Structure
 {
-    [XnbType("FezEngine.Readers.ArtObjectActorSettingsReader")]
+    [XnbType("FezEngine.Structure.ArtObjectActorSettings")]
+    [XnbReaderType("FezEngine.Readers.ArtObjectActorSettingsReader")]
     internal class ArtObjectActorSettings
     {
         [XnbProperty]

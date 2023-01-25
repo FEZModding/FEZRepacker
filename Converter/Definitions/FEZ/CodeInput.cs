@@ -1,6 +1,6 @@
 ﻿namespace FEZRepacker.Converter.Definitions.FezEngine.Structure.Input
 {
-    [XnbEnumType("FezEngine.Structure.Input.CodeInput")]
+    [XnbType("FezEngine.Structure.Input.CodeInput")]
     [Flags]
     internal enum CodeInput
     {

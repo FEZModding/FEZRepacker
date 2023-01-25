@@ -13,6 +13,9 @@ namespace FEZRepacker.Converter.XNB.Types.System
             _name.Namespace = "Microsoft.Xna.Framework.Content";
             _name.Name = "ArrayReader";
 
+            var genericQualifier = GetXnbTypeFor(typeof(T));
+            if (genericQualifier.HasValue) _name.Templates[0] = genericQualifier.Value;
+
             // some arrays have element type prefixes, some dont.
             // i have no idea what's the rule here, im just making it a variable
             _skipElementType = skipElementType;

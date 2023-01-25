@@ -1,6 +1,6 @@
 ﻿namespace FEZRepacker.Converter.Definitions.FezEngine.Structure
 {
-	[XnbEnumType("FezEngine.Structure.ActorType")]
+	[XnbType("FezEngine.Structure.ActorType")]
 	internal enum ActorType
 	{
 		None,

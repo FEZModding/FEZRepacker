@@ -14,11 +14,8 @@ namespace FEZRepacker.Converter.XNB.Types.System
             _name.Namespace = "Microsoft.Xna.Framework.Content";
             _name.Name = "EnumReader";
 
-            var attributes = typeof(T).GetCustomAttributes(typeof(XnbEnumTypeAttribute), false);
-            if (attributes.Length > 0)
-            {
-                _name.Templates[0] = (attributes.First() as XnbEnumTypeAttribute)!.Qualifier;
-            }
+            var enumQualifier = GetXnbTypeFor(typeof(T));
+            if (enumQualifier.HasValue) _name.Templates[0] = enumQualifier.Value;
         }
 
         public override XnbAssemblyQualifier Name => _name;

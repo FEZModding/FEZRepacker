@@ -1,6 +1,7 @@
 ﻿namespace FEZRepacker.Converter.Definitions.FezEngine.Structure
 {
-    [XnbType("FezEngine.Readers.TrileFaceReader")]
+    [XnbType("FezEngine.Structure.TrileFace")]
+    [XnbReaderType("FezEngine.Readers.TrileFaceReader")]
     internal class TrileFace
     {
         [XnbProperty(UseConverter = true)]

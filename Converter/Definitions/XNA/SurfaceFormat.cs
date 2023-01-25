@@ -1,6 +1,6 @@
 ﻿namespace FEZRepacker.Converter.Definitions.MicrosoftXna
 {
-    [XnbEnumType("Microsoft.Xna.Framework.Graphics.SurfaceFormat")]
+    [XnbType("Microsoft.Xna.Framework.Graphics.SurfaceFormat")]
     internal enum SurfaceFormat
     {
         Color = 0,

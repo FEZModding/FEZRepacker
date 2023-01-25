@@ -1,4 +1,5 @@
-﻿using FEZRepacker.Converter.XNB.Formats;
+﻿using FEZRepacker.Converter.Definitions;
+using FEZRepacker.Converter.XNB.Formats;
 
 namespace FEZRepacker.Converter.XNB.Types
 {
@@ -20,6 +21,26 @@ namespace FEZRepacker.Converter.XNB.Types
         public virtual bool IsEmpty(object data)
         {
             return false;
+        }
+
+        protected static XnbAssemblyQualifier? GetXnbTypeFor(Type type)
+        {
+            var attributes = type.GetCustomAttributes(typeof(XnbTypeAttribute), false);
+            if (attributes.Length > 0)
+            {
+                return (attributes.First() as XnbTypeAttribute)!.Qualifier;
+            }
+            return null;
+        }
+
+        protected static XnbAssemblyQualifier? GetXnbReaderTypeFor(Type type)
+        {
+            var attributes = type.GetCustomAttributes(typeof(XnbReaderTypeAttribute), false);
+            if (attributes.Length > 0)
+            {
+                return (attributes.First() as XnbReaderTypeAttribute)!.Qualifier;
+            }
+            return null;
         }
     }
 

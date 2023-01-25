@@ -6,7 +6,15 @@ namespace FEZRepacker.Converter.XNB.Formats
     {
         private static List<XnbFormatConverter> converters = new List<XnbFormatConverter>();
 
-        public static void Add(XnbFormatConverter converter)
+        static XnbFormatList()
+        {
+            Add(new TextStorageConverter());
+            Add(new TextureConverter());
+            Add(new AnimatedTextureConverter());
+            Add(new LevelConverter());
+        }
+
+        private static void Add(XnbFormatConverter converter)
         {
             converters.Add(converter);
         }

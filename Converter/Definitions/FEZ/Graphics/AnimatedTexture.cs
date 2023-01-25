@@ -1,6 +1,7 @@
 ﻿namespace FEZRepacker.Converter.Definitions.FezEngine.Content
 {
-    [XnbType("FezEngine.Readers.AnimatedTextureReader")]
+    [XnbType("FezEngine.Structure.AnimatedTexture")]
+    [XnbReaderType("FezEngine.Readers.AnimatedTextureReader")]
     internal class AnimatedTexture
     {
         // Definition has been altered since the Texture property is

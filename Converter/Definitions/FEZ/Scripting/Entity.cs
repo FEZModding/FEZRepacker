@@ -1,6 +1,7 @@
 ﻿namespace FEZRepacker.Converter.Definitions.FezEngine.Structure.Scripting
 {
-    [XnbType("FezEngine.Readers.EntityReader")]
+    [XnbType("FezEngine.Structure.Scripting.Entity")]
+    [XnbReaderType("FezEngine.Readers.EntityReader")]
     class Entity
     {
         [XnbProperty]

@@ -3,7 +3,8 @@ using System.Numerics;
 
 namespace FEZRepacker.Converter.Definitions.FezEngine.Structure
 {
-	[XnbType("FezEngine.Readers.BackgroundPlaneReader")]
+	[XnbType("FezEngine.Structure.BackgroundPlane")]
+	[XnbReaderType("FezEngine.Readers.BackgroundPlaneReader")]
 	internal class BackgroundPlane
 	{
 		[XnbProperty]

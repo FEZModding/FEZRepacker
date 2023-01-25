@@ -1,6 +1,6 @@
 ﻿namespace FEZRepacker.Converter.Definitions.FezEngine
 {
-	[XnbEnumType("FezEngine.LevelNodeType")]
+	[XnbType("FezEngine.LevelNodeType")]
 	internal enum LevelNodeType
 	{
 		Node,

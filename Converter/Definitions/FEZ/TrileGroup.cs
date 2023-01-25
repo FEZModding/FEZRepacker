@@ -2,7 +2,8 @@
 
 namespace FEZRepacker.Converter.Definitions.FezEngine.Structure
 {
-    [XnbType("FezEngine.Readers.TrileGroupReader")]
+    [XnbType("FezEngine.Structure.TrileGroup")]
+    [XnbReaderType("FezEngine.Readers.TrileGroupReader")]
     internal class TrileGroup
 	{
         [XnbProperty(UseConverter = true)]

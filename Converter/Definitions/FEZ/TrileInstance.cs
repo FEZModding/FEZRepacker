@@ -2,7 +2,8 @@
 
 namespace FEZRepacker.Converter.Definitions.FezEngine.Structure
 {
-    [XnbType("FezEngine.Readers.TrileInstanceReader")]
+    [XnbType("FezEngine.Structure.TrileInstance")]
+    [XnbReaderType("FezEngine.Readers.TrileInstanceReader")]
     internal class TrileInstance
     {
         [XnbProperty]

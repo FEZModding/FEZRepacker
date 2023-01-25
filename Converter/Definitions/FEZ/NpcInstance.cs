@@ -2,7 +2,8 @@
 
 namespace FEZRepacker.Converter.Definitions.FezEngine.Structure
 {
-	[XnbType("FezEngine.Readers.NpcInstanceReader")]
+	[XnbType("FezEngine.Structure.NpcInstance")]
+	[XnbReaderType("FezEngine.Readers.NpcInstanceReader")]
 	internal class NpcInstance
 	{
 		[XnbProperty]

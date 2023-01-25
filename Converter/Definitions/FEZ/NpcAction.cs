@@ -1,6 +1,6 @@
 ﻿namespace FEZRepacker.Converter.Definitions.FezEngine.Structure
 {
-	[XnbEnumType("FezEngine.Structure.NpcAction")]
+	[XnbType("FezEngine.Structure.NpcAction")]
 	internal enum NpcAction
 	{
 		None,

@@ -11,6 +11,9 @@ namespace FEZRepacker.Converter.XNB.Types.System
             _name = typeof(ArrayContentType<T>).FullName ?? "";
             _name.Namespace = "Microsoft.Xna.Framework.Content";
             _name.Name = "ListReader";
+
+            var genericQualifier = GetXnbTypeFor(typeof(T));
+            if (genericQualifier.HasValue) _name.Templates[0] = genericQualifier.Value;
         }
 
         public override XnbAssemblyQualifier Name => _name;

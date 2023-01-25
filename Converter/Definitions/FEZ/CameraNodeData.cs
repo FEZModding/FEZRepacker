@@ -1,6 +1,7 @@
 ﻿namespace FEZRepacker.Converter.Definitions.FezEngine.Structure
 {
-	[XnbType("FezEngine.Readers.CameraNodeDataReader")]
+	[XnbType("FezEngine.Structure.CameraNodeData")]
+	[XnbReaderType("FezEngine.Readers.CameraNodeDataReader")]
 	internal class CameraNodeData
 	{
 		[XnbProperty]

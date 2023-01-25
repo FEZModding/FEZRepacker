@@ -7,6 +7,7 @@ namespace FEZRepacker.Converter.XNB.Formats
         public XnbContentType[] ContentTypes { get; private set; }
         public abstract XnbContentType[] TypesFactory { get; }
         public XnbContentType PrimaryContentType => ContentTypes[0];
+        public string FormatName => PrimaryContentType.Name.Name.Replace("Reader", "");
         public abstract string FileFormat { get; }
 
         public abstract void FromBinary(BinaryReader xnbReader, BinaryWriter outWriter);
@@ -24,11 +25,6 @@ namespace FEZRepacker.Converter.XNB.Formats
         {
             ContentTypes = TypesFactory;
             ValidateType();
-
-            if(this.GetType() != typeof(XnbFormatConverter))
-            {
-                XnbFormatList.Add(this);
-            }
         }
 
         public T? ReadType<T>(BinaryReader reader, bool skipIdentifier = false)

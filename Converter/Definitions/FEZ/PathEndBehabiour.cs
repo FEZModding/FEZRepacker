@@ -1,6 +1,6 @@
 ﻿namespace FEZRepacker.Converter.Definitions.FezEngine.Structure
 {
-	[XnbEnumType("FezEngine.Structure.PathEndBehavior")]
+	[XnbType("FezEngine.Structure.PathEndBehavior")]
 	internal enum PathEndBehavior
 	{
 		Bounce,

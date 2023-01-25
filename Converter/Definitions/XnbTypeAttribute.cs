@@ -2,7 +2,7 @@
 
 namespace FEZRepacker.Converter.Definitions
 {
-    [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Enum, Inherited = false, AllowMultiple = false)]
     internal sealed class XnbTypeAttribute : Attribute
     {
         public XnbAssemblyQualifier Qualifier { get; set; }

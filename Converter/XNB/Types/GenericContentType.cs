@@ -13,10 +13,10 @@ namespace FEZRepacker.Converter.XNB.Types
     {
         private XnbAssemblyQualifier _name;
         public GenericContentType(XnbFormatConverter converter) : base(converter) {
-            var attribute = (typeof(T).GetCustomAttributes(typeof(XnbTypeAttribute), false).Single() as XnbTypeAttribute);
-            if (attribute != null) _name = attribute.Qualifier;
+            var qualifier = GetXnbReaderTypeFor(typeof(T));
+            if (qualifier.HasValue) _name = qualifier.Value;
             PopulateReflectionMaps();
-            CreateContainedTypeConstructor();
+            _typeBuilder = CreateContainedTypeConstructor();
         }
         public override XnbAssemblyQualifier Name => _name;
 
@@ -54,13 +54,13 @@ namespace FEZRepacker.Converter.XNB.Types
         }
 
 
-        private Func<T> _typeBuilder = null;
-        private void CreateContainedTypeConstructor()
+        private Func<T> _typeBuilder;
+        private Func<T> CreateContainedTypeConstructor()
         {
             var t = typeof(T);
             var ex = new Expression[] { Expression.New(typeof(T)) };
             var block = Expression.Block(t, ex);
-            _typeBuilder = Expression.Lambda<Func<T>>(block).Compile();
+            return Expression.Lambda<Func<T>>(block).Compile();
         }
 
 

@@ -3,7 +3,8 @@ using System.Numerics;
 
 namespace FEZRepacker.Converter.Definitions.FezEngine.Structure
 {
-    [XnbType("FezEngine.Readers.VolumeActorSettingsReader")]
+    [XnbType("FezEngine.Structure.VolumeActorSettings")]
+    [XnbReaderType("FezEngine.Readers.VolumeActorSettingsReader")]
     internal class VolumeActorSettings
     {
         [XnbProperty]

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Content;
+using System.Text;
 
 namespace FEZRepacker.Converter.XNB
 {
@@ -15,6 +16,11 @@ namespace FEZRepacker.Converter.XNB
             }
             else
             {
+                header.Flags -= XnbFlags.Compressed;
+                header.Write(decompressedStream);
+
+                using var decompressedDataStream = new MemoryStream();
+
                 using var xnbReader = new BinaryReader(xnbStream);
                 LzxDecoder decoder = new LzxDecoder(16);
 
@@ -45,16 +51,21 @@ namespace FEZRepacker.Converter.XNB
 
                     if (blockSize == 0 || frameSize == 0) break;
 
-                    decoder.Decompress(xnbStream, blockSize, decompressedStream, frameSize);
+                    decoder.Decompress(xnbStream, blockSize, decompressedDataStream, frameSize);
                     pos += blockSize;
 
                     xnbStream.Position = pos;
                 }
 
-                if (decompressedStream.Position != decompressedSize)
+                if (decompressedDataStream.Position != decompressedSize)
                 {
                     throw new Exception("XNBDecompressor failed!");
                 }
+
+                new BinaryWriter(decompressedStream).Write(decompressedSize);
+
+                decompressedDataStream.Position = 0;
+                decompressedDataStream.CopyTo(decompressedStream);
             }
 
             decompressedStream.Position = 0;

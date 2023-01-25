@@ -2,7 +2,8 @@
 
 namespace FEZRepacker.Converter.Definitions.FezEngine.Structure
 {
-    [XnbType("FezEngine.Readers.PathSegmentReader")]
+    [XnbType("FezEngine.Structure.PathSegment")]
+    [XnbReaderType("FezEngine.Readers.PathSegmentReader")]
     internal class PathSegment
     {
         [XnbProperty]

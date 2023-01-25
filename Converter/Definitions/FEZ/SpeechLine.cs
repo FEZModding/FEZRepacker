@@ -1,6 +1,7 @@
 ﻿namespace FEZRepacker.Converter.Definitions.FezEngine.Structure
 {
-	[XnbType("FezEngine.Readers.SpeechLineReader")]
+	[XnbType("FezEngine.Structure.SpeechLine")]
+	[XnbReaderType("FezEngine.Readers.SpeechLineReader")]
 	internal class SpeechLine
 	{
 		[XnbProperty(UseConverter = true)]

@@ -1,6 +1,7 @@
 ﻿namespace FEZRepacker.Converter.Definitions.FezEngine.Structure.Scripting
 {
-    [XnbType("FezEngine.Readers.ScriptTriggerReader")]
+    [XnbType("FezEngine.Structure.Scripting.ScriptTrigger")]
+    [XnbReaderType("FezEngine.Readers.ScriptTriggerReader")]
     class ScriptTrigger
     {
         [XnbProperty(UseConverter = true)]

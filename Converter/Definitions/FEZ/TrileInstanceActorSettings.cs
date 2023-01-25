@@ -1,6 +1,7 @@
 ﻿namespace FEZRepacker.Converter.Definitions.FezEngine.Structure
 {
-    [XnbType("FezEngine.Readers.InstanceActorSettingsReader")]
+    [XnbType("FezEngine.Structure.InstanceActorSettings")]
+    [XnbReaderType("FezEngine.Readers.InstanceActorSettingsReader")]
     internal class TrileInstanceActorSettings // Original name in FezEngine: InstanceActorSettings
     {
         [XnbProperty(Optional = true)]

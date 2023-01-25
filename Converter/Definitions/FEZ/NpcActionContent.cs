@@ -1,6 +1,7 @@
 ﻿namespace FEZRepacker.Converter.Definitions.FezEngine.Structure
 {
-	[XnbType("FezEngine.Readers.NpcActionContentReader")]
+	[XnbType("FezEngine.Structure.NpcActionContent")]
+	[XnbReaderType("FezEngine.Readers.NpcActionContentReader")]
 	internal class NpcActionContent
 	{
 		[XnbProperty(UseConverter = true)]

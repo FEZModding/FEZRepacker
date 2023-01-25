@@ -2,7 +2,8 @@
 
 namespace FEZRepacker.Converter.Definitions.FezEngine.Structure
 {
-    [XnbType("FezEngine.Readers.VolumeReader")]
+    [XnbType("FezEngine.Structure.Volume")]
+    [XnbReaderType("FezEngine.Readers.VolumeReader")]
     internal class Volume
     {
         [XnbProperty(UseConverter = true)]

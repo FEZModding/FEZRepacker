@@ -1,6 +1,7 @@
 ﻿namespace FEZRepacker.Converter.Definitions.FezEngine.Structure
 {
-    [XnbType("FezEngine.Readers.DotDialogueLineReader")]
+    [XnbType("FezEngine.Structure.DotDialogueLine")]
+    [XnbReaderType("FezEngine.Readers.DotDialogueLineReader")]
     internal class DotDialogueLine
     {
         [XnbProperty(UseConverter = true)]

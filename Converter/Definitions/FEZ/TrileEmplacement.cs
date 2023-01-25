@@ -2,7 +2,8 @@
 
 namespace FEZRepacker.Converter.Definitions.FezEngine.Structure
 {
-    [XnbType("FezEngine.Readers.TrileEmplacementReader")]
+    [XnbType("FezEngine.Structure.TrileEmplacement")]
+    [XnbReaderType("FezEngine.Readers.TrileEmplacementReader")]
     internal class TrileEmplacement : IEquatable<TrileEmplacement>, IComparable<TrileEmplacement>
     {
         [XnbProperty]

@@ -1,6 +1,7 @@
 ﻿namespace FEZRepacker.Converter.Definitions.FezEngine.Structure.Scripting
 {
-    [XnbType("FezEngine.Readers.ScriptReader")]
+    [XnbType("FezEngine.Structure.Scripting.Script")]
+    [XnbReaderType("FezEngine.Readers.ScriptReader")]
     class Script
     {
         [XnbProperty]

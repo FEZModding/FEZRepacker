@@ -2,7 +2,8 @@
 
 namespace FEZRepacker.Converter.Definitions.FezEngine.Structure
 {
-    [XnbType("FezEngine.Readers.ArtObjectInstanceReader")]
+    [XnbType("FezEngine.Structure.ArtObjectInstance")]
+    [XnbReaderType("FezEngine.Readers.ArtObjectInstanceReader")]
     internal class ArtObjectInstance
     {
         [XnbProperty]

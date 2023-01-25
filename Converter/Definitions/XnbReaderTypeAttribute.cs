@@ -2,12 +2,12 @@
 
 namespace FEZRepacker.Converter.Definitions
 {
-    [AttributeUsage(AttributeTargets.Enum, Inherited = false, AllowMultiple = false)]
-    internal sealed class XnbEnumTypeAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+    internal sealed class XnbReaderTypeAttribute : Attribute
     {
         public XnbAssemblyQualifier Qualifier { get; set; }
 
-        public XnbEnumTypeAttribute(string _qualifier){
+        public XnbReaderTypeAttribute(string _qualifier){
             Qualifier = _qualifier;
         }
 

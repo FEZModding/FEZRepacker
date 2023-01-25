@@ -2,7 +2,8 @@
 
 namespace FEZRepacker.Converter.Definitions.FezEngine.Content
 {
-    [XnbType("FezEngine.Readers.FrameReader")]
+    [XnbType("FezEngine.Content.FrameContent")]
+    [XnbReaderType("FezEngine.Readers.FrameReader")]
     internal class FrameContent
     {
         [XnbProperty(UseConverter = true)]

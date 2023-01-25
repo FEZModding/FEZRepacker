@@ -2,188 +2,10 @@
 
 namespace FEZRepacker
 {
-    class Program
+    internal class Program
     {
-        static Dictionary<string, Action<string[]>> Commands = new Dictionary<string, Action<string[]>>()
-        {
-            {"?", CommandHelp },
-            {"--help", CommandHelp },
-            {"help", CommandHelp },
-            {"-?", CommandHelp },
-
-            {"--unpack", CommandUnpack},
-            {"--pack", CommandPack},
-            {"--add", CommandAdd },
-            {"--list", CommandList },
-            {"--remove", CommandRemove },
-        };
-
-        // unpacks PAK file located in given path into given directory location
-        static void CommandUnpack(string[] args)
-        {
-            if(args.Length < 2)
-            {
-                throw new ArgumentException("Invalid number of parameters.");
-            }
-
-            string pakPath = args[0];
-            string unpackPath = args[1];
-
-            // parse additional arguments that could affect unpacking mode
-            PAKUnpackMode mode = PAKUnpackMode.Convert;
-            for(var i = 2; i < args.Length; i++)
-            {
-                var arg = args[i];
-                if (arg == "-xnb") mode = PAKUnpackMode.DecompressedXNB;
-            }
-
-            PAKContainer pak = PAKContainer.LoadPak(pakPath);
-            if (pak == null)
-            {
-                throw new FileLoadException("Couldn't load PAK file.");
-            }
-
-            Console.WriteLine($"Loaded .pak package containing {pak.FileCount} files.\n");
-
-            Console.WriteLine($"\nAttempting to save files to {unpackPath}.\n");
-
-            pak.SaveContent(unpackPath, mode);
-        }
-
-        // packs directory in given location into a pak file with given name
-        static void CommandPack(string[] args)
-        {
-            throw new NotImplementedException("Command hasn't been fully implemented yet!");
-        }
-
-        // list all files currently located in pak archive
-        static void CommandList(string[] args)
-        {
-            if (args.Length != 1)
-            {
-                throw new ArgumentException("Invalid number of parameters.");
-            }
-
-            string pakPath = args[0];
-
-            PAKContainer pak = PAKContainer.LoadPak(pakPath);
-            if (pak == null)
-            {
-                throw new FileLoadException("Couldn't load PAK file.");
-            }
-
-            Console.WriteLine($"Loaded .pak package containing {pak.FileCount} files.\n");
-
-            foreach (PAKRecord record in pak.Files)
-            {
-                Console.WriteLine($"\"{record.Name}\" ({record.File.GetInfo()})");
-            }
-        }
-
-
-        // packs files in given location and adds them into existing archive
-        static void CommandAdd(string[] args)
-        {
-            if (args.Length < 2 || args.Length > 3)
-            {
-                throw new ArgumentException("Invalid number of parameters.");
-            }
-
-            string pakPath = args[0];
-            string assetsPath = args[1];
-            string newPakPath = args.Length > 2 ? args[2] : pakPath;
-
-            PAKContainer pak = PAKContainer.LoadPak(pakPath);
-            if (pak == null)
-            {
-                throw new FileLoadException("Couldn't load PAK file.");
-            }
-            Console.WriteLine($"Loaded .pak package containing {pak.FileCount} files.");
-
-            Console.WriteLine($"Converting assets from {assetsPath} into PAK archive...");
-            pak.LoadContent(assetsPath);
-
-            Console.WriteLine("Saving PAK file...");
-            pak.SavePak(newPakPath);
-        }
-
-        static void CommandRemove(string[] args)
-        {
-            if (args.Length < 2 || args.Length > 3)
-            {
-                throw new ArgumentException("Invalid number of parameters.");
-            }
-
-            string pakPath = args[0];
-            string deleteAsset = args[1];
-            string newPakPath = args.Length > 2 ? args[2] : pakPath;
-
-            PAKContainer pak = PAKContainer.LoadPak(pakPath);
-            if (pak == null)
-            {
-                throw new FileLoadException("Couldn't load PAK file.");
-            }
-            Console.WriteLine($"Loaded .pak package containing {pak.FileCount} files.");
-
-            if (pak.Count(deleteAsset) == 0)
-            {
-                throw new InvalidDataException($"PAK doesn't contain asset \"{deleteAsset}\"");
-            }
-
-            pak.Remove(deleteAsset);
-
-            Console.WriteLine("Saving PAK file...");
-            pak.SavePak(newPakPath);
-        }
-
-        static void CommandHelp(string[] args)
-        {
-            Console.WriteLine(
-                "To unpack files from FEZ's .pak file into specific directory, use:\n" +
-                "FEZRepacker.exe --unpack <source> <destination> [-xnb]\n" +
-                "  source       Specifies the FEZ's .pak file to be unpacked.\n" +
-                "  destination  Specifies the directory where unpacked files will be saved.\n" +
-                "  -xnb         If used, raw XNB filed will be saved instead of their converted versions.\n\n" +
-
-                "To pack files as FEZ's .pak file, use:\n" +
-                "FEZPacker.exe --pack <source> <destination>\n" +
-                "  source       Specifies the directory where files to packed are located.\n" +
-                "  destination  Specifies the directory and filename for the packed file.\n\n" +
-
-                "To add files into FEZ's .pak file, use:\n" +
-                "FEZPacker.exe --add <target> <source> [destination]\n" +
-                "  target       Specifies the FEZ's .pak file into which files will be added.\n" +
-                "  source       Specifies the directory where files to packed are located.\n" +
-                "  destination  Specifies the directory and filename for the new packed file. If not set, uses the target name (overrides it).\n\n" +
-
-                "To delete a file from FEZ's .pak file, use:\n" +
-                "FEZPacker.exe --remove <target> <name> [destination]\n" +
-                "  target       Specifies the FEZ's .pak file from which a file will be deleted.\n" +
-                "  name         Specifies the full file name of the file that will be deteled.\n" +
-                "  destination  Specifies the directory and filename for the new packed file. If not set, uses the source name (overrides it).\n\n" +
-
-                "To list all files packed within the .pak file, use:\n" +
-                "FEZPacker.exe --list <package>\n" +
-                "  package      Specifies the FEZ's .pak file to list files from.\n\n"
-            );
-        }
-
-
         static void Main(string[] args)
         {
-            if (args.Length==1 && args[0] == "debug") {
-                Console.WriteLine("Running debug command!");
-                // args = new[] { "--list", "Other.pak" };
-                args = new[] { "--add", "Updates_old.pak", "Export", "Updates.pak" };
-                // args = new[] { "--unpack", "Other.pak", "TestDecomp"};
-                // args = new[] { "--unpack", "Updates.pak", "TestDecomp2"};
-                // args = new[] { "--unpack", "Updates.pak", "TestDecomp2", "-xnb"};
-                // args = new[] { "--remove", "Essentials_old.pak", "fonts\\zuish", "Essentials.pak" };
-            }
-
-            // keep number decimals consistent
-            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-GB");
-
             // showoff
             Console.WriteLine(
                 "==============================\n" +
@@ -191,43 +13,17 @@ namespace FEZRepacker
                 "==============================\n"
             );
 
-            // handle commands
-            bool validCommand = false;
+            // keep number decimals consistent
+            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-GB");
 
-            if (args.Length == 0)
+            if (args.Length > 0)
             {
-                Console.WriteLine("FEZPacker made by Krzyhau. Used to pack and unpack .pak files used in FEZ 1.12.\n");
-            }
-            else if (!Commands.ContainsKey(args[0]))
-            {
-                Console.WriteLine("Invalid command!");
+                CommandLine.ParseCommandLine(args);
             }
             else
             {
-                string command = args[0].ToLower();
-                string[] arguments = args.Skip(1).ToArray();
-#if DEBUG
-                Commands[command](arguments);
-                validCommand = true;
-#else
-                try
-                {
-                    Commands[command](arguments);
-                    validCommand = true;
-                }
-                catch(Exception ex)
-                {
-                    Console.WriteLine($"Error while trying to execute command \"{command}\"!");
-                    Console.WriteLine(ex);
-                }
-#endif
+                // run user interface here
             }
-
-            if (!validCommand)
-            {
-                Console.WriteLine("Use \"FEZPacker.exe --help\" for more help.");
-            }
-
         }
     }
 }

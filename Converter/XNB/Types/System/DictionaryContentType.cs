@@ -17,6 +17,13 @@ namespace FEZRepacker.Converter.XNB.Types.System
             _name = BasicType.FullName ?? "";
             _name.Namespace = "Microsoft.Xna.Framework.Content";
             _name.Name = "DictionaryReader";
+
+            var genericKeyQualifier = GetXnbTypeFor(typeof(K));
+            if (genericKeyQualifier.HasValue) _name.Templates[0] = genericKeyQualifier.Value;
+
+            var genericValueQualifier = GetXnbTypeFor(typeof(V));
+            if (genericValueQualifier.HasValue) _name.Templates[1] = genericValueQualifier.Value;
+
             this.skipKeyIdentifier = skipKeyIdentifier;
             this.skipValueIdentifier = skipValueIdentifier;
         }

@@ -13,17 +13,19 @@ namespace FEZRepacker.Converter.XNB
             Converted = false;
         }
 
-        public void Deconvert(Stream input, Stream output)
+        public Stream Deconvert(Stream input)
         {
+            var output = new MemoryStream();
+
             if(FormatConverter == null)
             {
                 input.CopyTo(output);
+                output.Position = 0;
                 Converted = false;
-                return;
+                return output;
             }
 
-            using var inputReader = new BinaryReader(input);
-            using var outputWriter = new BinaryWriter(output);
+            XnbHeader.Default.Write(output);
 
             using var xnbContentWriter = new BinaryWriter(new MemoryStream());
 
@@ -42,12 +44,16 @@ namespace FEZRepacker.Converter.XNB
             xnbContentWriter.Write7BitEncodedInt(1);
 
             // convert actual data
+            using var inputReader = new BinaryReader(input);
             FormatConverter.ToBinary(inputReader, xnbContentWriter);
 
-            // copy length and data into output stream
-            outputWriter.Write(xnbContentWriter.BaseStream.Length);
+            // copy length of the file (including header block of 10 bytes) and data into output stream
+            new BinaryWriter(output).Write((int)xnbContentWriter.BaseStream.Length + 10);
+            xnbContentWriter.BaseStream.Position = 0;
             xnbContentWriter.BaseStream.CopyTo(output);
             Converted = true;
+            output.Position = 0;
+            return output;
         }
     }
 }

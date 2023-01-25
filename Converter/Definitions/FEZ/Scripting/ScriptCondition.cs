@@ -1,6 +1,7 @@
 ﻿namespace FEZRepacker.Converter.Definitions.FezEngine.Structure.Scripting
 {
-    [XnbType("FezEngine.Readers.ScriptConditionReader")]
+    [XnbType("FezEngine.Structure.Scripting.ScriptCondition")]
+    [XnbReaderType("FezEngine.Readers.ScriptConditionReader")]
     class ScriptCondition
     {
         [XnbProperty(UseConverter = true)]

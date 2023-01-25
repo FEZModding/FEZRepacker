@@ -4,25 +4,31 @@ namespace FEZRepacker.Converter.XNB
 {
     public class XnbConverter
     {
-        public XnbFormatConverter? FormatConverter;
-        public bool Converted { get; private set; }
+        public XnbFormatConverter? FormatConverter { get; private set; }
+        public XnbAssemblyQualifier FileType { get; private set; }
+        public int FileTypeVersion { get; private set; }
+        public bool HeaderValid { get; private set; }
+        public bool Converted => FormatConverter != null;
 
         public XnbConverter()
         {
             FormatConverter = null;
-            Converted = false;
         }
 
-        public void Convert(Stream input, Stream output)
+        public Stream Convert(Stream input)
         {
+            Stream output = new MemoryStream();
             Stream decompressedInput = XnbCompressor.Decompress(input);
 
             if(!XnbHeader.TryRead(decompressedInput, out var header))
             {
-                Converted = false;
+                HeaderValid = false;
+                decompressedInput.Position = 0;
                 decompressedInput.CopyTo(output);
-                return;
+                output.Position = 0;
+                return output;
             }
+            HeaderValid = true;
 
             using var xnbReader = new BinaryReader(decompressedInput);
 
@@ -53,24 +59,25 @@ namespace FEZRepacker.Converter.XNB
             }
 
             int resourceTypeID = xnbReader.Read7BitEncodedInt();
-            XnbAssemblyQualifier mainType = usedTypes[resourceTypeID - 1];
-            int mainTypeVersion = typeReaderVersions[resourceTypeID - 1];
+            FileType = usedTypes[resourceTypeID - 1];
+            FileTypeVersion = typeReaderVersions[resourceTypeID - 1];
 
-            FormatConverter = XnbFormatList.FindByQualifier(mainType);
+            FormatConverter = XnbFormatList.FindByQualifier(FileType);
 
             if (FormatConverter == null)
             {
                 // we cannot convert this XNB file - just save the decompressed one
-                Converted = false;
+                decompressedInput.Position = 0;
                 decompressedInput.CopyTo(output);
-                return;
+                output.Position = 0;
+                return output;
             }
 
-            using var fileWriter = new BinaryWriter(output);
+            var fileWriter = new BinaryWriter(output);
 
             FormatConverter.FromBinary(xnbReader, fileWriter);
-
-            Converted = true;
+            output.Position = 0;
+            return output;
         }
     }
 }
