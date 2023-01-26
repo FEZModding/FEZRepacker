@@ -9,7 +9,7 @@
 FEZ stores its game assets in four `.pak` package files: `Essentials.pak`, `Music.pak`, `Other.pak` and `Updates.pak`. These packages can contain three different file types:
 
 - **Ogg** - digital multimedia container. Stores music.
-- **Effect files** - *presumably* the `XFO` files used in XNA Game Studio 4.0.
+- **Effect files** - *presumably* `FXC` effect files containing compiled HLSL pixel and vertex shaders in version `2_0`.
 - **XNB** - Microsoft XNA Game Studio 4.0 compiled content containers. Stores textures, sound effects, triles, levels, scripts and other miscellaneous data.
 
 Both Ogg and effect files are directly unpacked from PAK archives by FEZ Repacker. However, it additionally attempts to convert XNB files into a more readable format.
@@ -38,33 +38,47 @@ If you're interested in file formats exported by Repacker, read [this](/Docs/for
 
 ## Usage
 
-As of right now, FEZ Repacker is a command line tool. In order to see a list of available commands, use `FEZRepacker.exe help`.
+As of right now, FEZ Repacker is a command line tool. In order to see a list of available commands, use `FEZRepacker.exe --help`.
 
 To make the usage of the tool easier, you can put it within `Content` directory of your FEZ installation.
 
-Here's a list of currently defined commands:
+Here's a list of currently defined commands (differs from the newest pre-release):
 
-- `unpack <source> <destination> [-xnb]` - unpacks PAK file in a location defined by `<source>` parameter and stores its content in a directory defined by `<destination>` parameter. If `-xnb` parameter is used, raw XNB files will be unpacked instead of their converted versions.
-- `pack <source> <destionation>` - converts and packs files stored in a directory defined by `<source>` parameter and saves resulting PAK package in a location defined by `<destination>` parameter.
-- `add <target> <source> [destination]` - converts and packs files stored in a directory defined by `<source>` parameter and adds them to a PAK package in a location defined by `<target>` parameter. If `[destination]` parameter is defined, original PAK file will not be overwritten, and instead a new one will be located in a location defined by this parameter.
-- `remove <target> <name> [destination]` - removes a file defined by a `<name>` parameter from a PAK package in a location defined by `<source>` parameter. If `[destination]` parameter is defined, original PAK file will not be overwritten, and instead a new one will be located in a location defined by this parameter.
-- `list <source>` - lists all files packed into a PAK file defined by `<source>` parameter.
+- `[--unpack, -u] [pak-path] [destination-folder]`
+Unpacks entire .PAK package into specified directory (creates one if doesn't exist) and attempts to convert XNB assets into their corresponding format in the process.
+
+- `--unpack-raw [pak-path] [destination-folder]`
+Unpacks entire .PAK package into specified directory (creates one if doesn't exist) leaving XNB assets in their original form.
+
+- `--unpack-decompressed [pak-path] [destination-folder]`
+Unpacks entire .PAK package into specified directory (creates one if doesn't exist).and attempts to decompress all XNB assets, but does not convert them.
+
+- `[--unpack-fez-content, -g] [fez-content-directory] [destination-folder]`
+Unpacks and converts all game assets into specified directory (creates one if doesn't exist).
+
+- `[--pack, -p] [input-directory-path] [destination-pak-path] <include-pak-path>`
+Loads files from given input directory path, tries to deconvert them and pack into a destination .PAK file with given path. If include .PAK path is provided, it'll add its content into the new .PAK package.
+
+- `[--list, -l] [pak-path]`
+Lists all files contained withing given .PAK package.
+
+- `[--convert-from-xnb, -x] [xnb-input] [file-output]`
+Attempts to convert given XNB input (this can be a path to a single asset or an entire directory) and save it at given output (if input is a directory, dumps all converted files in specified path). Directories are treated recursively.
+
+- `[--convert-to-xnb, -X] [file-input] [xnb-output]`
+Attempts to convert given input (this can be a path to a single file or an entire directory) into XNB file(s) and save it at given output (if input is a directory, dumps all converted files in specified path). Directories are treated recursively.
 
 Here are some examples how you can use these commands:
 
 - To unpack `Other.pak` into a directory called `Other unpacked`, use:
-`FEZRepacker.exe unpack Other.pak "Other unpacked"`
-- To repack files contained in `Other unpacked` directory into a package named `Other.pak`, use:
-`FEZRepacker.exe pack "Other unpacked" Other.pak`
-- To add files contained in `Modded files` directory into the `Updates_old.pak` and save it as a new package called `Updaets.pak`, use:
-`FEZRepacker.exe add Updates_old.pak "Modded files" Updates.pak`
-- To remove a file called `font\zuish` from package `Updates.pak`, use:
-`FEZRepacker.exe remove Updates.pak font\zuish`
+`FEZRepacker.exe --unpack Other.pak "Other unpacked"`
+- To repack files contained in `Other unpacked` directory into a package named `Other.pak` while also including the contents of `Other_old.pak`, use:
+`FEZRepacker.exe --pack "Other unpacked" Other.pak Other_old.pak`
 
-If your changes to the original package files didn't affect the game, here's a couple of things to keep in mind:
+If you're trying to swap original assets by recompiling them into one of the archives and your changes didn't affect the game, here's a couple of things to keep in mind:
 
 - directory tree created in unpacking process **does matter** - putting modified files in the main directory after changing them doesn't give them their original location and name in PAK file after repacking, preventing the game from finding the new asset.
-- Usually there's no rule in what PAK file files are located, but in some cases it does matter, so while you can get behind packing your textures in, let's say, `Updates.pak`, Ogg music files are required to be located in `Music.pak` to be overwritten. A list of exceptions is larger than that, but I haven't fully figure it out yet.
+- Usually there's no rule in what PAK package your files are located, but in some cases it does matter, so while you can get behind packing your textures in, let's say, `Updates.pak`, music Ogg files are required to be located in `Music.pak` to be overwritten. A list of exceptions is larger than that, but I haven't fully figured it out yet.
 
 ## Sources
 
