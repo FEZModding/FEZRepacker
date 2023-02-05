@@ -95,48 +95,54 @@ namespace FEZRepacker
 
                 Console.WriteLine($"({filesDone+1}/{pak.Count}) {pakFile.Path} ({extension} file, size: {pakFile.Size} bytes)");
 
-                using var fileStream = pakFile.Open();
-
-                var outputStream = fileStream;
-
-                if(mode == UnpackingMode.DecompressedXNB)
+                try
                 {
-                    outputStream = XnbCompressor.Decompress(fileStream);
-                }
-                else if(mode == UnpackingMode.Converted)
-                {
-                    var converter = new XnbConverter();
-                    outputStream = converter.Convert(fileStream);
-                    var formatName = converter.HeaderValid ? converter.FileType.Name.Replace("Reader", "") : "";
-                    if (converter.Converted)
+                    using var fileStream = pakFile.Open();
+
+                    var outputStream = fileStream;
+
+                    if(mode == UnpackingMode.DecompressedXNB)
                     {
-                        extension = converter.FormatConverter!.FileFormat;
-                        Console.WriteLine($"  Format {formatName} converted into {extension} file.");
+                        outputStream = XnbCompressor.Decompress(fileStream);
                     }
-                    else
+                    else if(mode == UnpackingMode.Converted)
                     {
-                        if (converter.HeaderValid)
+                        var converter = new XnbConverter();
+                        outputStream = converter.Convert(fileStream);
+                        var formatName = converter.HeaderValid ? converter.FileType.Name.Replace("Reader", "") : "";
+                        if (converter.Converted)
                         {
-                            Console.WriteLine($"  Unknown format {formatName} - saving as XNB asset.");
+                            extension = converter.FormatConverter!.FileFormat;
+                            Console.WriteLine($"  Format {formatName} converted into {extension} file.");
                         }
                         else
                         {
-                            Console.WriteLine($"  Not a valid XNB file - saving with detected extension ({extension}).");
-                        }
+                            if (converter.HeaderValid)
+                            {
+                                Console.WriteLine($"  Unknown format {formatName} - saving as XNB asset.");
+                            }
+                            else
+                            {
+                                Console.WriteLine($"  Not a valid XNB file - saving with detected extension ({extension}).");
+                            }
                         
+                        }
                     }
-                }
 
-                var outputFileName = Path.Combine(outputDir, pakFile.Path + extension);
-                var outputDirectory = Path.GetDirectoryName(outputFileName) ?? "";
-                if (!Directory.Exists(outputDirectory))
+                    var outputFileName = Path.Combine(outputDir, pakFile.Path + extension);
+                    var outputDirectory = Path.GetDirectoryName(outputFileName) ?? "";
+                    if (!Directory.Exists(outputDirectory))
+                    {
+                        Directory.CreateDirectory(outputDirectory);
+                    }
+
+                    using var fileOutputStream = File.Open(outputFileName, FileMode.Create);
+                    outputStream.CopyTo(fileOutputStream);
+                }
+                catch(Exception ex)
                 {
-                    Directory.CreateDirectory(outputDirectory);
+                    Console.Error.WriteLine($"Unable to unpack {pakFile.Path} - {ex.Message}");
                 }
-
-                using var fileOutputStream = File.Open(outputFileName, FileMode.Create);
-                outputStream.CopyTo(fileOutputStream);
-
                 filesDone++;
             }
         }
@@ -202,42 +208,48 @@ namespace FEZRepacker
             {
                 Console.WriteLine($"({filesDone + 1}/{filesToAdd.Length}) {filePath}");
 
-                var extension = Path.GetExtension(filePath).ToLower();
-                var newExtension = extension;
-                using var fileStream = File.OpenRead(filePath);
-
-                var deconverter = new XnbDeconverter(extension);
-
-                using var deconverterStream = deconverter.Deconvert(fileStream);
-
-                if (deconverter.Converted)
+                try
                 {
-                    Console.WriteLine($"  Format {extension} deconverted into {deconverter.FormatConverter!.FormatName} XNB asset.");
-                    newExtension = ".xnb";
-                }
-                else
-                {
-                    if(extension.Equals(".xnb", StringComparison.OrdinalIgnoreCase))
+                    var extension = Path.GetExtension(filePath).ToLower();
+                    var newExtension = extension;
+                    using var fileStream = File.OpenRead(filePath);
+
+                    var deconverter = new XnbDeconverter(extension);
+
+                    using var deconverterStream = deconverter.Deconvert(fileStream);
+
+                    if (deconverter.Converted)
                     {
-                        Console.WriteLine($"  File is an XNB asset already - packing directly.");
+                        Console.WriteLine($"  Format {extension} deconverted into {deconverter.FormatConverter!.FormatName} XNB asset.");
+                        newExtension = ".xnb";
                     }
                     else
                     {
-                        Console.WriteLine($"  Format {extension} doesn't have a converter - packing as a raw file.");
+                        if (extension.Equals(".xnb", StringComparison.OrdinalIgnoreCase))
+                        {
+                            Console.WriteLine($"  File is an XNB asset already - packing directly.");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"  Format {extension} doesn't have a converter - packing as a raw file.");
+                        }
                     }
+
+                    var pakFilePath = Path.GetRelativePath(inputPath, filePath).Replace("/", "\\").ToLower();
+                    pakFilePath = pakFilePath.Substring(0, pakFilePath.Length - extension.Length);
+
+                    int removed = pak.RemoveAll(file => file.Path == pakFilePath && file.GetExtensionFromHeaderOrDefault() == newExtension);
+                    if (removed > 0)
+                    {
+                        Console.WriteLine($"  This file replaces {removed} file{(removed > 1 ? "s" : "")} that has been in the package already.");
+                    }
+
+                    pak.Add(PakFile.Read(pakFilePath, deconverterStream));
                 }
-
-                var pakFilePath = Path.GetRelativePath(inputPath, filePath).Replace("/", "\\").ToLower();
-                pakFilePath = pakFilePath.Substring(0, pakFilePath.Length - extension.Length);
-
-                int removed = pak.RemoveAll(file => file.Path == pakFilePath && file.GetExtensionFromHeaderOrDefault() == newExtension);
-                if(removed > 0)
+                catch(Exception ex)
                 {
-                    Console.WriteLine($"  This file replaces {removed} file{(removed > 1 ? "s" : "")} that has been in the package already.");
+                    Console.Error.WriteLine($"Unable to pack {filePath} - {ex.Message}");
                 }
-
-                pak.Add(PakFile.Read(pakFilePath, deconverterStream));
-
                 filesDone++;
             }
 

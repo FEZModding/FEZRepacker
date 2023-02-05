@@ -166,7 +166,7 @@ namespace FEZRepacker
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error while executing command: {ex.Message}");
+                Console.Error.WriteLine($"Error while executing command: {ex.Message}");
             }
         }
 
