@@ -30,8 +30,8 @@ namespace FEZRepacker.Converter.XNB
             using var xnbContentWriter = new BinaryWriter(new MemoryStream());
 
             // write list of XNB types
-            xnbContentWriter.Write7BitEncodedInt(FormatConverter.ContentTypes.Length);
-            foreach (var type in FormatConverter.ContentTypes)
+            xnbContentWriter.Write7BitEncodedInt(FormatConverter.PublicContentTypes.Count);
+            foreach (var type in FormatConverter.PublicContentTypes)
             {
                 xnbContentWriter.Write(type.Name.GetDisplayName(false)); // name
                 xnbContentWriter.Write(0); // version

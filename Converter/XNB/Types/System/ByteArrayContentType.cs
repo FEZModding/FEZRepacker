@@ -10,6 +10,7 @@ namespace FEZRepacker.Converter.XNB.Types.System
             _name = typeof(ArrayContentType<byte>).FullName ?? "";
             _name.Namespace = "Microsoft.Xna.Framework.Content";
             _name.Name = "ArrayReader";
+            IsPrivate = true;
         }
 
         public override XnbAssemblyQualifier Name => _name;

@@ -12,7 +12,7 @@ namespace FEZRepacker.Converter.XNB.Formats
 {
     internal class LevelConverter : XnbFormatConverter
     {
-        public override XnbContentType[] TypesFactory => new XnbContentType[]
+        public override List<XnbContentType> TypesFactory => new List<XnbContentType>
         {
             //new LevelContentType(this),
             new GenericContentType<Level>(this),

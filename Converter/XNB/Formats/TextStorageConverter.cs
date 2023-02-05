@@ -6,7 +6,7 @@ namespace FEZRepacker.Converter.XNB.Formats
 {
     internal class TextStorageConverter : JsonStorageConverter<Dictionary<string, Dictionary<string, string>>>
     {
-        public override XnbContentType[] TypesFactory => new XnbContentType[]
+        public override List<XnbContentType> TypesFactory => new List<XnbContentType>
         {
             new DictionaryContentType<string, Dictionary<string, string>>(this),
             new StringContentType(this),

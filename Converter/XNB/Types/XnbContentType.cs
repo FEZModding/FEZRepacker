@@ -8,10 +8,12 @@ namespace FEZRepacker.Converter.XNB.Types
         public XnbFormatConverter Converter { get; private set; }
         public abstract XnbAssemblyQualifier Name { get; }
         public abstract Type BasicType { get; }
+        public bool IsPrivate { get; protected set; }
 
         public XnbContentType(XnbFormatConverter converter)
         {
             Converter = converter;
+            IsPrivate = false;
         }
 
         public abstract object Read(BinaryReader reader);

@@ -13,7 +13,7 @@ namespace FEZRepacker.Converter.XNB.Formats
 {
     internal class AnimatedTextureConverter : XnbFormatConverter
     {
-        public override XnbContentType[] TypesFactory => new XnbContentType[]
+        public override List<XnbContentType> TypesFactory => new List<XnbContentType>
         {
             new GenericContentType<AnimatedTexture>(this),
             new ByteArrayContentType(this),

@@ -6,7 +6,7 @@ namespace FEZRepacker.Converter.XNB.Formats
 {
     internal class SoundEffectConverter : XnbFormatConverter
     {
-        public override XnbContentType[] TypesFactory => new XnbContentType[]
+        public override List<XnbContentType> TypesFactory => new List<XnbContentType>
         {
             new GenericContentType<SoundEffect>(this),
             new ByteArrayContentType(this)

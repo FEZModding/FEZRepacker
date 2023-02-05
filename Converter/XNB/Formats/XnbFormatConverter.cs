@@ -4,9 +4,10 @@ namespace FEZRepacker.Converter.XNB.Formats
 {
     public abstract class XnbFormatConverter
     {
-        public XnbContentType[] ContentTypes { get; private set; }
-        public abstract XnbContentType[] TypesFactory { get; }
-        public XnbContentType PrimaryContentType => ContentTypes[0];
+        public List<XnbContentType> ContentTypes { get; private set; }
+        public List<XnbContentType> PublicContentTypes { get; private set; }
+        public abstract List<XnbContentType> TypesFactory { get; }
+        public XnbContentType PrimaryContentType => PublicContentTypes[0];
         public string FormatName => PrimaryContentType.Name.Name.Replace("Reader", "");
         public abstract string FileFormat { get; }
 
@@ -15,7 +16,7 @@ namespace FEZRepacker.Converter.XNB.Formats
 
         protected virtual void ValidateType()
         {
-            if (PrimaryContentType == null)
+            if (ContentTypes.Count == 0)
             {
                 throw new InvalidDataException($"{this.GetType().Name} doesn't have primary type defined.");
             }
@@ -24,6 +25,7 @@ namespace FEZRepacker.Converter.XNB.Formats
         public XnbFormatConverter()
         {
             ContentTypes = TypesFactory;
+            PublicContentTypes = ContentTypes.Where(t => !t.IsPrivate).ToList();
             ValidateType();
         }
 
@@ -79,7 +81,7 @@ namespace FEZRepacker.Converter.XNB.Formats
         {
             if (T.IsPrimitive) skipIdentifier = true;
 
-            int typeID = ContentTypes.ToList().FindIndex(t => t.BasicType == T);
+            int typeID = ContentTypes.FindIndex(t => t.BasicType == T);
             if (typeID >= 0 && data != null)
             {
                 if(!skipIdentifier && ContentTypes[typeID].IsEmpty(data))
@@ -90,7 +92,12 @@ namespace FEZRepacker.Converter.XNB.Formats
                 {
                     if (!skipIdentifier)
                     {
-                        writer.Write7BitEncodedInt(typeID + 1);
+                        int publicTypeID = PublicContentTypes.FindIndex(t => t.BasicType == T);
+                        if(publicTypeID < 0)
+                        {
+                            throw new InvalidOperationException($"Attempted to write index of private content type {ContentTypes[typeID].Name}");
+                        }
+                        writer.Write7BitEncodedInt(publicTypeID + 1);
                     }
                     ContentTypes[typeID].Write(data, writer);
                 }

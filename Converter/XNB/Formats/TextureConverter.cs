@@ -14,7 +14,7 @@ namespace FEZRepacker.Converter.XNB.Formats
 {
     internal class TextureConverter : XnbFormatConverter
     {
-        public override XnbContentType[] TypesFactory => new XnbContentType[]
+        public override List<XnbContentType> TypesFactory => new List<XnbContentType>
         {
             new GenericContentType<Texture2D>(this),
             new EnumContentType<SurfaceFormat>(this),
