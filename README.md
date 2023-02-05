@@ -9,32 +9,32 @@
 FEZ stores its game assets in four `.pak` package files: `Essentials.pak`, `Music.pak`, `Other.pak` and `Updates.pak`. These packages can contain three different file types:
 
 - **Ogg** - digital multimedia container. Stores music.
-- **Effect files** - *presumably* `FXC` effect files containing compiled HLSL pixel and vertex shaders in version `2_0`.
+- **Effect files** - `FXC` effect files containing compiled XNA effect shaders.
 - **XNB** - Microsoft XNA Game Studio 4.0 compiled content containers. Stores textures, sound effects, triles, levels, scripts and other miscellaneous data.
 
 Both Ogg and effect files are directly unpacked from PAK archives by FEZ Repacker. However, it additionally attempts to convert XNB files into a more readable format.
 
 We can distinguish 13 different data types that can be stored in FEZ's XNB files:
 
-- Static images used by sprites and textures
-- Animated textures
-- 3D model of an art object
-- Textures and models of level blocks (triles)
-- Language texts
-- Bitmap fonts
-- Level data
-- Map tree data file
-- NPC metadata files
-- Sky data files
-- Tracked songs data files
-- XNA shader source code
-- Sound effects
+- Static images used by sprites and textures (`Texture2D`)
+- Animated textures (`AnimatedTexture`)
+- 3D model of an art object (`ArtObject`)
+- Textures and models of level blocks/triles (`TrileSet`)
+- Language texts (`Dictionary[String,Dictionary[String,String]]`)
+- Bitmap fonts (`SpriteFont`)
+- Level data (`Level`)
+- World map data file (`MapTree`)
+- NPC metadata files (`NpcMetadata`)
+- Sky data files (`Sky`)
+- Song information files (`TrackedSong`)
+- binary XNA effect files (`Effect`)
+- SFX (`SoundEffect`)
 
 Each of these formats are handled differently in order to convert it into a file format that allows easier manipulation of data it's representing (for instance, static images are converted into PNG files), which then Repacker can read and convert back into its original data structure.
 
-If you want to learn more about the process of reading PAK packages and XNB files, read [this documentation file](/Docs/pak.md).
+If you want to learn more about the process of reading PAK packages and XNB files, read [this page on the wiki.](/wiki/FEZ-assets-data-structure).
 
-If you're interested in file formats exported by Repacker, read [this](/Docs/formats.md) instead.
+If you're interested in file formats exported by Repacker, read [this](/wiki/Converted-content-formats) instead.
 
 ## Usage
 
