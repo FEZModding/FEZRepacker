@@ -86,6 +86,7 @@ namespace FEZRepacker.Converter.XNB.Types
                 else if (propertyType == typeof(bool)) readValue = reader.ReadBoolean();
                 else if (propertyType == typeof(int)) readValue = reader.ReadInt32();
                 else if (propertyType == typeof(byte)) readValue = reader.ReadByte();
+                else if (propertyType == typeof(short)) readValue = reader.ReadInt16();
                 else if (propertyType == typeof(float)) readValue = reader.ReadSingle();
                 else if (propertyType == typeof(string)) readValue = reader.ReadString();
                 else if (propertyType == typeof(Vector2)) readValue = reader.ReadVector2();
@@ -132,6 +133,7 @@ namespace FEZRepacker.Converter.XNB.Types
                     else if (propertyType == typeof(bool)) writer.Write((bool)writeValue!);
                     else if (propertyType == typeof(int)) writer.Write((int)writeValue!);
                     else if (propertyType == typeof(byte)) writer.Write((byte)writeValue!);
+                    else if (propertyType == typeof(short)) writer.Write((short)writeValue!);
                     else if (propertyType == typeof(float)) writer.Write((float)writeValue!);
                     else if (propertyType == typeof(string)) writer.Write((string)writeValue!);
                     else if (propertyType == typeof(Vector2)) writer.Write((Vector2)writeValue!);

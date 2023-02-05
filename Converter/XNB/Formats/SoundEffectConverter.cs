@@ -20,12 +20,17 @@ namespace FEZRepacker.Converter.XNB.Formats
             SoundEffect data = (SoundEffect)primaryType.Read(xnbReader);
 
             outWriter.Write("RIFF".ToCharArray());
-            var fileSize = 4 + (8 + data.FormatChunk.Length) + (8 + data.DataChunk.Length);
+            var fileSize = 4 + (8 + 18) + (8 + data.DataChunk.Length);
             outWriter.Write(fileSize);
             outWriter.Write("WAVE".ToCharArray());
             outWriter.Write("fmt ".ToCharArray());
-            outWriter.Write(data.FormatChunk.Length);
-            outWriter.Write(data.FormatChunk);
+            outWriter.Write(16);
+            outWriter.Write(data.FormatType);
+            outWriter.Write(data.ChannelCount);
+            outWriter.Write(data.SampleFrequency);
+            outWriter.Write(data.BytesPerSecond);
+            outWriter.Write(data.BlockAlignment);
+            outWriter.Write(data.BitsPerSample);
             outWriter.Write("data".ToCharArray());
             outWriter.Write(data.DataChunk.Length);
             outWriter.Write(data.DataChunk);
@@ -46,33 +51,41 @@ namespace FEZRepacker.Converter.XNB.Formats
             {
                 var chunkHeader = new string(inReader.ReadChars(4));
                 var chunkLength = inReader.ReadInt32();
-                if(chunkHeader == "fmt ")
+                
+                if (chunkHeader == "fmt ")
                 {
-                    var byteArray = inReader.ReadBytes(chunkLength);
-                    // Regular WAV fmt chunk is 16 bytes but SoundEffectReader reads additional
-                    // 2 bytes for seemingly no reason (not assigned or used in any way by the reader).
-                    // Filling it in just to make sure the game doesn't complain
-                    if (chunkLength < 18)
-                    {
-                        Array.Resize(ref byteArray, 18);
-                    }
-                    soundEffect.FormatChunk = byteArray;
+                    soundEffect.FormatChunkSize = 18;
+                    soundEffect.FormatType = inReader.ReadInt16();
+                    soundEffect.ChannelCount = inReader.ReadInt16();
+                    soundEffect.SampleFrequency = inReader.ReadInt32();
+                    soundEffect.BytesPerSecond = inReader.ReadInt32();
+                    soundEffect.BlockAlignment = inReader.ReadInt16();
+                    soundEffect.BitsPerSample = inReader.ReadInt16();
+                    soundEffect.ExtraParameter = 0;
+                    inReader.ReadBytes(chunkLength - 16);
                 }
-                if(chunkHeader == "data")
+                else
                 {
-                    soundEffect.DataChunk = inReader.ReadBytes(chunkLength);
+                    var chunkData = inReader.ReadBytes(chunkLength);
+                    if (chunkHeader == "data") soundEffect.DataChunk = chunkData;
                 }
 
-                if(soundEffect.FormatChunk.Length > 0 && soundEffect.DataChunk.Length > 0)
+                if(soundEffect.FormatChunkSize > 0 && soundEffect.DataChunk.Length > 0)
                 {
                     break;
                 }
             }
 
+            // Additional verification - bits-per-sample values that are not divisible by 16
+            // aren't handled by XNA properly. Uneven values (like 24-bit PCMs) causes corrupted sound.
+            if(soundEffect.FormatType != 2 && soundEffect.BitsPerSample % 16 != 0)
+            {
+                throw new InvalidDataException($"PCM WAV file bit resolution must be divisible by 16 ({soundEffect.BitsPerSample}-bit samples detected)");
+            }
+
             // not sure if loops are even used, but just to be safe, setting it to be the entire file
-            int channelCount = (soundEffect.FormatChunk[3] << 8) + soundEffect.FormatChunk[2];
             soundEffect.LoopStart = 0;
-            soundEffect.LoopLength = soundEffect.DataChunk.Length / Math.Max(1, channelCount);
+            soundEffect.LoopLength = soundEffect.DataChunk.Length / Math.Max(1, (int)soundEffect.ChannelCount);
 
             PrimaryContentType.Write(soundEffect, xnbWriter);
         }
