@@ -107,7 +107,7 @@ namespace FEZRepacker
                 {
                     var converter = new XnbConverter();
                     outputStream = converter.Convert(fileStream);
-                    var formatName = converter.FileType.Name.Replace("Reader", "");
+                    var formatName = converter.HeaderValid ? converter.FileType.Name.Replace("Reader", "") : "";
                     if (converter.Converted)
                     {
                         extension = converter.FormatConverter!.FileFormat;
