@@ -36,7 +36,8 @@ namespace FEZRepacker.Converter.XNB
 
         public void Write(Stream stream)
         {
-            stream.Write(FormatIdentifier.ToCharArray().Select(c => (byte)c).ToArray());
+            var formatIdentifierBytes = FormatIdentifier.ToCharArray().Select(c => (byte)c).ToArray();
+            stream.Write(formatIdentifierBytes, (int)stream.Position, formatIdentifierBytes.Length);
             stream.WriteByte((byte)PlatformIdentifier);
             stream.WriteByte(Version);
             stream.WriteByte((byte)Flags);

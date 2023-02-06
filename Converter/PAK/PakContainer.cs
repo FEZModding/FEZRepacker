@@ -29,7 +29,7 @@ namespace FEZRepacker.Converter.PAK
                 };
 
                 using var fileWriter = file.Open();
-                fileWriter.Write(data);
+                fileWriter.Write(data, (int)fileWriter.Position, data.Length);
 
                 container.Add(file);
             }
