@@ -26,7 +26,7 @@ namespace FEZRepacker
             }
 
             string argsStr = String.Join(" ", command.Arguments.Select(arg => arg.Optional ? $"<{arg.Name}>" : $"[{arg.Name}]"));
-
+            
             Console.WriteLine($"Usage: FEZRepacker.exe {allNames} {argsStr}");
             Console.WriteLine($"Description: {command.HelpText}");
         }
@@ -235,7 +235,8 @@ namespace FEZRepacker
                         }
                     }
 
-                    var pakFilePath = Path.GetRelativePath(inputPath, filePath).Replace("/", "\\").ToLower();
+                    // TODO: Does this really need to use a relative file path?
+                    var pakFilePath = GetRelativePath(inputPath, filePath).Replace("/", "\\").ToLower();
                     pakFilePath = pakFilePath.Substring(0, pakFilePath.Length - extension.Length);
 
                     int removed = pak.RemoveAll(file => file.Path == pakFilePath && file.GetExtensionFromHeaderOrDefault() == newExtension);
@@ -256,6 +257,19 @@ namespace FEZRepacker
             // save package
             using var fileOutputStream = File.Open(outputPackagePath, FileMode.Create);
             pak.Save(fileOutputStream);
+        }
+        
+        // TODO: Get rid of this asap.
+        private static string GetRelativePath(string relativeTo, string path)
+        {
+            var fullRelativePath = Path.GetFullPath(relativeTo);
+            var fullPath = Path.GetFullPath(path);
+
+            var relative = fullPath.Replace(fullRelativePath, "");
+            
+            return string.IsNullOrEmpty(relative)
+                ? "."
+                : relative;
         }
     }
 }

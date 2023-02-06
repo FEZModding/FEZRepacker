@@ -87,8 +87,8 @@ namespace FEZRepacker.Converter.XNB.Formats
                 int newAtlasHeight = (frameHeight + 1) * (int)(Math.Ceiling(frameCount / (float)i));
 
                 // rounding the size up to nearest power of two
-                newAtlasWidth = (int)Math.Pow(2, Math.Ceiling(Math.Log2(newAtlasWidth)));
-                newAtlasHeight = (int)Math.Pow(2, Math.Ceiling(Math.Log2(newAtlasHeight)));
+                newAtlasWidth = (int)Math.Pow(2, Math.Ceiling(Math.Log(newAtlasWidth, 2)));
+                newAtlasHeight = (int)Math.Pow(2, Math.Ceiling(Math.Log(newAtlasHeight, 2)));
 
                 if (newAtlasWidth > newAtlasHeight && atlasWidth > 0 && atlasHeight > 0) break;
 
