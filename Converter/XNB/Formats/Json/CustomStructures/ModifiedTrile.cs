@@ -32,7 +32,7 @@ namespace FEZRepacker.Converter.XNB.Formats.Json.CustomStructures
             Id = instance.TrileId;
             Orientation = OrientationLookup[instance.PhiLight];
             Settings = new ModifiedTrileInstanceSettings(position, instance);
-            if (Settings.IsUnnecessary()) Settings = null;
+            if (Settings.IsUnnecessary(true)) Settings = null;
         }
 
         public TrileInstance ToOriginal()
