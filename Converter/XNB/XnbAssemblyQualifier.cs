@@ -39,7 +39,7 @@
             var namespaceSplit = noTemplateFullName.Split('.');
             if(namespaceSplit.Length > 1)
             {
-                Namespace = String.Join('.', namespaceSplit.SkipLast(1));
+                Namespace = String.Join(".", namespaceSplit.SkipLast(1));
                 Name = namespaceSplit[namespaceSplit.Length - 1];
             }
             else

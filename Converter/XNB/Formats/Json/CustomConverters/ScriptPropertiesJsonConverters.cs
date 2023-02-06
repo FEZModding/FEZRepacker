@@ -98,7 +98,7 @@ namespace FEZRepacker.Converter.XNB.Formats.Json.CustomConverters
 
             if (cond.Operator != ComparisonOperator.None)
             {
-                string[] split = value.Split(OperatorLookup[cond.Operator]);
+                string[] split = value.Split(new[] { OperatorLookup[cond.Operator] }, default);
                 (cond.Object, cond.Property) = EntityJsonConverter.FromPropertyIdentifier(split[0].Trim());
                 if (split.Length > 1) cond.Value = split[1].Trim();
             }
