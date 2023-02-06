@@ -12,29 +12,29 @@ FEZ stores its game assets in four `.pak` package files: `Essentials.pak`, `Musi
 - **Effect files** - `FXC` effect files containing compiled XNA effect shaders.
 - **XNB** - Microsoft XNA Game Studio 4.0 compiled content containers. Stores textures, sound effects, triles, levels, scripts and other miscellaneous data.
 
-Both Ogg and effect files are directly unpacked from PAK archives by FEZ Repacker. However, it additionally attempts to convert XNB files into a more readable format.
+In addition to directly unpacking Ogg and effect files, Repacker is capable of converting specific XNB assets types into other intermediate formats and vice-versa, allowing much easier data manipulation.
 
-We can distinguish 13 different data types that can be stored in FEZ's XNB files:
+Here's a list of all 13 asset types handled by FEZ and file types Repacker converts them to:
 
-- Static images used by sprites and textures (`Texture2D`)
-- Animated textures (`AnimatedTexture`)
-- 3D model of an art object (`ArtObject`)
-- Textures and models of level blocks/triles (`TrileSet`)
-- Language texts (`Dictionary[String,Dictionary[String,String]]`)
-- Bitmap fonts (`SpriteFont`)
-- Level data (`Level`)
-- World map data file (`MapTree`)
-- NPC metadata files (`NpcMetadata`)
-- Sky data files (`Sky`)
-- Song information files (`TrackedSong`)
-- binary XNA effect files (`Effect`)
-- SFX (`SoundEffect`)
+|XNB content type name|Main purpose|Conversion format|
+|-|-|-|
+|Texture2D|Sprites and textures|PNG images|
+|AnimatedTexture|Animated textures|WebP animation|
+|ArtObject|3D models of art objects|Not defined yet|
+|TrileSet|Texture and models of level blocks (triles)|Not defined yet|
+|Dictionary[String,Dictionary[String,String]]|Language texts|Custom `.fezdata` file|
+|SpriteFont|Bitmap font|Not defined yet|
+|Level|Level data|Custom `.fezlvl` file|
+|MapTree|World map data|Not defined yet|
+|NpcMetadata|NPC behaviour information|Not defined yet|
+|Sky|Skybox structure|Not defined yet|
+|TrackedSong|Song information|Not defined yet|
+|Effect|Binary XNA effect file container|Binary FNA effect file|
+|SoundEffect|WAV sound effect container|WAV sound file|
 
-Each of these formats are handled differently in order to convert it into a file format that allows easier manipulation of data it's representing (for instance, static images are converted into PNG files), which then Repacker can read and convert back into its original data structure.
+You can read about conversion formats in detail [here](https://github.com/Krzyhau/FEZRepacker/wiki/Converted-content-formats).
 
-If you want to learn more about the process of reading PAK packages and XNB files, read [this page on the wiki.](/wiki/FEZ-assets-data-structure).
-
-If you're interested in file formats exported by Repacker, read [this](/wiki/Converted-content-formats) instead.
+If you want to learn more about the technical process of reading PAK packages and XNB files, read [this page on the wiki.](https://github.com/Krzyhau/FEZRepacker/wiki/FEZ-assets-data-structure).
 
 ## Usage
 
@@ -63,10 +63,10 @@ Loads files from given input directory path, tries to deconvert them and pack in
 Lists all files contained withing given .PAK package.
 
 - `[--convert-from-xnb, -x] [xnb-input] [file-output]`
-Attempts to convert given XNB input (this can be a path to a single asset or an entire directory) and save it at given output (if input is a directory, dumps all converted files in specified path). Directories are treated recursively.
+Attempts to convert given XNB input (this can be a path to a single asset or an entire directory) and save it at given output (if input is a directory, converts all files within it recursively and dumps all converted files in specified path).
 
 - `[--convert-to-xnb, -X] [file-input] [xnb-output]`
-Attempts to convert given input (this can be a path to a single file or an entire directory) into XNB file(s) and save it at given output (if input is a directory, dumps all converted files in specified path). Directories are treated recursively.
+Attempts to convert given input (this can be a path to a single file or an entire directory) into XNB file(s) and save it at given output (if input is a directory, converts all files within it recursively and dumps all converted files in specified path).
 
 Here are some examples how you can use these commands:
 
@@ -75,10 +75,11 @@ Here are some examples how you can use these commands:
 - To repack files contained in `Other unpacked` directory into a package named `Other.pak` while also including the contents of `Other_old.pak`, use:
 `FEZRepacker.exe --pack "Other unpacked" Other.pak Other_old.pak`
 
-If you're trying to swap original assets by recompiling them into one of the archives and your changes didn't affect the game, here's a couple of things to keep in mind:
+It is recommended to use mod loader to swap original assets, but if you're trying to do it manually by recompiling them into one of the archives and your changes didn't affect the game, here's a couple of things to keep in mind:
 
 - directory tree created in unpacking process **does matter** - putting modified files in the main directory after changing them doesn't give them their original location and name in PAK file after repacking, preventing the game from finding the new asset.
-- Usually there's no rule in what PAK package your files are located, but in some cases it does matter, so while you can get behind packing your textures in, let's say, `Updates.pak`, music Ogg files are required to be located in `Music.pak` to be overwritten. A list of exceptions is larger than that, but I haven't fully figured it out yet.
+- Packages are loaded in this order: `Essentials.pak`, `Updates.pak` and `Other.pak`. If you're trying to override an existing file, it has to be in the same package or in a package that's loaded sooner.
+- Music is handled separately and has to be packed in `Music.pak`.
 
 ## Sources
 
