@@ -15,17 +15,7 @@ namespace FEZRepacker.Converter.XNB.Formats.Json.CustomConverters
             if(reader.TokenType != JsonTokenType.String) throw new JsonException();
 
             string colorStr = JsonDocument.ParseValue(ref reader).Deserialize<string>() ?? "#00000000";
-            if(colorStr.Length == 7)
-            {
-                colorStr += "FF";
-            }
-            if(colorStr.Length != 9)
-            {
-                throw new JsonException("Given string is not a valid hex color.");
-            }
-
-            int argb = Int32.Parse(colorStr.Replace("#", ""), NumberStyles.HexNumber);
-            return Color.FromArgb(argb);
+            return ColorFromHTML(colorStr);
         }
 
         public override void Write(
@@ -39,6 +29,23 @@ namespace FEZRepacker.Converter.XNB.Formats.Json.CustomConverters
             string aHex = color.A.ToString("X2");
 
             writer.WriteRawValue($"\"#{rHex}{gHex}{bHex}{aHex}\"");
+        }
+
+        private static Color ColorFromHTML(string htmlCode)
+        {
+            string hexCode = htmlCode.Replace("#", "");
+
+            byte[] values = new byte[4] { 0, 0, 0, 255 };
+            int valueSize = (hexCode.Length < 6) ? 1 : 2;
+            if (valueSize == 2 && hexCode.Length % 2 == 1) hexCode += "0";
+            int valuesCount = hexCode.Length / valueSize;
+            for (int i = 0; i < valuesCount; i++)
+            {
+                string hexValue = hexCode.Substring(i * valueSize, valueSize);
+                values[i] = byte.Parse(hexValue, NumberStyles.HexNumber);
+            }
+
+            return Color.FromArgb(values[3], values[0], values[1], values[2]);
         }
     }
 }
