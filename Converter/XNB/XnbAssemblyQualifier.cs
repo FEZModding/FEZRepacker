@@ -36,11 +36,11 @@
 
 
             // separating namespace from the name
-            var namespaceSplit = noTemplateFullName.Split('.');
-            if(namespaceSplit.Length > 1)
+            var namespaceSplitPos = noTemplateFullName.LastIndexOf('.');
+            if(namespaceSplitPos >= 0)
             {
-                Namespace = String.Join(".", namespaceSplit.SkipLast(1));
-                Name = namespaceSplit[namespaceSplit.Length - 1];
+                Namespace = noTemplateFullName.Substring(0, namespaceSplitPos);
+                Name = noTemplateFullName.Substring(namespaceSplitPos + 1);
             }
             else
             {

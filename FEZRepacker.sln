@@ -7,14 +7,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FEZRepacker", "FEZRepacker.
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|x86 = Debug|x86
-		Release|x86 = Release|x86
+		Debug|AnyCPU = Debug|AnyCPU
+		Release|AnyCPU = Release|AnyCPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6EAAFC48-DB06-4136-8454-62351A852640}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{6EAAFC48-DB06-4136-8454-62351A852640}.Debug|x86.Build.0 = Debug|Any CPU
-		{6EAAFC48-DB06-4136-8454-62351A852640}.Release|x86.ActiveCfg = Release|Any CPU
-		{6EAAFC48-DB06-4136-8454-62351A852640}.Release|x86.Build.0 = Release|Any CPU
+		{6EAAFC48-DB06-4136-8454-62351A852640}.Debug|AnyCPU.ActiveCfg = Debug|Any CPU
+		{6EAAFC48-DB06-4136-8454-62351A852640}.Debug|AnyCPU.Build.0 = Debug|Any CPU
+		{6EAAFC48-DB06-4136-8454-62351A852640}.Release|AnyCPU.ActiveCfg = Release|Any CPU
+		{6EAAFC48-DB06-4136-8454-62351A852640}.Release|AnyCPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

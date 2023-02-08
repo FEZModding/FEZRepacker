@@ -68,8 +68,11 @@ namespace FEZRepacker.Converter.XNB.Types
         {
             T content = _typeBuilder();
 
-            foreach ((var property, var attribute) in _propertyMap)
+            foreach (var propertyMapRecord in _propertyMap)
             {
+                var property = propertyMapRecord.Key;
+                var attribute = propertyMapRecord.Value;
+
                 Type propertyType = _underlyingTypeMap[property];
 
                 if (attribute.Optional)
@@ -106,8 +109,11 @@ namespace FEZRepacker.Converter.XNB.Types
         {
             T content = (T)data;
 
-            foreach ((var property, var attribute) in _propertyMap)
+            foreach (var propertyMapRecord in _propertyMap)
             {
+                var property = propertyMapRecord.Key;
+                var attribute = propertyMapRecord.Value;
+
                 Type propertyType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
 
                 object? writeValue = property.GetValue(content);
