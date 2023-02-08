@@ -3,18 +3,24 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32407.343
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FEZRepacker", "FEZRepacker.csproj", "{6EAAFC48-DB06-4136-8454-62351A852640}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FEZRepacker.Converter", "Converter\FEZRepacker.Converter.csproj", "{B0186A91-03B6-4E71-8A4A-547CCAAA1300}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FEZRepacker.Interface", "Interface\FEZRepacker.Interface.csproj", "{390DE9FA-4CE4-42BA-871B-064A3C5027B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|AnyCPU = Debug|AnyCPU
-		Release|AnyCPU = Release|AnyCPU
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6EAAFC48-DB06-4136-8454-62351A852640}.Debug|AnyCPU.ActiveCfg = Debug|Any CPU
-		{6EAAFC48-DB06-4136-8454-62351A852640}.Debug|AnyCPU.Build.0 = Debug|Any CPU
-		{6EAAFC48-DB06-4136-8454-62351A852640}.Release|AnyCPU.ActiveCfg = Release|Any CPU
-		{6EAAFC48-DB06-4136-8454-62351A852640}.Release|AnyCPU.Build.0 = Release|Any CPU
+		{B0186A91-03B6-4E71-8A4A-547CCAAA1300}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0186A91-03B6-4E71-8A4A-547CCAAA1300}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0186A91-03B6-4E71-8A4A-547CCAAA1300}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0186A91-03B6-4E71-8A4A-547CCAAA1300}.Release|Any CPU.Build.0 = Release|Any CPU
+		{390DE9FA-4CE4-42BA-871B-064A3C5027B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{390DE9FA-4CE4-42BA-871B-064A3C5027B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{390DE9FA-4CE4-42BA-871B-064A3C5027B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{390DE9FA-4CE4-42BA-871B-064A3C5027B6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

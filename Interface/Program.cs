@@ -1,6 +1,8 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
+using System.Threading;
 
-namespace FEZRepacker
+namespace FEZRepacker.Interface
 {
     internal class Program
     {

@@ -3,7 +3,7 @@ using System.Text;
 
 namespace FEZRepacker.Converter.XNB
 {
-    internal class XnbCompressor
+    public class XnbCompressor
     {
         public static Stream Decompress(Stream xnbStream)
         {
