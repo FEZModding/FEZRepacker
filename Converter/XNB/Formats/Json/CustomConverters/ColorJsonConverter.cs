@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Drawing;
+using System.Globalization;
 
 namespace FEZRepacker.Converter.XNB.Formats.Json.CustomConverters
 {
@@ -14,8 +15,17 @@ namespace FEZRepacker.Converter.XNB.Formats.Json.CustomConverters
             if(reader.TokenType != JsonTokenType.String) throw new JsonException();
 
             string colorStr = JsonDocument.ParseValue(ref reader).Deserialize<string>() ?? "#00000000";
+            if(colorStr.Length == 7)
+            {
+                colorStr += "FF";
+            }
+            if(colorStr.Length != 9)
+            {
+                throw new JsonException("Given string is not a valid hex color.");
+            }
 
-            return ColorTranslator.FromHtml(colorStr);
+            int argb = Int32.Parse(colorStr.Replace("#", ""), NumberStyles.HexNumber);
+            return Color.FromArgb(argb);
         }
 
         public override void Write(

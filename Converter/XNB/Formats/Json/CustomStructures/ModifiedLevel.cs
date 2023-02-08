@@ -110,8 +110,10 @@ namespace FEZRepacker.Converter.XNB.Formats.Json.CustomStructures
 
             // sort tiles into modified structures
             Triles = new();
-            foreach((var pos, var instance) in level.Triles)
+            foreach(var trileRecord in level.Triles)
             {
+                var pos = trileRecord.Key;
+                var instance = trileRecord.Value;
                 Triles.Add(new ModifiedTrile(pos, instance));
                 foreach(var overlapping in instance.OverlappedTriples)
                 {

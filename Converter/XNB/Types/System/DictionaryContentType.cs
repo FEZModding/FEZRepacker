@@ -48,10 +48,10 @@ namespace FEZRepacker.Converter.XNB.Types.System
             Dictionary<K, V> dict = (Dictionary<K, V>)data;
 
             writer.Write(dict.Count);
-            foreach((K k, V v) in dict)
+            foreach(var record in dict)
             {
-                Converter.WriteType<K>(k, writer, skipKeyIdentifier);
-                Converter.WriteType<V>(v, writer, skipValueIdentifier);
+                Converter.WriteType<K>(record.Key, writer, skipKeyIdentifier);
+                Converter.WriteType<V>(record.Value, writer, skipValueIdentifier);
             }
         }
     }

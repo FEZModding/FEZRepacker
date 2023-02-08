@@ -1,4 +1,5 @@
-﻿using FEZRepacker.Converter.XNB.Types;
+﻿using FEZRepacker.Converter.Helpers;
+using FEZRepacker.Converter.XNB.Types;
 
 namespace FEZRepacker.Converter.XNB.Formats
 {
