@@ -1,12 +1,7 @@
 ﻿using FEZRepacker.Converter.PAK;
 using FEZRepacker.Converter.XNB;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace FEZRepacker
+namespace FEZRepacker.Interface
 {
     internal static partial class CommandLine
     {

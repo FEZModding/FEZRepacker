@@ -1,4 +1,4 @@
-﻿namespace FEZRepacker
+﻿namespace FEZRepacker.Converter
 {
     public struct XnbAssemblyQualifier
     {
