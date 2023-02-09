@@ -14,6 +14,7 @@ namespace FEZRepacker.Converter.XNB.Formats
             Add(new LevelConverter());
             Add(new SoundEffectConverter());
             Add(new EffectConverter());
+            //Add(new ArtObjectConverter());
         }
 
         private static void Add(XnbFormatConverter converter)
