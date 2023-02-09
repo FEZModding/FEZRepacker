@@ -65,10 +65,10 @@ namespace FEZRepacker.Converter.Definitions.FezEngine.Structure
         public string SongName { get; set; }
 
         [XnbProperty]
-        public int FarAwayPlaceFadeOutStart { get; set; }
+        public int FAPFadeOutStart { get; set; }
 
         [XnbProperty]
-        public int FarAwayPlaceFadeOutLength { get; set; }
+        public int FAPFadeOutLength { get; set; }
 
         [XnbProperty(UseConverter = true)]
         public Dictionary<TrileEmplacement, TrileInstance> Triles { get; set; }

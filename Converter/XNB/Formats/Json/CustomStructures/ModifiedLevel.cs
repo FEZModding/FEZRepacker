@@ -40,15 +40,16 @@ namespace FEZRepacker.Converter.XNB.Formats.Json.CustomStructures
         public bool LowPass { get; set; }
 
         // these are presumably unused
-        //public int FarAwayPlaceFadeOutStart { get; set; }
-        //public int FarAwayPlaceFadeOutLength { get; set; }
+        // FAP stands for Far Away Place
+        public int FAPFadeOutStart { get; set; }
+        public int FAPFadeOutLength { get; set; }
 
         public string TrileSetName { get; set; }
         public List<ModifiedTrile> Triles { get; set; }
         public Dictionary<int, ModifiedTrileGroup> Groups { get; set; }
-        public Dictionary<int, ModifiedVolume> Volumes { get; set; }
+        public Dictionary<int, Volume> Volumes { get; set; }
         public Dictionary<int, Script> Scripts { get; set; }
-        public Dictionary<int, ModifiedArtObjectInstance> ArtObjects { get; set; }
+        public Dictionary<int, ArtObjectInstance> ArtObjects { get; set; }
         public Dictionary<int, BackgroundPlane> BackgroundPlanes { get; set; }
         public Dictionary<int, MovementPath> Paths { get; set; }
         public Dictionary<int, NpcInstance> NonPlayerCharacters { get; set; }
@@ -96,8 +97,8 @@ namespace FEZRepacker.Converter.XNB.Formats.Json.CustomStructures
             WaterHeight = level.WaterHeight;
             WaterType = level.WaterType;
             SongName = level.SongName;
-            //FarAwayPlaceFadeOutStart = level.FarAwayPlaceFadeOutStart;
-            //FarAwayPlaceFadeOutLength = level.FarAwayPlaceFadeOutLength;
+            FAPFadeOutStart = level.FAPFadeOutStart;
+            FAPFadeOutLength = level.FAPFadeOutLength;
             MutedLoops = level.MutedLoops;
             AmbienceTracks = level.AmbienceTracks;
             SequenceSamplesPath = level.SequenceSamplesPath;
@@ -107,6 +108,8 @@ namespace FEZRepacker.Converter.XNB.Formats.Json.CustomStructures
             BackgroundPlanes = level.BackgroundPlanes;
             Paths = level.Paths;
             NonPlayerCharacters = level.NonPlayerCharacters;
+            Volumes = level.Volumes;
+            ArtObjects = level.ArtObjects;
 
             // sort tiles into modified structures
             Triles = new();
@@ -123,12 +126,6 @@ namespace FEZRepacker.Converter.XNB.Formats.Json.CustomStructures
 
             // create groups of modified paths
             Groups = level.Groups.ToDictionary(pair=>pair.Key, pair=>new ModifiedTrileGroup(pair.Value));
-
-            // convert volumes
-            Volumes = level.Volumes.ToDictionary(pair => pair.Key, pair => new ModifiedVolume(pair.Value));
-
-            // convert art objects
-            ArtObjects = level.ArtObjects.ToDictionary(pair => pair.Key, pair => new ModifiedArtObjectInstance(pair.Value));
         }
 
         public Level ToOriginal()
@@ -155,8 +152,8 @@ namespace FEZRepacker.Converter.XNB.Formats.Json.CustomStructures
             level.WaterHeight = WaterHeight;
             level.WaterType = WaterType;
             level.SongName = SongName;
-            //level.FarAwayPlaceFadeOutStart = FarAwayPlaceFadeOutStart;
-            //level.FarAwayPlaceFadeOutLength = FarAwayPlaceFadeOutLength;
+            level.FAPFadeOutStart = FAPFadeOutStart;
+            level.FAPFadeOutLength = FAPFadeOutLength;
             level.MutedLoops = MutedLoops;
             level.AmbienceTracks = AmbienceTracks;
             level.SequenceSamplesPath = SequenceSamplesPath;
@@ -166,29 +163,25 @@ namespace FEZRepacker.Converter.XNB.Formats.Json.CustomStructures
             level.BackgroundPlanes = BackgroundPlanes;
             level.Paths = Paths;
             level.NonPlayerCharacters = NonPlayerCharacters;
+            level.Volumes = Volumes;
+            level.ArtObjects = ArtObjects;
 
             // parse triles back into their original structure
-            foreach(var modTrile in Triles)
+            foreach (var modTrile in Triles)
             {
                 var trile = modTrile.ToOriginal();
-                if (!level.Triles.ContainsKey(modTrile.Position))
+                if (!level.Triles.ContainsKey(modTrile.Emplacement))
                 {
-                    level.Triles[modTrile.Position] = trile;
+                    level.Triles[modTrile.Emplacement] = trile;
                 }
                 else
                 {
-                    level.Triles[modTrile.Position].OverlappedTriples.Add(trile);
+                    level.Triles[modTrile.Emplacement].OverlappedTriples.Add(trile);
                 }
             }
 
             // put trile instances back into groups
             level.Groups = Groups.ToDictionary(pair => pair.Key, pair => pair.Value.ToOriginal(level));
-
-            // convert volumes back
-            level.Volumes = Volumes.ToDictionary(pair => pair.Key, pair => pair.Value.ToOriginal());
-
-            // convert art objects back
-            level.ArtObjects = ArtObjects.ToDictionary(pair => pair.Key, pair => pair.Value.ToOriginal());
 
             return level;
         }
