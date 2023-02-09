@@ -1,6 +1,7 @@
-﻿using FEZRepacker.Converter.Definitions.FezEngine;
+﻿using System.Numerics;
+
+using FEZRepacker.Converter.Definitions.FezEngine;
 using FEZRepacker.Converter.Definitions.FezEngine.Structure;
-using System.Numerics;
 
 namespace FEZRepacker.Converter.XNB.Formats.Json.CustomStructures
 {

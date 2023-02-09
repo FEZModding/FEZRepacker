@@ -3,6 +3,7 @@ using FEZRepacker.Converter.Definitions.MicrosoftXna;
 using FEZRepacker.Converter.XNB.Types;
 using FEZRepacker.Converter.XNB.Types.System;
 using FEZRepacker.Converter.XNB.Types.XNA;
+
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Gif;
 using SixLabors.ImageSharp.Formats.Webp;
@@ -59,7 +60,7 @@ namespace FEZRepacker.Converter.XNB.Formats
 
             animation.Frames.RemoveFrame(0);
 
-            animation.Save(outWriter.BaseStream, new GifEncoder { ColorTableMode = GifColorTableMode.Local});
+            animation.Save(outWriter.BaseStream, new GifEncoder { ColorTableMode = GifColorTableMode.Local });
         }
 
         public override void ToBinary(BinaryReader inReader, BinaryWriter xnbWriter)
@@ -106,13 +107,13 @@ namespace FEZRepacker.Converter.XNB.Formats
 
             int framePosX = 0;
             int framePosY = 0;
-            for(int i=0; i < frameCount; i++)
+            for (int i = 0; i < frameCount; i++)
             {
                 var frameImg = importedAnim.Frames[i];
 
                 frameImg.ProcessPixelRows(atlasImage.Frames.RootFrame, (animAccessor, atlasAccessor) =>
                 {
-                    for(int y = 0; y < frameHeight; y++)
+                    for (int y = 0; y < frameHeight; y++)
                     {
                         animAccessor.GetRowSpan(y).CopyTo(atlasAccessor.GetRowSpan(framePosY + y).Slice(framePosX));
                     }

@@ -1,5 +1,6 @@
-﻿using FEZRepacker.Converter.XNB.Formats;
-using System.Drawing;
+﻿using System.Drawing;
+
+using FEZRepacker.Converter.XNB.Formats;
 
 namespace FEZRepacker.Converter.XNB.Types.XNA
 {

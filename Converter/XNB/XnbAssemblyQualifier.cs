@@ -15,20 +15,20 @@
             var noInfoFullName = fullName;
             var endOfTemplatesIndex = fullName.LastIndexOf(']');
 
-            var additionalInfoSplit = fullName.IndexOf(',', Math.Max(0,endOfTemplatesIndex));
-            if(additionalInfoSplit != -1)
+            var additionalInfoSplit = fullName.IndexOf(',', Math.Max(0, endOfTemplatesIndex));
+            if (additionalInfoSplit != -1)
             {
                 noInfoFullName = fullName.Substring(0, additionalInfoSplit);
                 Specification = fullName.Substring(additionalInfoSplit + 2);
             }
-            
+
 
             // splitting name into actual name and templates
             var noTemplateFullName = noInfoFullName;
             var templatesStr = "";
 
             var templateSeparatorIndex = noInfoFullName.IndexOf('`');
-            if(templateSeparatorIndex != -1)
+            if (templateSeparatorIndex != -1)
             {
                 noTemplateFullName = noInfoFullName.Substring(0, templateSeparatorIndex);
                 templatesStr = noInfoFullName.Substring(templateSeparatorIndex + 1);
@@ -37,7 +37,7 @@
 
             // separating namespace from the name
             var namespaceSplitPos = noTemplateFullName.LastIndexOf('.');
-            if(namespaceSplitPos >= 0)
+            if (namespaceSplitPos >= 0)
             {
                 Namespace = noTemplateFullName.Substring(0, namespaceSplitPos);
                 Name = noTemplateFullName.Substring(namespaceSplitPos + 1);
@@ -49,7 +49,7 @@
             }
 
             // type uses templates
-            if(templatesStr.Length > 0)
+            if (templatesStr.Length > 0)
             {
                 int templateCount = Int32.Parse(templatesStr.Substring(0, 1));
                 string templatesStrInner = templatesStr.Substring(2, templatesStr.Length - 3);
@@ -58,25 +58,25 @@
 
                 int depth = 0;
                 int beginIndex = 0;
-                for(int i = 0; i < templatesStrInner.Length; i++)
+                for (int i = 0; i < templatesStrInner.Length; i++)
                 {
-                    if(templatesStrInner[i] == '[')
+                    if (templatesStrInner[i] == '[')
                     {
                         if (depth == 0) beginIndex = i;
                         depth++;
                     }
-                    if(templatesStrInner[i] == ']')
+                    if (templatesStrInner[i] == ']')
                     {
                         depth--;
-                        if(depth == 0)
+                        if (depth == 0)
                         {
-                            templates.Add(templatesStrInner.Substring(beginIndex+1, i - beginIndex - 1));
+                            templates.Add(templatesStrInner.Substring(beginIndex + 1, i - beginIndex - 1));
                         }
                     }
                 }
 
                 Templates = new XnbAssemblyQualifier[templateCount];
-                for(var i = 0; i < templateCount; i++)
+                for (var i = 0; i < templateCount; i++)
                 {
                     Templates[i] = new XnbAssemblyQualifier(templates[i]);
                 }
@@ -102,13 +102,13 @@
         {
             return new XnbAssemblyQualifier(s);
         }
-        public string GetDisplayName(bool simplified=false)
+        public string GetDisplayName(bool simplified = false)
         {
             string displayedName = (simplified ? "" : (Namespace + ".")) + Name;
-            if(Templates.Length > 0)
+            if (Templates.Length > 0)
             {
                 displayedName += (simplified) ? "[" : $"`{Templates.Length}[";
-                for (var i=0;i<Templates.Length;i++)
+                for (var i = 0; i < Templates.Length; i++)
                 {
                     if (i > 0) displayedName += ",";
                     var templateName = Templates[i].GetDisplayName(simplified);

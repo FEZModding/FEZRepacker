@@ -1,6 +1,7 @@
-﻿using FEZRepacker.Converter.Definitions.FezEngine.Structure;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
+
+using FEZRepacker.Converter.Definitions.FezEngine.Structure;
 
 namespace FEZRepacker.Converter.XNB.Formats.Json.CustomConverters
 {
@@ -11,7 +12,7 @@ namespace FEZRepacker.Converter.XNB.Formats.Json.CustomConverters
             Type typeToConvert,
             JsonSerializerOptions options)
         {
-            if(reader.TokenType != JsonTokenType.StartArray) throw new JsonException();
+            if (reader.TokenType != JsonTokenType.StartArray) throw new JsonException();
 
             reader.Read();
             int x = reader.GetInt32();
@@ -19,11 +20,11 @@ namespace FEZRepacker.Converter.XNB.Formats.Json.CustomConverters
             int y = reader.GetInt32();
             reader.Read();
             int z = reader.GetInt32();
-            TrileEmplacement trile = new TrileEmplacement(x,y,z);
+            TrileEmplacement trile = new TrileEmplacement(x, y, z);
             reader.Read();
 
             if (reader.TokenType != JsonTokenType.EndArray) throw new JsonException();
-            
+
             return trile;
         }
 

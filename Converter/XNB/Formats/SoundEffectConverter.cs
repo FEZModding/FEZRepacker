@@ -47,11 +47,11 @@ namespace FEZRepacker.Converter.XNB.Formats
             {
                 throw new InvalidDataException("WAV file has incorrect header");
             }
-            while(inReader.BaseStream.Position < inReader.BaseStream.Length)
+            while (inReader.BaseStream.Position < inReader.BaseStream.Length)
             {
                 var chunkHeader = new string(inReader.ReadChars(4));
                 var chunkLength = inReader.ReadInt32();
-                
+
                 if (chunkHeader == "fmt ")
                 {
                     soundEffect.FormatChunkSize = 18;
@@ -70,7 +70,7 @@ namespace FEZRepacker.Converter.XNB.Formats
                     if (chunkHeader == "data") soundEffect.DataChunk = chunkData;
                 }
 
-                if(soundEffect.FormatChunkSize > 0 && soundEffect.DataChunk.Length > 0)
+                if (soundEffect.FormatChunkSize > 0 && soundEffect.DataChunk.Length > 0)
                 {
                     break;
                 }
@@ -78,7 +78,7 @@ namespace FEZRepacker.Converter.XNB.Formats
 
             // Additional verification - bits-per-sample values that are not divisible by 16
             // aren't handled by XNA properly. Uneven values (like 24-bit PCMs) causes corrupted sound.
-            if(soundEffect.FormatType != 2 && soundEffect.BitsPerSample % 16 != 0)
+            if (soundEffect.FormatType != 2 && soundEffect.BitsPerSample % 16 != 0)
             {
                 throw new InvalidDataException($"PCM WAV file bit resolution must be divisible by 16 ({soundEffect.BitsPerSample}-bit samples detected)");
             }

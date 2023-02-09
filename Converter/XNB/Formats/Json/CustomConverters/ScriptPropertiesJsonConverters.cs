@@ -1,6 +1,7 @@
-﻿using FEZRepacker.Converter.Definitions.FezEngine.Structure.Scripting;
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
+
+using FEZRepacker.Converter.Definitions.FezEngine.Structure.Scripting;
 
 namespace FEZRepacker.Converter.XNB.Formats.Json.CustomConverters
 {
@@ -39,7 +40,7 @@ namespace FEZRepacker.Converter.XNB.Formats.Json.CustomConverters
     internal class ScriptTriggerJsonConverter : JsonConverter<ScriptTrigger>
     {
         public bool Accepts(Type type) => type == typeof(ScriptTrigger);
-        
+
         public override ScriptTrigger Read(
             ref Utf8JsonReader reader,
             Type type,
@@ -83,7 +84,7 @@ namespace FEZRepacker.Converter.XNB.Formats.Json.CustomConverters
 
 
         public bool Accepts(Type type) => type == typeof(ScriptCondition);
-        
+
         public override ScriptCondition Read(
             ref Utf8JsonReader reader,
             Type type,
@@ -133,7 +134,8 @@ namespace FEZRepacker.Converter.XNB.Formats.Json.CustomConverters
 
             ScriptAction action = new ScriptAction();
 
-            while (value[0] == '!' || value[0] == '#'){
+            while (value[0] == '!' || value[0] == '#')
+            {
                 if (value[0] == '!') action.Killswitch = true;
                 if (value[0] == '#') action.Blocking = true;
                 value = value.Substring(1);

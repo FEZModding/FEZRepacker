@@ -7,7 +7,8 @@ namespace FEZRepacker.Converter.Definitions
     {
         public XnbAssemblyQualifier Qualifier { get; set; }
 
-        public XnbReaderTypeAttribute(string _qualifier){
+        public XnbReaderTypeAttribute(string _qualifier)
+        {
             Qualifier = _qualifier;
         }
 

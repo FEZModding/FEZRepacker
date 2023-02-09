@@ -1,5 +1,6 @@
-﻿using FEZRepacker.Converter.Definitions.FezEngine.Structure.Input;
-using System.Numerics;
+﻿using System.Numerics;
+
+using FEZRepacker.Converter.Definitions.FezEngine.Structure.Input;
 
 namespace FEZRepacker.Converter.Definitions.FezEngine.Structure
 {

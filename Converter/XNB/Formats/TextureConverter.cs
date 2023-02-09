@@ -1,12 +1,15 @@
-﻿using FEZRepacker.Converter.Definitions.MicrosoftXna;
+﻿using System.Runtime.InteropServices;
+
+using FEZRepacker.Converter.Definitions.MicrosoftXna;
 using FEZRepacker.Converter.XNB;
 using FEZRepacker.Converter.XNB.Types;
 using FEZRepacker.Converter.XNB.Types.System;
+
 using Microsoft.Xna.Framework.Graphics;
+
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
-using System.Runtime.InteropServices;
 
 namespace FEZRepacker.Converter.XNB.Formats
 {

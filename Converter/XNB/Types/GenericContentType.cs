@@ -1,18 +1,20 @@
-﻿using FEZRepacker.Converter.Definitions;
-using FEZRepacker.Converter.Helpers;
-using FEZRepacker.Converter.XNB.Formats;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Numerics;
 using System.Reflection;
+
+using FEZRepacker.Converter.Definitions;
+using FEZRepacker.Converter.Helpers;
+using FEZRepacker.Converter.XNB.Formats;
 
 namespace FEZRepacker.Converter.XNB.Types
 {
     internal class GenericContentType<T> : XnbContentType<T> where T : class
     {
         private XnbAssemblyQualifier _name;
-        public GenericContentType(XnbFormatConverter converter) : base(converter) {
+        public GenericContentType(XnbFormatConverter converter) : base(converter)
+        {
             var qualifier = GetXnbReaderTypeFor(typeof(T));
             if (qualifier.HasValue) _name = qualifier.Value;
             PopulateReflectionMaps();
@@ -35,14 +37,14 @@ namespace FEZRepacker.Converter.XNB.Types
 
         private Dictionary<PropertyInfo, XnbPropertyAttribute> _propertyMap = new();
         private Dictionary<PropertyInfo, Type> _underlyingTypeMap = new();
-        
+
 
         private void PopulateReflectionMaps()
         {
             _propertyMap = typeof(T).GetProperties()
                 .Where(property => Attribute.IsDefined(property, typeof(XnbPropertyAttribute)))
                 .ToDictionary(
-                    property => property, 
+                    property => property,
                     property => (property.GetCustomAttributes(typeof(XnbPropertyAttribute), false).Single() as XnbPropertyAttribute)!
                  ).OrderBy(pair => pair.Value.Order)
                  .ToDictionary(pair => pair.Key, pair => pair.Value);
@@ -121,16 +123,16 @@ namespace FEZRepacker.Converter.XNB.Types
                 if (attribute.Optional)
                 {
                     int typeID = Converter.ContentTypes.ToList().FindIndex(t => t.BasicType == propertyType) + 1;
-                    if(writeValue != null)
+                    if (writeValue != null)
                     {
-                        if(typeID > 0) writer.Write7BitEncodedInt(typeID);
+                        if (typeID > 0) writer.Write7BitEncodedInt(typeID);
                         else writer.Write(true);
                     }
                     else writer.Write(false);
 
                 }
 
-                if(writeValue != null)
+                if (writeValue != null)
                 {
                     if (attribute.UseConverter)
                     {

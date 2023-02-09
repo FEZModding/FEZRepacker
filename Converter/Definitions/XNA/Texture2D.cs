@@ -24,7 +24,7 @@
 
         public Texture2D()
         {
-            TextureData= new byte[0];
+            TextureData = new byte[0];
             Format = SurfaceFormat.Color;
             MipmapLevels = 1;
         }

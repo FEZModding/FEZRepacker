@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using System.Text.Json.Serialization;
+
 using FEZRepacker.Converter.XNB.Formats.Json.CustomConverters;
 
 namespace FEZRepacker.Converter.XNB.Formats.Json
@@ -43,6 +44,6 @@ namespace FEZRepacker.Converter.XNB.Formats.Json
             PrepareOptions();
             return JsonSerializer.Deserialize<T>(json, _serializerOptions)!;
         }
-        
+
     }
 }

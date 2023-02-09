@@ -52,7 +52,7 @@ namespace FEZRepacker.Converter.Helpers
             int g = reader.ReadByte();
             int b = reader.ReadByte();
             int a = reader.ReadByte();
-            return Color.FromArgb(a,r,g,b);
+            return Color.FromArgb(a, r, g, b);
         }
 
         public static void Write(this BinaryWriter writer, Color color)

@@ -21,7 +21,7 @@ namespace FEZRepacker.Converter.XNB
             Stream output = new MemoryStream();
             Stream decompressedInput = XnbCompressor.Decompress(input);
 
-            if(!XnbHeader.TryRead(decompressedInput, out var header))
+            if (!XnbHeader.TryRead(decompressedInput, out var header))
             {
                 HeaderValid = false;
                 decompressedInput.Position = 0;

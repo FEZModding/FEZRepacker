@@ -85,7 +85,7 @@ namespace FEZRepacker.Converter.XNB.Formats
             int typeID = ContentTypes.FindIndex(t => t.BasicType == T);
             if (typeID >= 0 && data != null)
             {
-                if(!skipIdentifier && ContentTypes[typeID].IsEmpty(data))
+                if (!skipIdentifier && ContentTypes[typeID].IsEmpty(data))
                 {
                     writer.Write((byte)0x00);
                 }
@@ -94,7 +94,7 @@ namespace FEZRepacker.Converter.XNB.Formats
                     if (!skipIdentifier)
                     {
                         int publicTypeID = PublicContentTypes.FindIndex(t => t.BasicType == T);
-                        if(publicTypeID < 0)
+                        if (publicTypeID < 0)
                         {
                             throw new InvalidOperationException($"Attempted to write index of private content type {ContentTypes[typeID].Name}");
                         }
