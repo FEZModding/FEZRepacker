@@ -1,6 +1,7 @@
-﻿using FEZRepacker.Converter.Definitions.FezEngine.Structure.Geometry;
+﻿using System.Numerics;
+
+using FEZRepacker.Converter.Definitions.FezEngine.Structure.Geometry;
 using FEZRepacker.Converter.Definitions.MicrosoftXna;
-using System.Numerics;
 
 namespace FEZRepacker.Converter.Definitions.FezEngine.Structure
 {

@@ -1,14 +1,16 @@
-﻿using FEZRepacker.Converter.Definitions.FezEngine.Structure;
+﻿using System.Numerics;
+using System.Text;
+
+using FEZRepacker.Converter.Definitions.FezEngine.Structure;
 using FEZRepacker.Converter.Definitions.FezEngine.Structure.Geometry;
 using FEZRepacker.Converter.Definitions.MicrosoftXna;
 using FEZRepacker.Converter.XNB.Formats.Json;
 using FEZRepacker.Converter.XNB.Formats.Json.CustomStructures;
 using FEZRepacker.Converter.XNB.Types;
 using FEZRepacker.Converter.XNB.Types.System;
+
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
-using System.Numerics;
-using System.Text;
 
 namespace FEZRepacker.Converter.XNB.Formats
 {
@@ -56,7 +58,7 @@ namespace FEZRepacker.Converter.XNB.Formats
 
         private static byte[] SaveGeometry(ArtObject ao)
         {
-            if(ao.Geometry.Vertices.Length == 0 || ao.Geometry.Indices.Length == 0)
+            if (ao.Geometry.Vertices.Length == 0 || ao.Geometry.Indices.Length == 0)
             {
                 return new byte[0];
             }
@@ -122,7 +124,7 @@ namespace FEZRepacker.Converter.XNB.Formats
 
         private static byte[] SaveCubemap(ArtObject ao)
         {
-            if(ao.Cubemap.TextureData.Length == 0)
+            if (ao.Cubemap.TextureData.Length == 0)
             {
                 return new byte[0];
             }

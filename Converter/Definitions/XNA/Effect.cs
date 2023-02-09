@@ -10,7 +10,8 @@
         [XnbProperty(UseConverter = true, SkipIdentifier = true)]
         public byte[] Data { get; set; }
 
-        public Effect(){
+        public Effect()
+        {
             Data = new byte[0];
         }
     }

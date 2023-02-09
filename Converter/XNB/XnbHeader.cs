@@ -24,7 +24,8 @@ namespace FEZRepacker.Converter.XNB
             header = new XnbHeader();
             header.FormatIdentifier = new string(reader.ReadChars(3));
             if (header.FormatIdentifier != "XNB") return false;
-            if (!Enum.TryParse(reader.ReadByte().ToString(), out XnbPlatformIdentifier platformIdentifier)){
+            if (!Enum.TryParse(reader.ReadByte().ToString(), out XnbPlatformIdentifier platformIdentifier))
+            {
                 return false;
             }
             header.PlatformIdentifier = platformIdentifier;

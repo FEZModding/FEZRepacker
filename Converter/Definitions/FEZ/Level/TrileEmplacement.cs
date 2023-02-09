@@ -15,7 +15,7 @@ namespace FEZRepacker.Converter.Definitions.FezEngine.Structure
         [XnbProperty]
         public int Z { get; set; }
 
-        public TrileEmplacement() {}
+        public TrileEmplacement() { }
 
         public TrileEmplacement(int x, int y, int z)
         {

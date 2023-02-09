@@ -22,7 +22,7 @@ namespace FEZRepacker.Converter.XNB.Formats.Json
             var json = CustomJsonSerializer.Serialize(data);
 
             outWriter.Write(Encoding.UTF8.GetBytes(json));
-            
+
         }
 
         public override void ToBinary(BinaryReader inReader, BinaryWriter xnbWriter)

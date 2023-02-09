@@ -21,7 +21,7 @@ namespace FEZRepacker.Interface
             }
 
             string argsStr = String.Join(" ", command.Arguments.Select(arg => arg.Optional ? $"<{arg.Name}>" : $"[{arg.Name}]"));
-            
+
             Console.WriteLine($"Usage: FEZRepacker.exe {allNames} {argsStr}");
             Console.WriteLine($"Description: {command.HelpText}");
         }
@@ -68,7 +68,7 @@ namespace FEZRepacker.Interface
 
         public static void UnpackPackage(string pakPath, string outputDir, UnpackingMode mode)
         {
-            if(Path.GetExtension(pakPath) != ".pak")
+            if (Path.GetExtension(pakPath) != ".pak")
             {
                 throw new Exception("A path must lead to a .PAK file.");
             }
@@ -84,11 +84,11 @@ namespace FEZRepacker.Interface
             Console.WriteLine($"Unpacking archive {pakPath} containing {pak.Count} files...");
 
             int filesDone = 0;
-            foreach(var pakFile in pak)
+            foreach (var pakFile in pak)
             {
                 var extension = pakFile.GetExtensionFromHeaderOrDefault();
 
-                Console.WriteLine($"({filesDone+1}/{pak.Count}) {pakFile.Path} ({extension} file, size: {pakFile.Size} bytes)");
+                Console.WriteLine($"({filesDone + 1}/{pak.Count}) {pakFile.Path} ({extension} file, size: {pakFile.Size} bytes)");
 
                 try
                 {
@@ -96,11 +96,11 @@ namespace FEZRepacker.Interface
 
                     var outputStream = fileStream;
 
-                    if(mode == UnpackingMode.DecompressedXNB)
+                    if (mode == UnpackingMode.DecompressedXNB)
                     {
                         outputStream = XnbCompressor.Decompress(fileStream);
                     }
-                    else if(mode == UnpackingMode.Converted)
+                    else if (mode == UnpackingMode.Converted)
                     {
                         var converter = new XnbConverter();
                         outputStream = converter.Convert(fileStream);
@@ -120,7 +120,7 @@ namespace FEZRepacker.Interface
                             {
                                 Console.WriteLine($"  Not a valid XNB file - saving with detected extension ({extension}).");
                             }
-                        
+
                         }
                     }
 
@@ -134,7 +134,7 @@ namespace FEZRepacker.Interface
                     using var fileOutputStream = File.Open(outputFileName, FileMode.Create);
                     outputStream.CopyTo(fileOutputStream);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Console.Error.WriteLine($"Unable to unpack {pakFile.Path} - {ex.Message}");
                 }
@@ -155,7 +155,7 @@ namespace FEZRepacker.Interface
             Console.WriteLine($"PAK package \"{pakPath}\" with {pak.Count} files.");
             Console.WriteLine();
 
-            foreach(var item in pak)
+            foreach (var item in pak)
             {
                 var extension = item.GetExtensionFromHeaderOrDefault("unknown");
                 Console.WriteLine($"{item.Path} ({extension} file, size: {item.Size} bytes)");
@@ -199,7 +199,7 @@ namespace FEZRepacker.Interface
 
             // load, convert and add files to the package
             var filesDone = 0;
-            foreach(var filePath in filesToAdd)
+            foreach (var filePath in filesToAdd)
             {
                 Console.WriteLine($"({filesDone + 1}/{filesToAdd.Length}) {filePath}");
 
@@ -242,7 +242,7 @@ namespace FEZRepacker.Interface
 
                     pak.Add(PakFile.Read(pakFilePath, deconverterStream));
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Console.Error.WriteLine($"Unable to pack {filePath} - {ex.Message}");
                 }

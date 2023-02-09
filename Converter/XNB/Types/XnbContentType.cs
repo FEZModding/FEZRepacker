@@ -31,7 +31,7 @@ namespace FEZRepacker.Converter.XNB.Types
 
             var genericQualifiers = new List<XnbAssemblyQualifier>();
 
-            foreach(Type genericType in type.GetGenericArguments())
+            foreach (Type genericType in type.GetGenericArguments())
             {
                 var genericQualifier = GetXnbTypeFor(genericType);
                 if (!genericQualifier.HasValue) continue;
@@ -69,7 +69,7 @@ namespace FEZRepacker.Converter.XNB.Types
     // a little helper generalized class, so I don't have to override BasicType
     internal abstract class XnbContentType<T> : XnbContentType
     {
-        public XnbContentType(XnbFormatConverter converter) : base(converter){}
+        public XnbContentType(XnbFormatConverter converter) : base(converter) { }
 
         public override Type BasicType => typeof(T);
     }

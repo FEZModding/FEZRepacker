@@ -12,7 +12,8 @@ namespace FEZRepacker.Converter.Definitions
 
         public XnbPropertyAttribute(
             [CallerLineNumber] int _order = 0
-        ){
+        )
+        {
             Order = _order;
         }
 

@@ -1,7 +1,7 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Globalization;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace FEZRepacker.Converter.XNB.Formats.Json.CustomConverters
 {
@@ -12,7 +12,7 @@ namespace FEZRepacker.Converter.XNB.Formats.Json.CustomConverters
             Type typeToConvert,
             JsonSerializerOptions options)
         {
-            if(reader.TokenType != JsonTokenType.String) throw new JsonException();
+            if (reader.TokenType != JsonTokenType.String) throw new JsonException();
 
             string colorStr = JsonDocument.ParseValue(ref reader).Deserialize<string>() ?? "#00000000";
             return ColorFromHTML(colorStr);

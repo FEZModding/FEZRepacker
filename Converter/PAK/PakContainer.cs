@@ -42,10 +42,10 @@ namespace FEZRepacker.Converter.PAK
             using var writer = new BinaryWriter(writeStream);
             writer.Write(Count);
 
-            foreach(var file in this)
+            foreach (var file in this)
             {
                 writer.Write(file.Path);
-                
+
                 using var fileStream = file.Open();
                 writer.Write((int)fileStream.Length);
                 fileStream.CopyTo(writeStream);

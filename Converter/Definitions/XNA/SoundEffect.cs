@@ -46,7 +46,8 @@
         public int UnknownValue { get; set; }
 
 
-        public SoundEffect(){
+        public SoundEffect()
+        {
             DataChunk = new byte[0];
         }
     }

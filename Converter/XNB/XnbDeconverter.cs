@@ -18,7 +18,7 @@ namespace FEZRepacker.Converter.XNB
         {
             var output = new MemoryStream();
 
-            if(FormatConverter == null)
+            if (FormatConverter == null)
             {
                 input.CopyTo(output);
                 output.Position = 0;

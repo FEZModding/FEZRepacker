@@ -16,7 +16,7 @@
         [XnbProperty]
         public string Value { get; set; }
 
-        
+
         public ScriptCondition()
         {
             Object = new();

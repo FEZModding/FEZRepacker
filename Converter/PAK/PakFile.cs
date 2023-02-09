@@ -1,6 +1,6 @@
 ﻿namespace FEZRepacker.Converter.PAK
 {
-    public class PakFile 
+    public class PakFile
     {
         internal class PakFileStream : MemoryStream
         {
@@ -41,13 +41,13 @@
             return openStream;
         }
 
-        public string GetExtensionFromHeaderOrDefault(string defaultExtension=".unk")
+        public string GetExtensionFromHeaderOrDefault(string defaultExtension = ".unk")
         {
             var extension = defaultExtension;
 
-            if(data.Length >= 3)
+            if (data.Length >= 3)
             {
-                if(data[0] == 'X' && data[1] == 'N' && data[2] == 'B')
+                if (data[0] == 'X' && data[1] == 'N' && data[2] == 'B')
                 {
                     extension = ".xnb";
                 }
@@ -55,7 +55,7 @@
                 {
                     extension = ".ogg";
                 }
-                else if(data.Length >= 4 && 
+                else if (data.Length >= 4 &&
                     data[0] == 0x01 && data[1] == 0x09 && data[2] == 0xFF && data[3] == 0xFE)
                 {
                     extension = ".fxc";

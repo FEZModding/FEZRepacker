@@ -1,5 +1,6 @@
-﻿using Microsoft.Xna.Framework.Content;
-using System.Text;
+﻿using System.Text;
+
+using Microsoft.Xna.Framework.Content;
 
 namespace FEZRepacker.Converter.XNB
 {

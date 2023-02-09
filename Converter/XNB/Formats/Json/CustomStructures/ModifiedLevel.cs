@@ -1,7 +1,8 @@
-﻿using FEZRepacker.Converter.Definitions.FezEngine;
+﻿using System.Numerics;
+
+using FEZRepacker.Converter.Definitions.FezEngine;
 using FEZRepacker.Converter.Definitions.FezEngine.Structure;
 using FEZRepacker.Converter.Definitions.FezEngine.Structure.Scripting;
-using System.Numerics;
 
 namespace FEZRepacker.Converter.XNB.Formats.Json.CustomStructures
 {
@@ -113,19 +114,19 @@ namespace FEZRepacker.Converter.XNB.Formats.Json.CustomStructures
 
             // sort tiles into modified structures
             Triles = new();
-            foreach(var trileRecord in level.Triles)
+            foreach (var trileRecord in level.Triles)
             {
                 var pos = trileRecord.Key;
                 var instance = trileRecord.Value;
                 Triles.Add(new ModifiedTrile(pos, instance));
-                foreach(var overlapping in instance.OverlappedTriples)
+                foreach (var overlapping in instance.OverlappedTriples)
                 {
                     Triles.Add(new ModifiedTrile(pos, overlapping));
                 }
             }
 
             // create groups of modified paths
-            Groups = level.Groups.ToDictionary(pair=>pair.Key, pair=>new ModifiedTrileGroup(pair.Value));
+            Groups = level.Groups.ToDictionary(pair => pair.Key, pair => new ModifiedTrileGroup(pair.Value));
         }
 
         public Level ToOriginal()

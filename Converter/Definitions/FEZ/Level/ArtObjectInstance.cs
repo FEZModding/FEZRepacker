@@ -21,7 +21,7 @@ namespace FEZRepacker.Converter.Definitions.FezEngine.Structure
         [XnbProperty(UseConverter = true)]
         public ArtObjectActorSettings ActorSettings { get; set; }
 
-        
+
         public ArtObjectInstance()
         {
             Name = "";

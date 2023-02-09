@@ -15,7 +15,8 @@ namespace FEZRepacker.Converter.Definitions.FezEngine.Structure.Geometry
         [XnbProperty(UseConverter = true)]
         public ushort[] Indices { get; set; }
 
-        public ShaderInstancedIndexedPrimitives(){
+        public ShaderInstancedIndexedPrimitives()
+        {
             Vertices = new TemplateType[0];
             Indices = new ushort[0];
         }

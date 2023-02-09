@@ -2,17 +2,18 @@
 
 namespace FEZRepacker.Converter.XNB.Types.System
 {
-    internal class DictionaryContentType<K,V> : XnbContentType<Dictionary<K,V>> where K : notnull
+    internal class DictionaryContentType<K, V> : XnbContentType<Dictionary<K, V>> where K : notnull
     {
         private XnbAssemblyQualifier _name;
         private bool skipKeyIdentifier;
         private bool skipValueIdentifier;
 
         public DictionaryContentType(
-            XnbFormatConverter converter, 
-            bool skipKeyIdentifier = false, 
+            XnbFormatConverter converter,
+            bool skipKeyIdentifier = false,
             bool skipValueIdentifier = false
-        ) : base(converter){
+        ) : base(converter)
+        {
             // creating type assembly qualifier name, since we're using own types
             _name = BasicType.FullName ?? "";
             _name.Namespace = "Microsoft.Xna.Framework.Content";
@@ -34,11 +35,11 @@ namespace FEZRepacker.Converter.XNB.Types.System
         {
             Dictionary<K, V> data = new Dictionary<K, V>();
             int dataCount = reader.ReadInt32();
-            for(int i = 0; i < dataCount; i++)
+            for (int i = 0; i < dataCount; i++)
             {
                 K? key = Converter.ReadType<K>(reader, skipKeyIdentifier);
                 V? value = Converter.ReadType<V>(reader, skipValueIdentifier);
-                if(key != null && value != null) data[key] = value;
+                if (key != null && value != null) data[key] = value;
             }
             return data;
         }
@@ -48,7 +49,7 @@ namespace FEZRepacker.Converter.XNB.Types.System
             Dictionary<K, V> dict = (Dictionary<K, V>)data;
 
             writer.Write(dict.Count);
-            foreach(var record in dict)
+            foreach (var record in dict)
             {
                 Converter.WriteType<K>(record.Key, writer, skipKeyIdentifier);
                 Converter.WriteType<V>(record.Value, writer, skipValueIdentifier);

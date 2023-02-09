@@ -11,7 +11,7 @@ namespace FEZRepacker.Converter.XNB.Formats.Json.CustomConverters
             Type typeToConvert,
             JsonSerializerOptions options)
         {
-            if(reader.TokenType != JsonTokenType.StartArray) throw new JsonException();
+            if (reader.TokenType != JsonTokenType.StartArray) throw new JsonException();
 
             reader.Read();
             float x = reader.GetSingle();
@@ -21,11 +21,11 @@ namespace FEZRepacker.Converter.XNB.Formats.Json.CustomConverters
             float z = reader.GetSingle();
             reader.Read();
             float w = reader.GetSingle();
-            Quaternion q = new Quaternion(x,y,z,w);
+            Quaternion q = new Quaternion(x, y, z, w);
             reader.Read();
 
             if (reader.TokenType != JsonTokenType.EndArray) throw new JsonException();
-            
+
             return q;
         }
 
