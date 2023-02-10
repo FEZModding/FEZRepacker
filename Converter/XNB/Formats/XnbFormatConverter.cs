@@ -1,4 +1,5 @@
-﻿using FEZRepacker.Converter.Helpers;
+﻿using FEZRepacker.Converter.FileSystem;
+using FEZRepacker.Converter.Helpers;
 using FEZRepacker.Converter.XNB.Types;
 
 namespace FEZRepacker.Converter.XNB.Formats
@@ -12,8 +13,15 @@ namespace FEZRepacker.Converter.XNB.Formats
         public string FormatName => PrimaryContentType.Name.Name.Replace("Reader", "");
         public abstract string FileFormat { get; }
 
-        public abstract void FromBinary(BinaryReader xnbReader, BinaryWriter outWriter);
-        public abstract void ToBinary(BinaryReader inReader, BinaryWriter xnbWriter);
+        public XnbFormatConverter()
+        {
+            ContentTypes = TypesFactory;
+            PublicContentTypes = ContentTypes.Where(t => !t.IsPrivate).ToList();
+            ValidateType();
+        }
+
+        public abstract FileBundle ReadXNBContent(BinaryReader xnbReader);
+        public abstract void WriteXnbContent(FileBundle bundle, BinaryWriter xnbWriter);
 
         protected virtual void ValidateType()
         {
@@ -21,13 +29,6 @@ namespace FEZRepacker.Converter.XNB.Formats
             {
                 throw new InvalidDataException($"{this.GetType().Name} doesn't have primary type defined.");
             }
-        }
-
-        public XnbFormatConverter()
-        {
-            ContentTypes = TypesFactory;
-            PublicContentTypes = ContentTypes.Where(t => !t.IsPrivate).ToList();
-            ValidateType();
         }
 
         public T? ReadType<T>(BinaryReader reader, bool skipIdentifier = false)

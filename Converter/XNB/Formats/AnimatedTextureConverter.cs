@@ -1,5 +1,6 @@
 ﻿using FEZRepacker.Converter.Definitions.FezEngine.Content;
 using FEZRepacker.Converter.Definitions.MicrosoftXna;
+using FEZRepacker.Converter.FileSystem;
 using FEZRepacker.Converter.XNB.Types;
 using FEZRepacker.Converter.XNB.Types.System;
 using FEZRepacker.Converter.XNB.Types.XNA;
@@ -25,7 +26,7 @@ namespace FEZRepacker.Converter.XNB.Formats
         };
         public override string FileFormat => ".gif";
 
-        public override void FromBinary(BinaryReader xnbReader, BinaryWriter outWriter)
+        public override FileBundle ReadXNBContent(BinaryReader xnbReader)
         {
             AnimatedTexture txt = (AnimatedTexture)PrimaryContentType.Read(xnbReader);
 
@@ -60,14 +61,18 @@ namespace FEZRepacker.Converter.XNB.Formats
 
             animation.Frames.RemoveFrame(0);
 
-            animation.Save(outWriter.BaseStream, new GifEncoder { ColorTableMode = GifColorTableMode.Local });
+            var outStream = new MemoryStream();
+            animation.Save(outStream, new GifEncoder { ColorTableMode = GifColorTableMode.Local });
+            outStream.Seek(0, SeekOrigin.Begin);
+
+            return FileBundle.Single(outStream, FileFormat);
         }
 
-        public override void ToBinary(BinaryReader inReader, BinaryWriter xnbWriter)
+        public override void WriteXnbContent(FileBundle bundle, BinaryWriter xnbWriter)
         {
             AnimatedTexture animatedTexture = new AnimatedTexture();
 
-            using var importedAnim = Image.Load<Rgba32>(inReader.BaseStream);
+            using var importedAnim = Image.Load<Rgba32>(bundle[0].Data);
 
             //// calculate texture atlas size (least size when using powers of two)
             //// why powers of two you may ask? idk, original textures seem to do that,

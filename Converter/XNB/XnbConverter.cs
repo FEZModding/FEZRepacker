@@ -1,4 +1,5 @@
-﻿using FEZRepacker.Converter.Helpers;
+﻿using FEZRepacker.Converter.FileSystem;
+using FEZRepacker.Converter.Helpers;
 using FEZRepacker.Converter.XNB.Formats;
 
 namespace FEZRepacker.Converter.XNB
@@ -16,7 +17,7 @@ namespace FEZRepacker.Converter.XNB
             FormatConverter = null;
         }
 
-        public Stream Convert(Stream input)
+        public FileBundle Convert(Stream input)
         {
             Stream output = new MemoryStream();
             Stream decompressedInput = XnbCompressor.Decompress(input);
@@ -26,8 +27,8 @@ namespace FEZRepacker.Converter.XNB
                 HeaderValid = false;
                 decompressedInput.Position = 0;
                 decompressedInput.CopyTo(output);
-                output.Position = 0;
-                return output;
+                output.Seek(0, SeekOrigin.Begin);
+                return FileBundle.Single(output, ".xnb");
             }
             HeaderValid = true;
 
@@ -70,15 +71,11 @@ namespace FEZRepacker.Converter.XNB
                 // we cannot convert this XNB file - just save the decompressed one
                 decompressedInput.Position = 0;
                 decompressedInput.CopyTo(output);
-                output.Position = 0;
-                return output;
+                output.Seek(0, SeekOrigin.Begin);
+                return FileBundle.Single(output, ".xnb");
             }
 
-            var fileWriter = new BinaryWriter(output);
-
-            FormatConverter.FromBinary(xnbReader, fileWriter);
-            output.Position = 0;
-            return output;
+            return FormatConverter.ReadXNBContent(xnbReader);
         }
     }
 }

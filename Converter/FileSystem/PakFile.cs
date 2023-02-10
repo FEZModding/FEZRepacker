@@ -1,4 +1,4 @@
-﻿namespace FEZRepacker.Converter.PAK
+﻿namespace FEZRepacker.Converter.FileSystem
 {
     public class PakFile
     {

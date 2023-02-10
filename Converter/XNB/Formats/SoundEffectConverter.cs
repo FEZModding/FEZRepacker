@@ -1,4 +1,5 @@
 ﻿using FEZRepacker.Converter.Definitions.MicrosoftXna;
+using FEZRepacker.Converter.FileSystem;
 using FEZRepacker.Converter.XNB.Types;
 using FEZRepacker.Converter.XNB.Types.System;
 
@@ -13,11 +14,14 @@ namespace FEZRepacker.Converter.XNB.Formats
         };
         public override string FileFormat => ".wav";
 
-        public override void FromBinary(BinaryReader xnbReader, BinaryWriter outWriter)
+        public override FileBundle ReadXNBContent(BinaryReader xnbReader)
         {
             XnbContentType primaryType = PrimaryContentType;
 
             SoundEffect data = (SoundEffect)primaryType.Read(xnbReader);
+
+            var outStream = new MemoryStream();
+            var outWriter = new BinaryWriter(outStream);
 
             outWriter.Write("RIFF".ToCharArray());
             var fileSize = 4 + (8 + 18) + (8 + data.DataChunk.Length);
@@ -34,11 +38,16 @@ namespace FEZRepacker.Converter.XNB.Formats
             outWriter.Write("data".ToCharArray());
             outWriter.Write(data.DataChunk.Length);
             outWriter.Write(data.DataChunk);
+
+            outStream.Seek(0, SeekOrigin.Begin);
+            return FileBundle.Single(outStream, FileFormat);
         }
 
-        public override void ToBinary(BinaryReader inReader, BinaryWriter xnbWriter)
+        public override void WriteXnbContent(FileBundle bundle, BinaryWriter xnbWriter)
         {
             var soundEffect = new SoundEffect();
+
+            var inReader = new BinaryReader(bundle.GetData());
 
             var riffHeader = new string(inReader.ReadChars(4));
             var fileSize = inReader.ReadInt32();

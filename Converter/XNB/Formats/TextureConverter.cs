@@ -1,6 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 
 using FEZRepacker.Converter.Definitions.MicrosoftXna;
+using FEZRepacker.Converter.FileSystem;
 using FEZRepacker.Converter.XNB;
 using FEZRepacker.Converter.XNB.Types;
 using FEZRepacker.Converter.XNB.Types.System;
@@ -65,18 +66,22 @@ namespace FEZRepacker.Converter.XNB.Formats
         }
 
 
-        public override void FromBinary(BinaryReader xnbReader, BinaryWriter outWriter)
+        public override FileBundle ReadXNBContent(BinaryReader xnbReader)
         {
             Texture2D texture = (Texture2D)PrimaryContentType.Read(xnbReader);
 
             using var image = ImageFromTexture2D(texture);
 
-            image.Save(outWriter.BaseStream, new PngEncoder());
+            var outStream = new MemoryStream();
+            image.Save(outStream, new PngEncoder());
+            outStream.Seek(0, SeekOrigin.Begin);
+
+            return FileBundle.Single(outStream, FileFormat);
         }
 
-        public override void ToBinary(BinaryReader inReader, BinaryWriter xnbWriter)
+        public override void WriteXnbContent(FileBundle bundle, BinaryWriter xnbWriter)
         {
-            using var importedImage = Image.Load<Rgba32>(inReader.BaseStream);
+            using var importedImage = Image.Load<Rgba32>(bundle.GetData());
 
             Texture2D texture = ImageToTexture2D(importedImage);
 

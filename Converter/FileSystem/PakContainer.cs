@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace FEZRepacker.Converter.PAK
+namespace FEZRepacker.Converter.FileSystem
 {
     public class PakContainer : List<PakFile>
     {

@@ -4,6 +4,7 @@ using FEZRepacker.Converter.Definitions.FezEngine;
 using FEZRepacker.Converter.Definitions.FezEngine.Structure;
 using FEZRepacker.Converter.Definitions.FezEngine.Structure.Input;
 using FEZRepacker.Converter.Definitions.FezEngine.Structure.Scripting;
+using FEZRepacker.Converter.FileSystem;
 using FEZRepacker.Converter.XNB.Formats.Json;
 using FEZRepacker.Converter.XNB.Formats.Json.CustomStructures;
 using FEZRepacker.Converter.XNB.Types;
@@ -80,7 +81,7 @@ namespace FEZRepacker.Converter.XNB.Formats
         };
         public override string FileFormat => ".fezlvl";
 
-        public override void FromBinary(BinaryReader xnbReader, BinaryWriter outWriter)
+        public override FileBundle ReadXNBContent(BinaryReader xnbReader)
         {
             XnbContentType primaryType = PrimaryContentType;
 
@@ -90,12 +91,13 @@ namespace FEZRepacker.Converter.XNB.Formats
 
             var json = CustomJsonSerializer.Serialize(level);
 
-            outWriter.Write(Encoding.UTF8.GetBytes(json));
-
+            var outStream = new MemoryStream(Encoding.UTF8.GetBytes(json));
+            return FileBundle.Single(outStream, FileFormat);
         }
 
-        public override void ToBinary(BinaryReader inReader, BinaryWriter xnbWriter)
+        public override void WriteXnbContent(FileBundle bundle, BinaryWriter xnbWriter)
         {
+            var inReader = new BinaryReader(bundle.GetData());
             string json = new string(inReader.ReadChars((int)inReader.BaseStream.Length));
             ModifiedLevel level = CustomJsonSerializer.Deserialize<ModifiedLevel>(json);
 

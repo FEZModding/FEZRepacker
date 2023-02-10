@@ -1,4 +1,4 @@
-﻿using FEZRepacker.Converter.PAK;
+﻿using FEZRepacker.Converter.FileSystem;
 using FEZRepacker.Converter.XNB;
 
 namespace FEZRepacker.Interface
@@ -94,21 +94,22 @@ namespace FEZRepacker.Interface
                 {
                     using var fileStream = pakFile.Open();
 
-                    var outputStream = fileStream;
+                    var outputBundle = FileBundle.Single(fileStream, ".xnb");
 
                     if (mode == UnpackingMode.DecompressedXNB)
                     {
-                        outputStream = XnbCompressor.Decompress(fileStream);
+                        outputBundle = FileBundle.Single(XnbCompressor.Decompress(fileStream), ".xnb");
                     }
                     else if (mode == UnpackingMode.Converted)
                     {
                         var converter = new XnbConverter();
-                        outputStream = converter.Convert(fileStream);
+                        outputBundle = converter.Convert(fileStream);
                         var formatName = converter.HeaderValid ? converter.FileType.Name.Replace("Reader", "") : "";
                         if (converter.Converted)
                         {
                             extension = converter.FormatConverter!.FileFormat;
-                            Console.WriteLine($"  Format {formatName} converted into {extension} file.");
+                            var storageTypeName = (outputBundle.Count > 1 ? "bundle" : "file");
+                            Console.WriteLine($"  Format {formatName} converted into {extension} {storageTypeName}.");
                         }
                         else
                         {
@@ -124,15 +125,18 @@ namespace FEZRepacker.Interface
                         }
                     }
 
-                    var outputFileName = Path.Combine(outputDir, pakFile.Path + extension);
-                    var outputDirectory = Path.GetDirectoryName(outputFileName) ?? "";
+                    outputBundle.BundlePath = Path.Combine(outputDir, pakFile.Path + extension);
+                    var outputDirectory = Path.GetDirectoryName(outputBundle.BundlePath) ?? "";
                     if (!Directory.Exists(outputDirectory))
                     {
                         Directory.CreateDirectory(outputDirectory);
                     }
 
-                    using var fileOutputStream = File.Open(outputFileName, FileMode.Create);
-                    outputStream.CopyTo(fileOutputStream);
+                    foreach(var outputFile in outputBundle)
+                    {
+                        using var fileOutputStream = File.Open(outputBundle.BundlePath + outputFile.Extension, FileMode.Create);
+                        outputFile.Data.CopyTo(fileOutputStream);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -194,59 +198,74 @@ namespace FEZRepacker.Interface
                 throw new Exception("Given input directory does not exist.");
             }
 
-            string[] filesToAdd = Directory.GetFiles(inputPath, "*.*", SearchOption.AllDirectories);
-            Console.WriteLine($"Packing {filesToAdd.Length} files into {outputPackagePath}...");
+            string[] fileNamesToAdd = Directory.GetFiles(inputPath, "*.*", SearchOption.AllDirectories);
+            Console.WriteLine($"Found {fileNamesToAdd.Length} files.");
 
-            // load, convert and add files to the package
-            var filesDone = 0;
-            foreach (var filePath in filesToAdd)
+            // load and transform file list into bundles
+            var fileList = new Dictionary<string, Stream>();
+            foreach (var filePath in fileNamesToAdd)
             {
-                Console.WriteLine($"({filesDone + 1}/{filesToAdd.Length}) {filePath}");
+                var relativePath = Path.GetRelativePath(inputPath, filePath).Replace("/", "\\").ToLower();
+                fileList[relativePath] = File.OpenRead(filePath);
+            }
+            var fileBundlesToAdd = FileBundle.BundleFiles(fileList);
+
+
+            var assetsToAdd = new Dictionary<(string Path, string Extension), Stream>();
+
+            // convert
+            Console.WriteLine($"Converting {fileBundlesToAdd.Count()} assets...");
+            var filesDone = 0;
+            foreach (var fileBundle in fileBundlesToAdd)
+            {
+                Console.WriteLine($"({filesDone + 1}/{fileBundlesToAdd.Count}) {fileBundle.BundlePath}");
 
                 try
                 {
-                    var extension = Path.GetExtension(filePath).ToLower();
-                    var newExtension = extension;
-                    using var fileStream = File.OpenRead(filePath);
+                    var deconverter = new XnbDeconverter();
 
-                    var deconverter = new XnbDeconverter(extension);
-
-                    using var deconverterStream = deconverter.Deconvert(fileStream);
+                    var deconverterStream = deconverter.Deconvert(fileBundle);
 
                     if (deconverter.Converted)
                     {
-                        Console.WriteLine($"  Format {extension} deconverted into {deconverter.FormatConverter!.FormatName} XNB asset.");
-                        newExtension = ".xnb";
+                        Console.WriteLine($"  Format {fileBundle.MainExtension} deconverted into {deconverter.FormatConverter!.FormatName} XNB asset.");
+                        assetsToAdd.Add((fileBundle.BundlePath, ".xnb"), deconverterStream);
                     }
                     else
                     {
-                        if (extension.Equals(".xnb", StringComparison.OrdinalIgnoreCase))
+                        Console.WriteLine($"  Format {fileBundle.MainExtension} doesn't have a converter - packing asset as raw files.");
+
+                        foreach(var file in fileBundle)
                         {
-                            Console.WriteLine($"  File is an XNB asset already - packing directly.");
-                        }
-                        else
-                        {
-                            Console.WriteLine($"  Format {extension} doesn't have a converter - packing as a raw file.");
+                            file.Data.Seek(0, SeekOrigin.Begin);
+                            var ext = fileBundle.MainExtension + file.Extension;
+                            assetsToAdd.Add((fileBundle.BundlePath, ext), file.Data);
                         }
                     }
-
-                    // TODO: Does this really need to use a relative file path?
-                    var pakFilePath = Path.GetRelativePath(inputPath, filePath).Replace("/", "\\").ToLower();
-                    pakFilePath = pakFilePath.Substring(0, pakFilePath.Length - extension.Length);
-
-                    int removed = pak.RemoveAll(file => file.Path == pakFilePath && file.GetExtensionFromHeaderOrDefault() == newExtension);
-                    if (removed > 0)
-                    {
-                        Console.WriteLine($"  This file replaces {removed} file{(removed > 1 ? "s" : "")} that has been in the package already.");
-                    }
-
-                    pak.Add(PakFile.Read(pakFilePath, deconverterStream));
                 }
                 catch (Exception ex)
                 {
-                    Console.Error.WriteLine($"Unable to pack {filePath} - {ex.Message}");
+                    Console.Error.WriteLine($"Unable to convert asset {fileBundle.BundlePath} - {ex.Message}");
                 }
                 filesDone++;
+            }
+
+            // add to pak
+            Console.WriteLine($"Packing {assetsToAdd.Count()} assets into {outputPackagePath}...");
+
+            foreach(var assetRecord in assetsToAdd)
+            {
+                var assetPath = assetRecord.Key.Path;
+                var assetExtension = assetRecord.Key.Extension;
+                var asset = assetRecord.Value;
+
+                int removed = pak.RemoveAll(file => file.Path == assetPath && file.GetExtensionFromHeaderOrDefault() == assetExtension);
+                if (removed > 0)
+                {
+                    Console.WriteLine($"File {assetPath} replaces {removed} file{(removed > 1 ? "s" : "")} that has been in the package already.");
+                }
+
+                pak.Add(PakFile.Read(assetPath, asset));
             }
 
             // save package

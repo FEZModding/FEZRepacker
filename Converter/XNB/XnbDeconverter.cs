@@ -1,4 +1,5 @@
-﻿using FEZRepacker.Converter.Helpers;
+﻿using FEZRepacker.Converter.FileSystem;
+using FEZRepacker.Converter.Helpers;
 using FEZRepacker.Converter.XNB.Formats;
 
 namespace FEZRepacker.Converter.XNB
@@ -8,20 +9,24 @@ namespace FEZRepacker.Converter.XNB
         public XnbFormatConverter? FormatConverter;
         public bool Converted { get; private set; }
 
-        public XnbDeconverter(string extension)
+        public XnbDeconverter()
         {
-            FormatConverter = XnbFormatList.FindByExtension(extension);
             Converted = false;
         }
 
-        public Stream Deconvert(Stream input)
+        public Stream Deconvert(FileBundle fileBundle)
         {
+            FormatConverter = XnbFormatList.FindByExtension(fileBundle.MainExtension);
+
             var output = new MemoryStream();
 
             if (FormatConverter == null)
             {
-                input.CopyTo(output);
-                output.Position = 0;
+                if(fileBundle.Count > 0)
+                {
+                    fileBundle[0].Data.CopyTo(output);
+                    output.Seek(0, SeekOrigin.Begin);
+                }
                 Converted = false;
                 return output;
             }
@@ -45,8 +50,7 @@ namespace FEZRepacker.Converter.XNB
             xnbContentWriter.Write7BitEncodedInt(1);
 
             // convert actual data
-            using var inputReader = new BinaryReader(input);
-            FormatConverter.ToBinary(inputReader, xnbContentWriter);
+            FormatConverter.WriteXnbContent(fileBundle, xnbContentWriter);
 
             // copy length of the file (including header block of 10 bytes) and data into output stream
             new BinaryWriter(output).Write((int)xnbContentWriter.BaseStream.Length + 10);

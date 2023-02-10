@@ -59,6 +59,13 @@ namespace FEZRepacker.Converter.Definitions.FezEngine.Structure.Geometry
             return normalByte;
         }
 
-
+        public override bool Equals(object obj)
+        {
+            var other = obj as VertexPositionNormalTextureInstance;
+            return other != null 
+                && other.Position == this.Position
+                && other.NormalByte == this.NormalByte
+                && other.TextureCoordinate == this.TextureCoordinate;
+        }
     }
 }
