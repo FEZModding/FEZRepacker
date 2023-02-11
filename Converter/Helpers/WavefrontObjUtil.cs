@@ -44,7 +44,7 @@ namespace FEZRepacker.Converter.Helpers
             foreach (var texCoord in textureCoordinates)
             {
                 // y coords are inverted
-                objBuilder.AppendLine($"vt {texCoord.X} {-texCoord.Y}");
+                objBuilder.AppendLine($"vt {texCoord.X} {1.0f - texCoord.Y}");
             }
 
             foreach (var normal in normals)
@@ -131,7 +131,7 @@ namespace FEZRepacker.Converter.Helpers
                 {
                     var x = float.Parse(tokens[1]);
                     var y = float.Parse(tokens[2]);
-                    uvs.Add(new Vector2(x, -y)); // y is inverted
+                    uvs.Add(new Vector2(x, 1.0f - y)); // y is inverted
                 }
                 else if(tokens[0] == "vn" && tokens.Length >= 4)
                 {

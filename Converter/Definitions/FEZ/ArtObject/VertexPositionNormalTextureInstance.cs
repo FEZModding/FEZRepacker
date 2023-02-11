@@ -53,7 +53,7 @@ namespace FEZRepacker.Converter.Definitions.FezEngine.Structure.Geometry
                 if (distance < smallestDistance)
                 {
                     smallestDistance = distance;
-                    normalByte = 0;
+                    normalByte = i;
                 }
             }
             return normalByte;

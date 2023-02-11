@@ -115,6 +115,26 @@ namespace FEZRepacker.Converter.XNB.Formats
             string geometryString = new string(geometryReader.ReadChars((int)geometryStream.Length));
             var geometry = WavefrontObjUtil.FromWavefrontObj<Matrix>(geometryString);
             if(geometry.Count() > 0) ao.Geometry = geometry.Values.First();
+
+            // recalculate geometry texture coordinates into correct cubemap coords
+            foreach (var vertex in ao.Geometry.Vertices)
+            {
+                (int textureOffset, Vector3 xAxis, Vector3 yAxis) = vertex.NormalByte switch
+                {
+                    5 => (0, new Vector3(1, 0, 0), new Vector3(0, -1, 0)), // front
+                    3 => (1, new Vector3(0, 0, -1), new Vector3(0, -1, 0)), // right
+                    2 => (2, new Vector3(-1, 0, 0), new Vector3(0, -1, 0)), // back
+                    0 => (3, new Vector3(0, 0, 1), new Vector3(0, -1, 0)), // left
+                    4 => (4, new Vector3(1, 0, 0), new Vector3(0, 0, 1)), // top
+                    1 => (5, new Vector3(1, 0, 0), new Vector3(0, 0, -1)), // bottom
+                };
+
+                var texturePlanePosition = vertex.Position / ao.Size;
+                vertex.TextureCoordinate = new Vector2(
+                    (Vector3.Dot(texturePlanePosition, xAxis) + 0.5f + textureOffset) / 6.0f,
+                    Vector3.Dot(texturePlanePosition, yAxis) + 0.5f
+                );
+            }
         }
 
         private static void LoadCubemap(Stream imageStream, ref ArtObject ao)
