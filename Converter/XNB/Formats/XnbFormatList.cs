@@ -17,6 +17,7 @@ namespace FEZRepacker.Converter.XNB.Formats
             Add(new ArtObjectConverter());
             Add(new MapTreeConverter());
             Add(new SkyConverter());
+            Add(new NpcMetadataConverter());
         }
 
         private static void Add(XnbFormatConverter converter)

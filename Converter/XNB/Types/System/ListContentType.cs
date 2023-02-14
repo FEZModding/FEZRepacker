@@ -5,7 +5,8 @@ namespace FEZRepacker.Converter.XNB.Types.System
     internal class ListContentType<T> : XnbContentType<List<T>> where T : notnull
     {
         private XnbAssemblyQualifier _name;
-        public ListContentType(XnbFormatConverter converter) : base(converter)
+        private bool _skipElementType;
+        public ListContentType(XnbFormatConverter converter, bool skipElementType = false) : base(converter)
         {
             // creating type assembly qualifier name
             _name = typeof(ArrayContentType<T>).FullName ?? "";
@@ -14,6 +15,11 @@ namespace FEZRepacker.Converter.XNB.Types.System
 
             var genericQualifier = GetXnbTypeFor(typeof(T));
             if (genericQualifier.HasValue) _name.Templates[0] = genericQualifier.Value;
+
+            // similarly to arrays, elements can have type identifier prefix
+            // but unlike arrays, this is much less common
+            // again, barely any idea what's the rule here.
+            _skipElementType = skipElementType;
         }
 
         public override XnbAssemblyQualifier Name => _name;
@@ -24,7 +30,7 @@ namespace FEZRepacker.Converter.XNB.Types.System
             int dataCount = reader.ReadInt32();
             for (int i = 0; i < dataCount; i++)
             {
-                T? value = Converter.ReadType<T>(reader);
+                T? value = Converter.ReadType<T>(reader, _skipElementType);
                 if (value != null) data.Add(value);
             }
             return data;
