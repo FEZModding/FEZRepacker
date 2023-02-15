@@ -62,7 +62,12 @@ namespace FEZRepacker.Interface
 
             foreach (var packagePath in packagePaths)
             {
-                UnpackPackage(packagePath, outputDir, unpackingMode);
+                var actualOutputDir = outputDir;
+                if (packagePath.EndsWith("Music.pak"))
+                {
+                    actualOutputDir = Path.Combine(outputDir, "music");
+                }
+                UnpackPackage(packagePath, actualOutputDir, unpackingMode);
             }
         }
 

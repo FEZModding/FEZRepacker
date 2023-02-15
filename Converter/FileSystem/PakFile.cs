@@ -45,18 +45,17 @@
         {
             var extension = defaultExtension;
 
-            if (data.Length >= 3)
+            if (data.Length >= 4)
             {
                 if (data[0] == 'X' && data[1] == 'N' && data[2] == 'B')
                 {
                     extension = ".xnb";
                 }
-                else if (data[0] == 'O' && data[1] == 'G' && data[2] == 'G')
+                else if (data[0] == 'O' && data[1] == 'g' && data[2] == 'g' && data[3] == 'S')
                 {
                     extension = ".ogg";
                 }
-                else if (data.Length >= 4 &&
-                    data[0] == 0x01 && data[1] == 0x09 && data[2] == 0xFF && data[3] == 0xFE)
+                else if (data[0] == 0x01 && data[1] == 0x09 && data[2] == 0xFF && data[3] == 0xFE)
                 {
                     extension = ".fxc";
                 }
