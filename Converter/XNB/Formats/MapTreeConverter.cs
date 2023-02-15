@@ -2,8 +2,6 @@
 
 using FEZRepacker.Converter.Definitions.FezEngine;
 using FEZRepacker.Converter.Definitions.FezEngine.Structure;
-using FEZRepacker.Converter.Definitions.FezEngine.Structure.Input;
-using FEZRepacker.Converter.Definitions.FezEngine.Structure.Scripting;
 using FEZRepacker.Converter.FileSystem;
 using FEZRepacker.Converter.XNB.Formats.Json;
 using FEZRepacker.Converter.XNB.Formats.Json.CustomStructures;

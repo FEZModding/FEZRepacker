@@ -5,8 +5,6 @@ using FEZRepacker.Converter.XNB.Formats.Json;
 using FEZRepacker.Converter.XNB.Types;
 using FEZRepacker.Converter.XNB.Types.System;
 
-using static FEZRepacker.Converter.XNB.Formats.Json.CustomStructures.ModifiedMapTree;
-
 namespace FEZRepacker.Converter.XNB.Formats
 {
     internal class SkyConverter : JsonStorageConverter<Sky>
