@@ -12,16 +12,18 @@ namespace FEZRepacker.Converter.Helpers
     {
         public static string ToWavefrontObj<T>(Dictionary<string, ShaderInstancedIndexedPrimitives<VertexPositionNormalTextureInstance, T>> geometries)
         {
+            int indicesOffset = 0;
             var objBuilder = new StringBuilder();
             foreach(var geometry in geometries)
             {
-                objBuilder.Append($"o {geometry.Key}");
-                objBuilder.Append(geometry.Value.ToWavefrontObj());
+                objBuilder.AppendLine($"o {geometry.Key}");
+                objBuilder.AppendLine(geometry.Value.ToWavefrontObj(indicesOffset));
+                indicesOffset += geometry.Value.Vertices.Count();
             }
             return objBuilder.ToString();
         }
 
-        public static string ToWavefrontObj<T>(this ShaderInstancedIndexedPrimitives<VertexPositionNormalTextureInstance,T> geometry)
+        public static string ToWavefrontObj<T>(this ShaderInstancedIndexedPrimitives<VertexPositionNormalTextureInstance,T> geometry, int indicesOffset = 0)
         {
             var objBuilder = new StringBuilder();
 
@@ -58,11 +60,12 @@ namespace FEZRepacker.Converter.Helpers
             bool isLine = (type == PrimitiveType.LineList || type == PrimitiveType.LineStrip);
             bool isList = (type == PrimitiveType.TriangleList || type == PrimitiveType.LineList);
 
+            int iOffset = indicesOffset + 1; // indexing starts at 1. add given offset on top of that.
             if (isLine)
             {
                 for (int i = 1; i < indices.Count() - indices.Count() % 2; i += (isList ? 2 : 1))
                 {
-                    objBuilder.AppendLine($"l {indices[i - 1] + 1} {indices[i] + 1}");
+                    objBuilder.AppendLine($"l {indices[i - 1] + iOffset} {indices[i] + iOffset}");
                 }
             }
             else
@@ -70,9 +73,9 @@ namespace FEZRepacker.Converter.Helpers
                 for (int i = 2; i < indices.Count() - indices.Count() % 3; i += (isList ? 3 : 1))
                 {
                     // revert orders of indices
-                    int i3 = indices[i - 2] + 1;
-                    int i2 = indices[i - 1] + 1;
-                    int i1 = indices[i] + 1;
+                    int i3 = indices[i - 2] + iOffset;
+                    int i2 = indices[i - 1] + iOffset;
+                    int i1 = indices[i] + iOffset;
 
                     objBuilder.AppendLine($"f {i1}/{i1}/{i1} {i2}/{i2}/{i2} {i3}/{i3}/{i3}");
                 }

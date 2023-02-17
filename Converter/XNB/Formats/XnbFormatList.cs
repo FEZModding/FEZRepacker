@@ -19,6 +19,7 @@ namespace FEZRepacker.Converter.XNB.Formats
             Add(new SkyConverter());
             Add(new NpcMetadataConverter());
             Add(new TrackedSongConverter());
+            Add(new TrileSetConverter());
         }
 
         private static void Add(XnbFormatConverter converter)
