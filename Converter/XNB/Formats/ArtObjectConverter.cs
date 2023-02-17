@@ -85,19 +85,6 @@ namespace FEZRepacker.Converter.XNB.Formats
             
             var image = TextureConverter.ImageFromTexture2D(ao.Cubemap);
 
-            // ArtObject's cubemap alpha channel is presumably unused and set to 0 - make it 255.
-            image.ProcessPixelRows(accessor =>
-            {
-                for (int y = 0; y < accessor.Height; y++)
-                {
-                    var pixelRow = accessor.GetRowSpan(y);
-                    foreach (ref Rgba32 pixel in pixelRow)
-                    {
-                        pixel.A = 255;
-                    }
-                }
-            });
-
             image.Save(memoryStream, new PngEncoder());
             memoryStream.Seek(0, SeekOrigin.Begin);
             return memoryStream;
