@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+    <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
     <PublishSingleFile>true</PublishSingleFile>
     <PublishTrimmed>true</PublishTrimmed>
   </PropertyGroup>
