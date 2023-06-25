@@ -93,19 +93,19 @@ namespace FEZRepacker.Interface
             {
                 Name = "--convert-from-xnb", Aliases = new[]{"-x"},
                 HelpText = "Attempts to convert given XNB input (this can be a path to a single asset or an entire directory) " +
-                "and save it at given output (if input is a directory, dumps all converted files in specified path). " +
-                "Directories are treated recursively.",
-                Arguments = new[]{ new Argument("xnb-input"), new Argument("file-output") },
-                Operation = delegate(string[] args){ ConvertFromXNB(args[0], args[1]); }
+                "and save it at given output directory. If input is a directory, dumps all converted files in specified path " +
+                "recursively. If output directory is not given, outputs next to the input file(s).",
+                Arguments = new[]{ new Argument("xnb-input"), new Argument("file-output", true) },
+                Operation = delegate(string[] args){ ConvertFromXNB(args[0], args.Length > 1 ? args[1] : ""); }
             },
             new Command
             {
                 Name = "--convert-to-xnb", Aliases = new[]{"-X"},
                 HelpText = "Attempts to convert given input (this can be a path to a single file or an entire directory) " +
-                "into XNB file(s) and save it at given output (if input is a directory, dumps all converted files in specified path). " +
-                "Directories are treated recursively.",
-                Arguments = new[]{ new Argument("file-input"), new Argument("xnb-output") },
-                Operation = delegate(string[] args){ ConvertIntoXNB(args[0], args[1]); }
+                "into XNB file(s) and save it at given output directory. If input is a directory, dumps all converted files in" +
+                "specified path recursively. If output directory is not given, outputs next to the input file(s).",
+                Arguments = new[]{ new Argument("file-input"), new Argument("xnb-output", true) },
+                Operation = delegate(string[] args){ ConvertIntoXNB(args[0], args.Length > 1 ? args[1] : ""); }
             },
         };
 

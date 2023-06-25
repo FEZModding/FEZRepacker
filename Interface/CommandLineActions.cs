@@ -1,4 +1,6 @@
-﻿using FEZRepacker.Converter.FileSystem;
+﻿using System.IO;
+
+using FEZRepacker.Converter.FileSystem;
 using FEZRepacker.Converter.XNB;
 
 namespace FEZRepacker.Interface
@@ -173,12 +175,177 @@ namespace FEZRepacker.Interface
 
         public static void ConvertFromXNB(string inputPath, string outputPath)
         {
-            Console.WriteLine("Feature currently not supported.");
+            var xnbFilesToConvert = new List<string>();
+
+            if (Directory.Exists(inputPath))
+            {
+                xnbFilesToConvert = Directory.GetFiles(inputPath, "*.xnb", SearchOption.AllDirectories).ToList();
+                Console.WriteLine($"Found {xnbFilesToConvert.Count()} XNB files in given directory.");
+            }
+            else if (File.Exists(inputPath))
+            {
+                xnbFilesToConvert.Add(inputPath);
+                if (Path.GetExtension(inputPath) != ".xnb")
+                {
+                    throw new Exception("An input file must be an .XNB file.");
+                }
+                inputPath = Path.GetDirectoryName(inputPath) ?? "";
+            }
+            else
+            {
+                throw new FileNotFoundException("Specified input path does not lead to any file or a directory");
+            }
+
+            if (outputPath.Length == 0)
+            {
+                outputPath = inputPath;
+            }
+            if (!Directory.Exists(outputPath))
+            {
+                Directory.CreateDirectory(outputPath);
+            }
+
+            var filesDone = 0;
+            foreach (var xnbPath in xnbFilesToConvert)
+            {
+                Console.WriteLine($"({filesDone + 1}/{xnbFilesToConvert.Count}) {xnbPath}");
+
+                using var xnbStream = File.OpenRead(xnbPath);
+
+                var converter = new XnbConverter();
+                var outputBundle = converter.Convert(xnbStream);
+                var formatName = converter.HeaderValid ? converter.FileType.Name.Replace("Reader", "") : "";
+                if (converter.Converted)
+                {
+                    outputBundle.MainExtension = converter.FormatConverter!.FileFormat;
+                    var storageTypeName = (outputBundle.Count > 1 ? "bundle" : "file");
+                    Console.WriteLine($"  Format {formatName} converted into {outputBundle.MainExtension} {storageTypeName}.");
+                }
+                else
+                {
+                    Console.WriteLine(converter.HeaderValid ? $"  Unknown format {formatName}." : $"  Not a valid XNB file." + " Skipping.");
+                    continue;
+                }
+
+                var relativePath = Path.GetRelativePath(inputPath, xnbPath)
+                    .Replace("/", "\\")
+                    .Replace(".xnb", "", StringComparison.InvariantCultureIgnoreCase);
+                outputBundle.BundlePath = Path.Combine(outputPath, relativePath + outputBundle.MainExtension);
+                var outputDirectory = Path.GetDirectoryName(outputBundle.BundlePath) ?? "";
+                if (!Directory.Exists(outputDirectory))
+                {
+                    Directory.CreateDirectory(outputDirectory);
+                }
+
+                foreach (var outputFile in outputBundle)
+                {
+                    using var fileOutputStream = File.Open(outputBundle.BundlePath + outputFile.Extension, FileMode.Create);
+                    outputFile.Data.CopyTo(fileOutputStream);
+                }
+
+                filesDone++;
+            }
         }
 
         public static void ConvertIntoXNB(string inputPath, string outputPath)
         {
-            Console.WriteLine("Feature currently not supported.");
+            var fileNames = new string[0];
+
+            if (Directory.Exists(inputPath))
+            {
+                fileNames = Directory.GetFiles(inputPath, "*.*", SearchOption.AllDirectories);
+                Console.WriteLine($"Found {fileNames.Length} files.");
+            }
+            else if (File.Exists(inputPath))
+            {
+                var fileName = Path.GetFileNameWithoutExtension(inputPath);
+                inputPath = Path.GetDirectoryName(inputPath) ?? "";
+                fileNames = Directory.GetFiles(inputPath, $"{fileName}.*");
+                Console.WriteLine($"Found {fileNames.Length} linked files for a file bundle.");
+            }
+            else
+            {
+                throw new FileNotFoundException("Specified input path does not lead to any file or a directory");
+            }
+
+            if (outputPath.Length == 0)
+            {
+                outputPath = inputPath;
+            }
+            if (!Directory.Exists(outputPath))
+            {
+                Directory.CreateDirectory(outputPath);
+            }
+
+            // load and transform file list into bundles
+            var fileList = new Dictionary<string, Stream>();
+            foreach (var filePath in fileNames)
+            {
+                var relativePath = Path.GetRelativePath(inputPath, filePath).Replace("/", "\\").ToLower();
+                fileList[relativePath] = File.OpenRead(filePath);
+            }
+            var fileBundles = FileBundle.BundleFiles(fileList);
+            Console.WriteLine($"Converting {fileBundles.Count()} file bundles.");
+
+
+            var xnbAssets = new Dictionary<(string Path, string Extension), Stream>();
+
+            // convert
+            Console.WriteLine($"Converting {fileBundles.Count()} assets...");
+            var filesDone = 0;
+            foreach (var fileBundle in fileBundles)
+            {
+                Console.WriteLine($"({filesDone + 1}/{fileBundles.Count}) {fileBundle.BundlePath}");
+
+                try
+                {
+                    var deconverter = new XnbDeconverter();
+
+                    var deconverterStream = deconverter.Deconvert(fileBundle);
+
+                    if (deconverter.Converted)
+                    {
+                        Console.WriteLine($"  Format {fileBundle.MainExtension} deconverted into {deconverter.FormatConverter!.FormatName} XNB asset.");
+                        xnbAssets.Add((fileBundle.BundlePath, ".xnb"), deconverterStream);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"  Format {fileBundle.MainExtension} doesn't have a converter - packing asset as raw files.");
+
+                        foreach (var file in fileBundle)
+                        {
+                            file.Data.Seek(0, SeekOrigin.Begin);
+                            var ext = fileBundle.MainExtension + file.Extension;
+                            xnbAssets.Add((fileBundle.BundlePath, ext), file.Data);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.Error.WriteLine($"Unable to convert asset {fileBundle.BundlePath} - {ex.Message}");
+                }
+                filesDone++;
+            }
+
+            Console.WriteLine($"Saving {xnbAssets.Count()} XNB assets...");
+
+            foreach (var assetRecord in xnbAssets)
+            {
+                var assetPath = assetRecord.Key.Path;
+                var assetExtension = assetRecord.Key.Extension;
+                var asset = assetRecord.Value;
+
+                var assetOutputFullPath = Path.Combine(outputPath, $"{assetPath}{assetExtension}");
+
+                var directoryPath = Path.GetDirectoryName(assetOutputFullPath) ?? "";
+                if (directoryPath.Length > 0 && !Directory.Exists(directoryPath))
+                {
+                    Directory.CreateDirectory(directoryPath);
+                }
+
+                using var assetFile = File.Create(assetOutputFullPath);
+                asset.CopyTo(assetFile);
+            }
         }
 
         public static void AddToPackage(string inputPath, string outputPackagePath, string includePackagePath)
