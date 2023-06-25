@@ -9,7 +9,7 @@ namespace FEZRepacker.Interface
             // showoff
             Console.WriteLine(
                 "==============================\n" +
-                "= FEZRepacker 0.2 by Krzyhau =\n" +
+                "= FEZRepacker 0.3 by Krzyhau =\n" +
                 "==============================\n"
             );
 
