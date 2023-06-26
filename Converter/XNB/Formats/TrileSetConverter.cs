@@ -51,13 +51,15 @@ namespace FEZRepacker.Converter.XNB.Formats
             TrileSet trileSet = (TrileSet)PrimaryContentType.Read(xnbReader);
 
             var geometry = SaveGeometry(trileSet);
-            var texture = SaveCubemap(trileSet);
+            var abledoTexture = SaveCubemap(trileSet, false);
+            var emissionTexture = SaveCubemap(trileSet, true);
             var data = SaveAdditionalData(trileSet);
 
             return new FileBundle(FileFormat)
             {
                 (".obj", geometry),
-                (".png", texture),
+                (".png", abledoTexture),
+                (".apng", emissionTexture),
                 (".json", data)
             };
         }
@@ -66,12 +68,18 @@ namespace FEZRepacker.Converter.XNB.Formats
         {
             TrileSet trileSet = new TrileSet();
 
+            Stream albedoData = null;
+            Stream emissionData = null;
+
             foreach (var file in bundle)
             {
                 if (file.Extension == ".obj") LoadGeometry(file.Data, ref trileSet);
-                if (file.Extension == ".png") LoadCubemap(file.Data, ref trileSet);
+                if (file.Extension == ".png") albedoData = file.Data;
+                if (file.Extension == ".apng") emissionData = file.Data;
                 if (file.Extension == ".json") LoadAdditionalData(file.Data, ref trileSet);
             }
+
+            LoadCubemap(albedoData, emissionData, ref trileSet);
 
             PrimaryContentType.Write(trileSet, xnbWriter);
         }
@@ -90,7 +98,7 @@ namespace FEZRepacker.Converter.XNB.Formats
             return new MemoryStream(Encoding.UTF8.GetBytes(objString));
         }
 
-        private static Stream SaveCubemap(TrileSet trileSet)
+        private static Stream SaveCubemap(TrileSet trileSet, bool emission)
         {
             var memoryStream = new MemoryStream();
 
@@ -100,6 +108,20 @@ namespace FEZRepacker.Converter.XNB.Formats
             }
 
             var image = TextureConverter.ImageFromTexture2D(trileSet.TextureAtlas);
+
+            // separate emission encoded into alpha channel from albedo
+            image.ProcessPixelRows(accessor =>
+            {
+                for (int y = 0; y < accessor.Height; y++)
+                {
+                    var pixelRow = accessor.GetRowSpan(y);
+                    foreach (ref Rgba32 pixel in pixelRow)
+                    {
+                        if (emission) pixel.R = pixel.G = pixel.B = pixel.A;
+                        pixel.A = 255;
+                    }
+                }
+            });
 
             image.Save(memoryStream, new PngEncoder());
             memoryStream.Seek(0, SeekOrigin.Begin);
@@ -126,10 +148,32 @@ namespace FEZRepacker.Converter.XNB.Formats
             }
         }
 
-        private static void LoadCubemap(Stream imageStream, ref TrileSet trileSet)
+        private static void LoadCubemap(Stream imageAlbedoStream, Stream imageEmissionStream, ref TrileSet ts)
         {
-            using var importedImage = Image.Load<Rgba32>(imageStream);
-            trileSet.TextureAtlas = TextureConverter.ImageToTexture2D(importedImage);
+            if (imageAlbedoStream == null && imageEmissionStream == null) return;
+
+            // use emission stream as albedo if albedo is not present
+            using var albedoImage = Image.Load<Rgba32>(imageAlbedoStream ?? imageEmissionStream);
+
+            using var emissionImage =
+                imageEmissionStream != null
+                ? Image.Load<Rgba32>(imageEmissionStream)
+                : new Image<Rgba32>(albedoImage.Width, albedoImage.Height, Color.Black);
+
+            albedoImage.ProcessPixelRows(emissionImage, (albedoAccesor, emissionAccesor) =>
+            {
+                for (int y = 0; y < albedoAccesor.Height; y++)
+                {
+                    var albedoPixelRow = albedoAccesor.GetRowSpan(y);
+                    var emissionPixelRow = emissionAccesor.GetRowSpan(y);
+                    for (int x = 0; x < albedoPixelRow.Length; x++)
+                    {
+                        albedoPixelRow[x].A = emissionPixelRow[x].R;
+                    }
+                }
+            });
+
+            ts.TextureAtlas = TextureConverter.ImageToTexture2D(albedoImage);
         }
 
         private static void LoadAdditionalData(Stream jsonStream, ref TrileSet trileSet)

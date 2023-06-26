@@ -42,13 +42,15 @@ namespace FEZRepacker.Converter.XNB.Formats
             ArtObject ao = (ArtObject)PrimaryContentType.Read(xnbReader);
 
             var geometry = SaveGeometry(ao);
-            var texture = SaveCubemap(ao);
+            var albedoTexture = SaveCubemap(ao, false);
+            var emissionTexture = SaveCubemap(ao, true);
             var data = SaveAdditionalData(ao);
 
             return new FileBundle(FileFormat)
             {
                 (".obj", geometry),
-                (".png", texture),
+                (".png", albedoTexture),
+                (".apng", emissionTexture),
                 (".json", data)
             };
         }
@@ -57,12 +59,18 @@ namespace FEZRepacker.Converter.XNB.Formats
         {
             ArtObject ao = new ArtObject();
 
+            Stream albedoData = null;
+            Stream emissionData = null;
+
             foreach(var file in bundle)
             {
                 if (file.Extension == ".obj") LoadGeometry(file.Data, ref ao);
-                if (file.Extension == ".png") LoadCubemap(file.Data, ref ao);
+                if (file.Extension == ".png") albedoData = file.Data;
+                if (file.Extension == ".apng") emissionData = file.Data;
                 if (file.Extension == ".json") LoadAdditionalData(file.Data, ref ao);
             }
+
+            LoadCubemap(albedoData, emissionData, ref ao);
 
             PrimaryContentType.Write(ao, xnbWriter);
         }
@@ -74,7 +82,7 @@ namespace FEZRepacker.Converter.XNB.Formats
             return new MemoryStream(Encoding.UTF8.GetBytes(ao.Geometry.ToWavefrontObj()));
         }
 
-        private static Stream SaveCubemap(ArtObject ao)
+        private static Stream SaveCubemap(ArtObject ao, bool emission)
         {
             var memoryStream = new MemoryStream();
 
@@ -84,6 +92,20 @@ namespace FEZRepacker.Converter.XNB.Formats
             }
             
             var image = TextureConverter.ImageFromTexture2D(ao.Cubemap);
+
+            // separate emission encoded into alpha channel from albedo
+            image.ProcessPixelRows(accessor =>
+            {
+                for (int y = 0; y < accessor.Height; y++)
+                {
+                    var pixelRow = accessor.GetRowSpan(y);
+                    foreach (ref Rgba32 pixel in pixelRow)
+                    {
+                        if (emission) pixel.R = pixel.G = pixel.B = pixel.A;
+                        pixel.A = 255;
+                    }
+                }
+            });
 
             image.Save(memoryStream, new PngEncoder());
             memoryStream.Seek(0, SeekOrigin.Begin);
@@ -124,11 +146,34 @@ namespace FEZRepacker.Converter.XNB.Formats
             }
         }
 
-        private static void LoadCubemap(Stream imageStream, ref ArtObject ao)
+        private static void LoadCubemap(Stream imageAlbedoStream, Stream imageEmissionStream, ref ArtObject ao)
         {
-            using var importedImage = Image.Load<Rgba32>(imageStream);
-            ao.Cubemap = TextureConverter.ImageToTexture2D(importedImage);
+            if (imageAlbedoStream == null && imageEmissionStream == null) return;
+
+            // use emission stream as albedo if albedo is not present
+            using var albedoImage = Image.Load<Rgba32>(imageAlbedoStream ?? imageEmissionStream);
+
+            using var emissionImage = 
+                imageEmissionStream != null 
+                ? Image.Load<Rgba32>(imageEmissionStream) 
+                : new Image<Rgba32>(albedoImage.Width, albedoImage.Height, Color.Black);
+           
+            albedoImage.ProcessPixelRows(emissionImage, (albedoAccesor, emissionAccesor) =>
+            {
+                for (int y = 0; y < albedoAccesor.Height; y++)
+                {
+                    var albedoPixelRow = albedoAccesor.GetRowSpan(y);
+                    var emissionPixelRow = emissionAccesor.GetRowSpan(y);
+                    for (int x = 0; x < albedoPixelRow.Length; x++)
+                    {
+                        albedoPixelRow[x].A = emissionPixelRow[x].R;
+                    }
+                }
+            });
+
+            ao.Cubemap = TextureConverter.ImageToTexture2D(albedoImage);
         }
+
 
         private static void LoadAdditionalData(Stream jsonStream, ref ArtObject ao)
         {
