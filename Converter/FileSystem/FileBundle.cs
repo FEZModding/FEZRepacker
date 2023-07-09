@@ -38,9 +38,9 @@
             this.Clear();
         }
 
-        public static FileBundle Single(Stream stream, string extension="", string path = "")
+        public static FileBundle Single(Stream stream, string extension="", string subextension = "")
         {
-            return new FileBundle(extension, path) { ("", stream) };
+            return new FileBundle(extension) { (subextension, stream) };
         }
 
         public static List<FileBundle> BundleFiles(Dictionary<string, Stream> files)
