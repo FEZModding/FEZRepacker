@@ -22,7 +22,8 @@ namespace FEZRepacker.Interface
             }
             else
             {
-                // run user interface here
+                Console.WriteLine("In order to get usage help, use '--help' argument.\n");
+                // TODO: run user interface here?
             }
         }
     }
