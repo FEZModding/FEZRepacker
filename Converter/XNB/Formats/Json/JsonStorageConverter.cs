@@ -24,12 +24,12 @@ namespace FEZRepacker.Converter.XNB.Formats.Json
             var json = CustomJsonSerializer.Serialize(data);
 
             var outStream = new MemoryStream(Encoding.UTF8.GetBytes(json));
-            return FileBundle.Single(outStream, FileFormat);
+            return FileBundle.Single(outStream, FileFormat, ".json");
         }
 
         public override void WriteXnbContent(FileBundle bundle, BinaryWriter xnbWriter)
         {
-            using var inReader = new BinaryReader(bundle.GetData(), Encoding.UTF8, true);
+            using var inReader = new BinaryReader(bundle.GetData(".json"), Encoding.UTF8, true);
             string json = new string(inReader.ReadChars((int)inReader.BaseStream.Length));
             T data = CustomJsonSerializer.Deserialize<T>(json);
 
