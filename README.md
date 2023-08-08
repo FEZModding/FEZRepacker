@@ -20,15 +20,15 @@ Here's a list of all 13 asset types handled by FEZ and file types Repacker conve
 |-|-|-|
 |Texture2D|Sprites and textures|PNG images|
 |AnimatedTexture|Animated textures|WebP animation|
-|ArtObject|3D models of art objects|Not defined yet|
-|TrileSet|Texture and models of level blocks (triles)|Not defined yet|
+|ArtObject|3D models of art objects|Custom `.fezao` file bundle|
+|TrileSet|Texture and models of level blocks (triles)|Custom `.fezts` file bundle|
 |Dictionary[String,Dictionary[String,String]]|Language texts|Custom `.fezdata` file|
-|SpriteFont|Bitmap font|Not defined yet|
+|SpriteFont|Bitmap font|Custon `.fezfont` file bundle|
 |Level|Level data|Custom `.fezlvl` file|
-|MapTree|World map data|Not defined yet|
-|NpcMetadata|NPC behaviour information|Not defined yet|
-|Sky|Skybox structure|Not defined yet|
-|TrackedSong|Song information|Not defined yet|
+|MapTree|World map data|`.fezmap.json` JSON file|
+|NpcMetadata|NPC behaviour information|`.feznpc.json` JSON file|
+|Sky|Skybox structure|`.fezsky.json` JSON file|
+|TrackedSong|Song information|`.fezsong.json` JSON file|
 |Effect|Binary XNA effect file container|Binary FNA effect file|
 |SoundEffect|WAV sound effect container|WAV sound file|
 
