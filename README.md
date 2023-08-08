@@ -22,9 +22,9 @@ Here's a list of all 13 asset types handled by FEZ and file types Repacker conve
 |AnimatedTexture|Animated textures|WebP animation|
 |ArtObject|3D models of art objects|Custom `.fezao` file bundle|
 |TrileSet|Texture and models of level blocks (triles)|Custom `.fezts` file bundle|
-|Dictionary[String,Dictionary[String,String]]|Language texts|Custom `.fezdata` file|
 |SpriteFont|Bitmap font|Custon `.fezfont` file bundle|
-|Level|Level data|Custom `.fezlvl` file|
+|Dictionary[String,Dictionary[String,String]]|Language texts|`.fezdata.json` JSON file|
+|Level|Level data|`.fezlvl.json` JSON file|
 |MapTree|World map data|`.fezmap.json` JSON file|
 |NpcMetadata|NPC behaviour information|`.feznpc.json` JSON file|
 |Sky|Skybox structure|`.fezsky.json` JSON file|
