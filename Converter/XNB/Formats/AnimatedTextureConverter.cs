@@ -3,13 +3,14 @@ using FEZRepacker.Converter.Definitions.MicrosoftXna;
 using FEZRepacker.Converter.FileSystem;
 using FEZRepacker.Converter.XNB.Types;
 using FEZRepacker.Converter.XNB.Types.System;
-using FEZRepacker.Converter.XNB.Types.XNA;
 
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Gif;
 using SixLabors.ImageSharp.Formats.Webp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+
+using Rectangle = FEZRepacker.Converter.Definitions.MicrosoftXna.Rectangle;
 
 namespace FEZRepacker.Converter.XNB.Formats
 {
@@ -22,7 +23,7 @@ namespace FEZRepacker.Converter.XNB.Formats
             new ListContentType<FrameContent>(this),
             new GenericContentType<FrameContent>(this),
             new TimeSpanContentType(this),
-            new RectangleContentType(this)
+            new GenericContentType<Rectangle>(this)
         };
         public override string FileFormat => ".gif";
 
@@ -49,7 +50,7 @@ namespace FEZRepacker.Converter.XNB.Formats
                 var rect = frame.Rectangle;
 
                 using var frameImg = image.Clone(i =>
-                    i.Crop(new Rectangle(rect.X, rect.Y, rect.Width, rect.Height))
+                    i.Crop(new (rect.X, rect.Y, rect.Width, rect.Height))
                 );
 
                 var metadata = frameImg.Frames.RootFrame.Metadata.GetGifMetadata();
@@ -126,7 +127,7 @@ namespace FEZRepacker.Converter.XNB.Formats
 
                 FrameContent frame = new FrameContent();
                 frame.Duration = TimeSpan.FromMilliseconds(frameImg.Metadata.GetGifMetadata().FrameDelay * 10);
-                frame.Rectangle = new System.Drawing.Rectangle(framePosX, framePosY, frameWidth, frameHeight);
+                frame.Rectangle = new Rectangle(framePosX, framePosY, frameWidth, frameHeight);
                 animatedTexture.Frames.Add(frame);
 
                 framePosX += frameWidth + 1; // pixel padding between sprites

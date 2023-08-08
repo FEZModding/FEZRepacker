@@ -20,6 +20,7 @@ namespace FEZRepacker.Converter.XNB.Formats
             Add(new NpcMetadataConverter());
             Add(new TrackedSongConverter());
             Add(new TrileSetConverter());
+            Add(new SpriteFontConverter());
         }
 
         private static void Add(XnbFormatConverter converter)
