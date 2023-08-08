@@ -127,8 +127,11 @@ namespace FEZRepacker.Interface
 
         public static void ParseCommandLine(string[] args)
         {
+            var debugMode = false;
+
             if (args.Length == 1 && args[0] == "debug")
             {
+                debugMode = true;
                 Console.WriteLine("Running debug mode! Type your command line arguments: ");
                 var input = Console.ReadLine() ?? "";
                 args = Regex.Matches(input, @"[\""].+?[\""]|[^ ]+").Cast<Match>().Select(m => m.Value).ToArray();
@@ -161,7 +164,8 @@ namespace FEZRepacker.Interface
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"Error while executing command: {ex.Message}");
+                if (debugMode) throw;
+                else Console.Error.WriteLine($"Error while executing command: {ex.Message}");
             }
         }
 
