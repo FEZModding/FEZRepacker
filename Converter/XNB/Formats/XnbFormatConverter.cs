@@ -67,7 +67,7 @@ namespace FEZRepacker.Converter.XNB.Formats
                 }
                 else
                 {
-                    throw new InvalidDataException($"Cannot convert value of type {T.Name}");
+                    throw new InvalidDataException($"Cannot convert value of type {T.FullName}");
                 }
             }
 
