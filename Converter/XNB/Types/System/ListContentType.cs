@@ -43,7 +43,7 @@ namespace FEZRepacker.Converter.XNB.Types.System
             writer.Write(list.Count);
             foreach (T value in list)
             {
-                Converter.WriteType<T>(value, writer);
+                Converter.WriteType<T>(value, writer, _skipElementType);
             }
         }
 
