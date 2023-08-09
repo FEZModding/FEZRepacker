@@ -8,9 +8,9 @@ namespace FEZRepacker.Interface
         {
             // showoff
             Console.WriteLine(
-                "==============================\n" +
-                "= FEZRepacker 0.3 by Krzyhau =\n" +
-                "==============================\n"
+                "================================================\n" +
+                "= FEZRepacker 0.4 by Krzyhau & FEZModding Team =\n" +
+                "================================================\n"
             );
 
             // keep number decimals consistent
