@@ -20,7 +20,7 @@ namespace FEZRepacker.Converter.XNB
         public FileBundle Convert(Stream input)
         {
             Stream output = new MemoryStream();
-            Stream decompressedInput = XnbCompressor.Decompress(input);
+            using Stream decompressedInput = XnbCompressor.Decompress(input);
 
             if (!XnbHeader.TryRead(decompressedInput, out var header))
             {
@@ -28,6 +28,7 @@ namespace FEZRepacker.Converter.XNB
                 decompressedInput.Position = 0;
                 decompressedInput.CopyTo(output);
                 output.Seek(0, SeekOrigin.Begin);
+
                 return FileBundle.Single(output, ".xnb");
             }
             HeaderValid = true;
@@ -75,7 +76,11 @@ namespace FEZRepacker.Converter.XNB
                 return FileBundle.Single(output, ".xnb");
             }
 
-            return FormatConverter.ReadXNBContent(xnbReader);
+            var convertedBundle = FormatConverter.ReadXNBContent(xnbReader);
+
+            output.Dispose();
+
+            return convertedBundle;
         }
     }
 }

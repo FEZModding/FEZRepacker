@@ -71,7 +71,7 @@ namespace FEZRepacker.Converter.XNB.Formats
                 return memoryStream;
             }
             
-            var image = TextureConverter.ImageFromTexture2D(font.Texture);
+            using var image = TextureConverter.ImageFromTexture2D(font.Texture);
 
             image.Save(memoryStream, new PngEncoder());
             memoryStream.Seek(0, SeekOrigin.Begin);

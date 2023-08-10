@@ -86,31 +86,33 @@ namespace FEZRepacker.Interface
             }
 
             using var pakStream = File.OpenRead(pakPath);
-            var pak = PakContainer.Read(pakStream);
+            using var pakReader = new PakReader(pakStream);
 
-            Console.WriteLine($"Unpacking archive {pakPath} containing {pak.Count} files...");
+            Console.WriteLine($"Unpacking archive {pakPath} containing {pakReader.FileCount} files...");
 
             int filesDone = 0;
-            foreach (var pakFile in pak)
+            foreach (var pakFile in pakReader.ReadFiles())
             {
-                var extension = pakFile.GetExtensionFromHeaderOrDefault();
+                var extension = pakFile.DetectedFileExtension;
 
-                Console.WriteLine($"({filesDone + 1}/{pak.Count}) {pakFile.Path} ({extension} file, size: {pakFile.Size} bytes)");
+                Console.WriteLine(
+                    $"({filesDone + 1}/{pakReader.FileCount})" +
+                    $"{pakFile.Path} ({(extension.Length == 0 ? "unknown" : extension)} file," +
+                    $"size: {pakFile.Size} bytes)"
+                );
 
                 try
                 {
-                    using var fileStream = pakFile.Open();
-
-                    var outputBundle = FileBundle.Single(fileStream, ".xnb");
+                    var outputBundle = FileBundle.Single(pakFile.Data, ".xnb");
 
                     if (mode == UnpackingMode.DecompressedXNB)
                     {
-                        outputBundle = FileBundle.Single(XnbCompressor.Decompress(fileStream), ".xnb");
+                        outputBundle = FileBundle.Single(XnbCompressor.Decompress(pakFile.Data), ".xnb");
                     }
                     else if (mode == UnpackingMode.Converted)
                     {
                         var converter = new XnbConverter();
-                        outputBundle = converter.Convert(fileStream);
+                        outputBundle = converter.Convert(pakFile.Data);
                         var formatName = converter.HeaderValid ? converter.FileType.Name.Replace("Reader", "") : "";
                         if (converter.Converted)
                         {
@@ -144,6 +146,8 @@ namespace FEZRepacker.Interface
                         using var fileOutputStream = File.Open(outputBundle.BundlePath + outputFile.Extension, FileMode.Create);
                         outputFile.Data.CopyTo(fileOutputStream);
                     }
+
+                    outputBundle.Dispose();
                 }
                 catch (Exception ex)
                 {
@@ -161,15 +165,15 @@ namespace FEZRepacker.Interface
             }
 
             using var pakStream = File.OpenRead(pakPath);
-            var pak = PakContainer.Read(pakStream);
+            using var pakReader = new PakReader(pakStream);
 
-            Console.WriteLine($"PAK package \"{pakPath}\" with {pak.Count} files.");
+            Console.WriteLine($"PAK package \"{pakPath}\" with {pakReader.FileCount} files.");
             Console.WriteLine();
 
-            foreach (var item in pak)
+            foreach (var item in pakReader.ReadFiles())
             {
-                var extension = item.GetExtensionFromHeaderOrDefault("unknown");
-                Console.WriteLine($"{item.Path} ({extension} file, size: {item.Size} bytes)");
+                var typeText = item.DetectedFileExtension.Length == 0 ? "unknown" : item.DetectedFileExtension;
+                Console.WriteLine($"{item.Path} ({typeText} file, size: {item.Size} bytes)");
             }
         }
 
@@ -350,8 +354,8 @@ namespace FEZRepacker.Interface
 
         public static void AddToPackage(string inputPath, string outputPackagePath, string includePackagePath)
         {
-            // prepare package
-            PakContainer pak = new PakContainer();
+            // prepare include package
+            bool shouldUseIncludePackage = false;
 
             if (File.Exists(includePackagePath))
             {
@@ -359,8 +363,7 @@ namespace FEZRepacker.Interface
                 {
                     throw new Exception("Included package path must lead to a .PAK file.");
                 }
-                using var includeStream = File.OpenRead(includePackagePath);
-                pak = PakContainer.Read(includeStream);
+                shouldUseIncludePackage = true;
                 Console.WriteLine($"Using {includePackagePath} as a base for package creation.");
             }
 
@@ -382,10 +385,30 @@ namespace FEZRepacker.Interface
             }
             var fileBundlesToAdd = FileBundle.BundleFiles(fileList);
 
+            // create a temporary pak file
+            // we're doing this because output package path might be the same as include package path
+            // and since we want to write to one while reading to the other one, temp file is needed.
+            string tempPakName = Path.GetTempPath() + "repacker_pak_" + Guid.NewGuid().ToString() + ".pak";
+            using var tempPakStream = File.Open(tempPakName, FileMode.Create);
+            using var tempPak = new PakWriter(tempPakStream);
 
-            var assetsToAdd = new Dictionary<(string Path, string Extension), Stream>();
+            // add files from include package
+            if (shouldUseIncludePackage)
+            {
+                using var includePackageStream = File.Open(includePackagePath, FileMode.Open);
+                using var includePackage = new PakReader(includePackageStream);
+                foreach (var file in includePackage.ReadFiles())
+                {
+                    if (fileList.ContainsKey(file.Path))
+                    {
+                        Console.WriteLine($"File {file.Path} exists in include package already and it's going to be replaced.");
+                        continue;
+                    }
+                    tempPak.WriteFile(file.Path, file.Data);
+                }
+            }
 
-            // convert
+            // convert assets and add them to temp pak
             Console.WriteLine($"Converting {fileBundlesToAdd.Count()} assets...");
             var filesDone = 0;
             foreach (var fileBundle in fileBundlesToAdd)
@@ -396,12 +419,12 @@ namespace FEZRepacker.Interface
                 {
                     var deconverter = new XnbDeconverter();
 
-                    var deconverterStream = deconverter.Deconvert(fileBundle);
+                    using var deconverterStream = deconverter.Deconvert(fileBundle);
 
                     if (deconverter.Converted)
                     {
                         Console.WriteLine($"  Format {fileBundle.MainExtension} deconverted into {deconverter.FormatConverter!.FormatName} XNB asset.");
-                        assetsToAdd.Add((fileBundle.BundlePath, ".xnb"), deconverterStream);
+                        tempPak.WriteFile(fileBundle.BundlePath, deconverterStream);
                     }
                     else
                     {
@@ -410,8 +433,7 @@ namespace FEZRepacker.Interface
                         foreach(var file in fileBundle)
                         {
                             file.Data.Seek(0, SeekOrigin.Begin);
-                            var ext = fileBundle.MainExtension + file.Extension;
-                            assetsToAdd.Add((fileBundle.BundlePath, ext), file.Data);
+                            tempPak.WriteFile(fileBundle.BundlePath, file.Data);
                         }
                     }
                 }
@@ -420,29 +442,23 @@ namespace FEZRepacker.Interface
                     Console.Error.WriteLine($"Unable to convert asset {fileBundle.BundlePath} - {ex.Message}");
                 }
                 filesDone++;
+
+                // we're done with that file bundle - get rid of it
+                fileBundle.Dispose();
             }
 
-            // add to pak
-            Console.WriteLine($"Packing {assetsToAdd.Count()} assets into {outputPackagePath}...");
+            // finalize - move temp file to output package path
+            Console.WriteLine($"Packed {tempPak.FileCount} assets into {outputPackagePath}...");
 
-            foreach(var assetRecord in assetsToAdd)
+            tempPak.Dispose();
+            tempPakStream.Close();
+
+            if (File.Exists(outputPackagePath))
             {
-                var assetPath = assetRecord.Key.Path;
-                var assetExtension = assetRecord.Key.Extension;
-                var asset = assetRecord.Value;
-
-                int removed = pak.RemoveAll(file => file.Path == assetPath && file.GetExtensionFromHeaderOrDefault() == assetExtension);
-                if (removed > 0)
-                {
-                    Console.WriteLine($"File {assetPath} replaces {removed} file{(removed > 1 ? "s" : "")} that has been in the package already.");
-                }
-
-                pak.Add(PakFile.Read(assetPath, asset));
+                File.Delete(outputPackagePath);
             }
-
-            // save package
-            using var fileOutputStream = File.Open(outputPackagePath, FileMode.Create);
-            pak.Save(fileOutputStream);
+            File.Move(tempPakName, outputPackagePath);
+            
         }
     }
 }

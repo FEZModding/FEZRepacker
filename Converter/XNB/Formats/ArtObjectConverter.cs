@@ -91,7 +91,7 @@ namespace FEZRepacker.Converter.XNB.Formats
                 return memoryStream;
             }
             
-            var image = TextureConverter.ImageFromTexture2D(ao.Cubemap);
+            using var image = TextureConverter.ImageFromTexture2D(ao.Cubemap);
 
             // separate emission encoded into alpha channel from albedo
             image.ProcessPixelRows(accessor =>
