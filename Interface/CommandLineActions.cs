@@ -364,7 +364,6 @@ namespace FEZRepacker.Interface
                     throw new Exception("Included package path must lead to a .PAK file.");
                 }
                 shouldUseIncludePackage = true;
-                Console.WriteLine($"Using {includePackagePath} as a base for package creation.");
             }
 
             // get a list of files to load
@@ -392,25 +391,10 @@ namespace FEZRepacker.Interface
             using var tempPakStream = File.Open(tempPakName, FileMode.Create);
             using var tempPak = new PakWriter(tempPakStream);
 
-            // add files from include package
-            if (shouldUseIncludePackage)
-            {
-                using var includePackageStream = File.Open(includePackagePath, FileMode.Open);
-                using var includePackage = new PakReader(includePackageStream);
-                foreach (var file in includePackage.ReadFiles())
-                {
-                    if (fileList.ContainsKey(file.Path))
-                    {
-                        Console.WriteLine($"File {file.Path} exists in include package already and it's going to be replaced.");
-                        continue;
-                    }
-                    tempPak.WriteFile(file.Path, file.Data);
-                }
-            }
-
             // convert assets and add them to temp pak
             Console.WriteLine($"Converting {fileBundlesToAdd.Count()} assets...");
             var filesDone = 0;
+            var addedFiles = new List<string>();
             foreach (var fileBundle in fileBundlesToAdd)
             {
                 Console.WriteLine($"({filesDone + 1}/{fileBundlesToAdd.Count}) {fileBundle.BundlePath}");
@@ -425,6 +409,7 @@ namespace FEZRepacker.Interface
                     {
                         Console.WriteLine($"  Format {fileBundle.MainExtension} deconverted into {deconverter.FormatConverter!.FormatName} XNB asset.");
                         tempPak.WriteFile(fileBundle.BundlePath, deconverterStream);
+                        addedFiles.Add(fileBundle.BundlePath + ".xnb");
                     }
                     else
                     {
@@ -434,6 +419,7 @@ namespace FEZRepacker.Interface
                         {
                             file.Data.Seek(0, SeekOrigin.Begin);
                             tempPak.WriteFile(fileBundle.BundlePath, file.Data);
+                            addedFiles.Add(fileBundle.BundlePath + fileBundle.MainExtension);
                         }
                     }
                 }
@@ -445,6 +431,23 @@ namespace FEZRepacker.Interface
 
                 // we're done with that file bundle - get rid of it
                 fileBundle.Dispose();
+            }
+
+            // add files from include package
+            Console.WriteLine($"Adding remaining assets from {includePackagePath}...");
+            if (shouldUseIncludePackage)
+            {
+                using var includePackageStream = File.Open(includePackagePath, FileMode.Open);
+                using var includePackage = new PakReader(includePackageStream);
+                foreach (var file in includePackage.ReadFiles())
+                {
+                    if (addedFiles.Contains(file.Path + file.DetectedFileExtension))
+                    {
+                        Console.WriteLine($"Skipping asset from included package {file.Path}, as it's already in the output package.");
+                        continue;
+                    }
+                    tempPak.WriteFile(file.Path, file.Data);
+                }
             }
 
             // finalize - move temp file to output package path
