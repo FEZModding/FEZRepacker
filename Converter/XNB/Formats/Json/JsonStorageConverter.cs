@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Text.Json;
 
 using FEZRepacker.Converter.FileSystem;
 
@@ -31,9 +32,17 @@ namespace FEZRepacker.Converter.XNB.Formats.Json
         {
             using var inReader = new BinaryReader(bundle.GetData(".json"), Encoding.UTF8, true);
             string json = new string(inReader.ReadChars((int)inReader.BaseStream.Length));
-            T data = CustomJsonSerializer.Deserialize<T>(json);
 
-            PrimaryContentType.Write(data, xnbWriter);
+            try
+            {
+                T data = CustomJsonSerializer.Deserialize<T>(json);
+                PrimaryContentType.Write(data, xnbWriter);
+            }
+            catch(JsonException ex)
+            {
+                throw new InvalidDataException($"No valid JSON structure in a file bundle: {ex.Message}");
+            }
+
         }
     }
 }

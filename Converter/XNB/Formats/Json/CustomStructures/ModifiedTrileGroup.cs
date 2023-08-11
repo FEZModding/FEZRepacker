@@ -77,7 +77,10 @@ namespace FEZRepacker.Converter.XNB.Formats.Json.CustomStructures
             trileGroup.AssociatedSound = AssociatedSound;
 
             // create triles list out of emplacements
-            trileGroup.Triles = Triles.Select(x => level.Triles[x]).Where(x => x != null).ToList();
+            trileGroup.Triles = Triles
+                .Where(x => level.Triles.ContainsKey(x))
+                .Select(x => level.Triles[x])
+                .Where(x => x != null).ToList();
 
             return trileGroup;
         }
