@@ -9,7 +9,7 @@ namespace FEZRepacker.Converter.XNB.Formats
         public override List<XnbContentType> TypesFactory => new List<XnbContentType>
         {
             new DictionaryContentType<string, Dictionary<string, string>>(this),
-            new StringContentType(this),
+            new StringContentType(this, false),
             new DictionaryContentType<string, string>(this)
         };
         public override string FileFormat => ".fezdata";
