@@ -47,7 +47,7 @@ namespace FEZRepacker.Converter.XNB.Formats
         {
             var soundEffect = new SoundEffect();
 
-            var inReader = new BinaryReader(bundle.GetData());
+            var inReader = new BinaryReader(bundle.GetData(""));
 
             var riffHeader = new string(inReader.ReadChars(4));
             var fileSize = inReader.ReadInt32();

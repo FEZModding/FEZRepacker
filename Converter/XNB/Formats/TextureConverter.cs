@@ -81,7 +81,7 @@ namespace FEZRepacker.Converter.XNB.Formats
 
         public override void WriteXnbContent(FileBundle bundle, BinaryWriter xnbWriter)
         {
-            using var importedImage = Image.Load<Rgba32>(bundle.GetData());
+            using var importedImage = Image.Load<Rgba32>(bundle.GetData(""));
 
             Texture2D texture = ImageToTexture2D(importedImage);
 

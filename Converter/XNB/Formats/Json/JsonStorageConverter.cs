@@ -30,7 +30,7 @@ namespace FEZRepacker.Converter.XNB.Formats.Json
 
         public override void WriteXnbContent(FileBundle bundle, BinaryWriter xnbWriter)
         {
-            using var inReader = new BinaryReader(bundle.GetData(".json"), Encoding.UTF8, true);
+            using var inReader = new BinaryReader(bundle.GetData(".json", ""), Encoding.UTF8, true);
             string json = new string(inReader.ReadChars((int)inReader.BaseStream.Length));
 
             try

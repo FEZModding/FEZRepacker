@@ -13,11 +13,13 @@
             BundlePath = path;
         }
 
-        public Stream GetData(string extension = "")
+        public Stream GetData(params string[] validExtensions)
         {
-            foreach(var record in this)
-            {
-                if (record.Extension == extension) return record.Data;
+            foreach(var extension in validExtensions) {
+                foreach(var record in this)
+                {
+                    if (record.Extension == extension) return record.Data;
+                }
             }
             return new MemoryStream();
         }

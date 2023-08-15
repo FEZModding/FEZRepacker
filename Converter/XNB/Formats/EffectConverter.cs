@@ -33,7 +33,7 @@ namespace FEZRepacker.Converter.XNB.Formats
         public override void WriteXnbContent(FileBundle bundle, BinaryWriter xnbWriter)
         {
             var effect = new Effect();
-            var inReader = new BinaryReader(bundle.GetData());
+            var inReader = new BinaryReader(bundle.GetData(""));
             effect.Data = inReader.ReadBytes(inReader.ReadInt32());
             PrimaryContentType.Write(effect, xnbWriter);
         }
