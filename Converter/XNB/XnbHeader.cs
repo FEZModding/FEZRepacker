@@ -4,6 +4,21 @@ namespace FEZRepacker.Converter.XNB
 {
     public struct XnbHeader
     {
+        [Flags]
+        public enum XnbFlags
+        {
+            None = 0x00,
+            HiDefProfile = 0x01,
+            Compressed = 0x80,
+        }
+
+        public enum XnbPlatformIdentifier
+        {
+            Windows = 'w',
+            Mobile = 'm',
+            XBox = 'x',
+        }
+
         public string FormatIdentifier;
         public XnbPlatformIdentifier PlatformIdentifier;
         public byte Version;
