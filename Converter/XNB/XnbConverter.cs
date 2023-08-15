@@ -4,6 +4,11 @@ using FEZRepacker.Converter.XNB.Formats;
 
 namespace FEZRepacker.Converter.XNB
 {
+    /// <summary>
+    /// Allows conversion of an XNB stream into a <c>FileBundle</c>.
+    /// Uses primary asset type defined in an XNB file to find appropriate format converter,
+    /// then uses found converter to create a FileBundle.
+    /// </summary>
     public class XnbConverter
     {
         public XnbFormatConverter? FormatConverter { get; private set; }
@@ -17,6 +22,18 @@ namespace FEZRepacker.Converter.XNB
             FormatConverter = null;
         }
 
+        /// <summary>
+        /// Converts given stream into a <c>FileBundle</c>.
+        /// </summary>
+        /// <param name="input">Stream to convert.</param>
+        /// <returns>
+        /// <c>FileBundle</c> containing converted file. 
+        /// If failed to read XNB asset, returns a copy of input stream as a file bundle.
+        /// </returns>
+        /// <exception cref="InvalidDataException">
+        /// Thrown when more than 1 resource is present in XNB asset file, 
+        /// which should not be the case for FEZ XNB assets.
+        /// </exception>
         public FileBundle Convert(Stream input)
         {
             Stream output = new MemoryStream();

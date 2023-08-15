@@ -10,6 +10,12 @@ using FEZRepacker.Converter.XNB.Formats;
 
 namespace FEZRepacker.Converter.XNB.Types
 {
+    /// <summary>
+    /// Generalizes content type creation by using reflection on given type containing <c>XnbTypeAttribute</c>
+    /// by parsing each public property with <c>XnbPropertyAttribute</c> based on parameters contained in it.
+    /// This replaces the need of creating a content type for each custom asset type.
+    /// </summary>
+    /// <typeparam name="T">Class type with <c>XnbTypeAttribute</c> to form content type from.</typeparam>
     internal class GenericContentType<T> : XnbContentType<T> where T : class
     {
         private XnbAssemblyQualifier _name;
@@ -21,19 +27,6 @@ namespace FEZRepacker.Converter.XNB.Types
             _typeBuilder = CreateContainedTypeConstructor();
         }
         public override XnbAssemblyQualifier Name => _name;
-
-        /* 
-         * Greetings, dear traveller! 
-         * 
-         * Before you lies what I personally consider to be the most cursed
-         * code that I have ever created, and it hold this entire project together!
-         * You see, this piece of junk replaced a need for having a separate
-         * converter for each data type. HOWEVER, in a place of like 30 files
-         * comes one, probably very unsafe one. But should I care?! NAH!
-         * 
-         * If you're reading this it means it worked at least once and I proceeded
-         * onward with my life, cursing everyone working on this project in the future.
-         */
 
         private Dictionary<PropertyInfo, XnbPropertyAttribute> _propertyMap = new();
         private Dictionary<PropertyInfo, Type> _underlyingTypeMap = new();

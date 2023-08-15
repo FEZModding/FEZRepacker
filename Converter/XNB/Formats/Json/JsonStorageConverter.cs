@@ -5,6 +5,10 @@ using FEZRepacker.Converter.FileSystem;
 
 namespace FEZRepacker.Converter.XNB.Formats.Json
 {
+    /// <summary>
+    /// Allows conversion of a generic XNB asset types into and from JSON files.
+    /// </summary>
+    /// <typeparam name="T">Type to convert directly to/from JSON to</typeparam>
     internal abstract class JsonStorageConverter<T> : XnbFormatConverter where T : notnull
     {
         protected override void ValidateType()

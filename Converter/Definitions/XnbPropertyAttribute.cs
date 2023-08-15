@@ -2,6 +2,10 @@
 
 namespace FEZRepacker.Converter.Definitions
 {
+    /// <summary>
+    /// Used to assign conversion method for content type property.
+    /// For more details, see <c>GenericContentType</c> implementation.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
     internal sealed class XnbPropertyAttribute : Attribute
     {

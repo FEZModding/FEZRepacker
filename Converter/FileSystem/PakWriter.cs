@@ -4,6 +4,9 @@ using System.Text;
 
 namespace FEZRepacker.Converter.FileSystem
 {
+    /// <summary>
+    /// Allows creation of a FEZ PAK package.
+    /// </summary>
     public class PakWriter : IDisposable
     {
         private BinaryWriter writer;
@@ -13,6 +16,10 @@ namespace FEZRepacker.Converter.FileSystem
 
         public uint FileCount => currentFileCount;
 
+        /// <summary>
+        /// Initializes a PAK writer.
+        /// </summary>
+        /// <param name="stream">A stream to write PAK package to.</param>
         public PakWriter(Stream stream)
         {
             writer = new BinaryWriter(stream, Encoding.UTF8, false);
@@ -21,6 +28,11 @@ namespace FEZRepacker.Converter.FileSystem
             writer.Write(lastWrittenFileCount);
         }
 
+        /// <summary>
+        /// Appends a file data at the end of PAK package.
+        /// </summary>
+        /// <param name="name">Path and name to identify the file data with in the package.</param>
+        /// <param name="data">File data to store in the package.</param>
         public void WriteFile(string name, Stream data)
         {
             writer.Write(name);

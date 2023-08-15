@@ -5,6 +5,9 @@ using System.Text;
 
 namespace FEZRepacker.Converter.FileSystem
 {
+    /// <summary>
+    /// Allows accessing individual files in a FEZ PAK package contained in the given stream.
+    /// </summary>
     public class PakReader : IDisposable
     {
         public struct FileInfo
@@ -19,6 +22,10 @@ namespace FEZRepacker.Converter.FileSystem
 
         public uint FileCount { get; private set; }
 
+        /// <summary>
+        /// Initializes PAK package reader.
+        /// </summary>
+        /// <param name="stream">A stream to read a package from.</param>
         public PakReader(Stream stream)
         {
             reader = new BinaryReader(stream, Encoding.UTF8, false);
@@ -26,6 +33,11 @@ namespace FEZRepacker.Converter.FileSystem
             FileCount = reader.ReadUInt32();
         }
 
+        /// <summary>
+        /// Enumerates files from the package.
+        /// </summary>
+        /// <remarks>Enumeration copies the content of the file into a buffer.</remarks>
+        /// <returns>A list of files contained within the package.</returns>
         public IEnumerable<FileInfo> ReadFiles()
         {
             for (var i = 0; i < FileCount; i++)

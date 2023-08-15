@@ -4,6 +4,11 @@ using FEZRepacker.Converter.XNB.Types;
 
 namespace FEZRepacker.Converter.XNB.Formats
 {
+    /// <summary>
+    /// Defines information and methods for converting XNB assets into file bundles and vice-versa.
+    /// Each format converter needs to define methods of conversion, a main file bundle format
+    /// and a list of content types this converter deals with.
+    /// </summary>
     public abstract class XnbFormatConverter
     {
         public List<XnbContentType> ContentTypes { get; private set; }

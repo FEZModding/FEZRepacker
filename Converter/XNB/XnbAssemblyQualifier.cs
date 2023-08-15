@@ -1,5 +1,9 @@
 ﻿namespace FEZRepacker.Converter
 {
+    /// <summary>
+    /// Represents an assembly qualified name, tailored for converting FEZ-specific structures 
+    /// within XNB assets. Allows easy modification and conversion from/to string.
+    /// </summary>
     public struct XnbAssemblyQualifier
     {
         public string Namespace;
@@ -102,6 +106,12 @@
         {
             return new XnbAssemblyQualifier(s);
         }
+
+        /// <summary>
+        /// Creates a string representing assembly qualified name.
+        /// </summary>
+        /// <param name="simplified">When true, creates a name without namespaces and specifications.</param>
+        /// <returns>A string representing an assembly qualified name stored in this structure.</returns>
         public string GetDisplayName(bool simplified = false)
         {
             string displayedName = (simplified ? "" : (Namespace + ".")) + Name;

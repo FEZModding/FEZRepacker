@@ -4,6 +4,11 @@ using FEZRepacker.Converter.XNB.Formats;
 
 namespace FEZRepacker.Converter.XNB
 {
+    /// <summary>
+    /// Allows conversion of <c>FileBundle</c> into an XNB stream.
+    /// Uses extension of a given bundle to determine format converter to use,
+    /// then uses it to create an XNB asset data.
+    /// </summary>
     public class XnbDeconverter
     {
         public XnbFormatConverter? FormatConverter;
@@ -14,6 +19,15 @@ namespace FEZRepacker.Converter.XNB
             Converted = false;
         }
 
+        /// <summary>
+        /// Converts given <c>FileBundle</c> into a stream containing XNB asset data.
+        /// </summary>
+        /// <param name="fileBundle"><c>FileBundle</c> to convert</param>
+        /// <returns>
+        /// Stream containing converted XNB asset.
+        /// If no format converter has been found, stores main bundle file 
+        /// (the one with no sub-extension) within the stream.
+        /// </returns>
         public Stream Deconvert(FileBundle fileBundle)
         {
             FormatConverter = XnbFormatList.FindByExtension(fileBundle.MainExtension);

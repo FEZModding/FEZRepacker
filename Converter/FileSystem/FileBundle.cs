@@ -1,5 +1,13 @@
 ﻿namespace FEZRepacker.Converter.FileSystem
 {
+
+    /// <summary>
+    /// Defines a set of file streams which can be collectively created from
+    /// or converted into a single XNB asset.
+    /// Files forming a bundle have two extensions, one defining the bundle extension
+    /// and the other defining the individual file extension:
+    /// <code>[filename].[bundle-extension].[file-extension]</code>
+    /// </summary>
     public sealed class FileBundle : IDisposable
     {
         public struct FileRecord
@@ -67,6 +75,11 @@
             return bundle;
         }
 
+        /// <summary>
+        /// Bundles given list of files based on their extensions.
+        /// </summary>
+        /// <param name="files">Dictionary containing file names paired with corresponding file streams.</param>
+        /// <returns>List of organized file bundles.</returns>
         public static List<FileBundle> BundleFiles(Dictionary<string, Stream> files)
         {
             var bundles = new List<FileBundle>();
@@ -102,6 +115,11 @@
             return bundles;
         }
 
+        /// <summary>
+        /// Unpacks all of the bundle files into a list.
+        /// </summary>
+        /// <param name="fileBundles">File bundles to unpack</param>
+        /// <returns>Dictionary containing file names paired with corresponding file streams.</returns>
         public static Dictionary<string, Stream> UnbundleFiles(List<FileBundle> fileBundles)
         {
             var files = new Dictionary<string, Stream>();

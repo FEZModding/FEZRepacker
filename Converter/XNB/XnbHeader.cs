@@ -2,6 +2,9 @@
 
 namespace FEZRepacker.Converter.XNB
 {
+    /// <summary>
+    /// Stores information present in XNB file header.
+    /// </summary>
     public struct XnbHeader
     {
         [Flags]
@@ -32,6 +35,13 @@ namespace FEZRepacker.Converter.XNB
             Flags = XnbFlags.HiDefProfile,
         };
 
+        /// <summary>
+        /// Attempts to read XNB header from given stream.
+        /// </summary>
+        /// <remarks>Stream position can change even if reading fails.</remarks>
+        /// <param name="stream">Stream to read header to</param>
+        /// <param name="header">When read successfully, stores XNB header.</param>
+        /// <returns>True if read header from given stream successfully, false otherwise.</returns>
         public static bool TryRead(Stream stream, out XnbHeader header)
         {
             using var reader = new BinaryReader(stream, Encoding.UTF8, true);
@@ -50,6 +60,10 @@ namespace FEZRepacker.Converter.XNB
             return true;
         }
 
+        /// <summary>
+        /// Writes XNB header into the stream.
+        /// </summary>
+        /// <param name="stream">Steam to write XNB header to.</param>
         public void Write(Stream stream)
         {
             var formatIdentifierBytes = FormatIdentifier.ToCharArray().Select(c => (byte)c).ToArray();

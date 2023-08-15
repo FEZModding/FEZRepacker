@@ -6,18 +6,28 @@ namespace FEZRepacker.Converter.XNB
 {
     public class XnbCompressor
     {
+
+        /// <summary>
+        /// Attempts to decompress given stream containing XNB file.
+        /// </summary>
+        /// <param name="xnbStream">A stream to convert</param>
+        /// <returns>
+        /// New stream containing decompressed XNB file. 
+        /// If given stream doesn't have a valid XNB file, returns a copy of input stream.
+        /// </returns>
+        /// <exception cref="InvalidDataException">Thrown when compressed data is invalid.</exception>
         public static Stream Decompress(Stream xnbStream)
         {
             var decompressedStream = new MemoryStream();
 
-            if (!XnbHeader.TryRead(xnbStream, out var header) || (header.Flags & XnbFlags.Compressed) == 0)
+            if (!XnbHeader.TryRead(xnbStream, out var header) || (header.Flags & XnbHeader.XnbFlags.Compressed) == 0)
             {
                 xnbStream.Position = 0;
                 xnbStream.CopyTo(decompressedStream);
             }
             else
             {
-                header.Flags -= XnbFlags.Compressed;
+                header.Flags -= XnbHeader.XnbFlags.Compressed;
                 header.Write(decompressedStream);
 
                 using var decompressedDataStream = new MemoryStream();
@@ -60,7 +70,7 @@ namespace FEZRepacker.Converter.XNB
 
                 if (decompressedDataStream.Position != decompressedSize)
                 {
-                    throw new Exception("XNBDecompressor failed!");
+                    throw new InvalidDataException("XNBDecompressor failed!");
                 }
 
                 new BinaryWriter(decompressedStream).Write(decompressedSize);
