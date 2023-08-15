@@ -51,17 +51,16 @@ namespace FEZRepacker.Converter.XNB.Formats
             TrileSet trileSet = (TrileSet)PrimaryContentType.Read(xnbReader);
 
             var geometry = SaveGeometry(trileSet);
-            var abledoTexture = SaveCubemap(trileSet, false);
+            var albedoTexture = SaveCubemap(trileSet, false);
             var emissionTexture = SaveCubemap(trileSet, true);
             var data = SaveAdditionalData(trileSet);
 
-            return new FileBundle(FileFormat)
-            {
-                (".obj", geometry),
-                (".png", abledoTexture),
-                (".apng", emissionTexture),
-                (".json", data)
-            };
+            var bundle = new FileBundle(FileFormat);
+            bundle.AddFile(geometry, ".obj");
+            bundle.AddFile(albedoTexture, ".png");
+            bundle.AddFile(emissionTexture, ".apng");
+            bundle.AddFile(data, ".json");
+            return bundle;
         }
 
         public override void WriteXnbContent(FileBundle bundle, BinaryWriter xnbWriter)
@@ -71,7 +70,7 @@ namespace FEZRepacker.Converter.XNB.Formats
             Stream albedoData = null;
             Stream emissionData = null;
 
-            foreach (var file in bundle)
+            foreach (var file in bundle.Files)
             {
                 if (file.Extension == ".obj") LoadGeometry(file.Data, ref trileSet);
                 if (file.Extension == ".png") albedoData = file.Data;

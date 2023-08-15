@@ -73,7 +73,7 @@ namespace FEZRepacker.Converter.XNB.Formats
         {
             AnimatedTexture animatedTexture = new AnimatedTexture();
 
-            using var importedAnim = Image.Load<Rgba32>(bundle[0].Data);
+            using var importedAnim = Image.Load<Rgba32>(bundle.GetData(""));
 
             //// calculate texture atlas size (least size when using powers of two)
             //// why powers of two you may ask? idk, original textures seem to do that,

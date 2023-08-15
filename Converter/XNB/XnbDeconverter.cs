@@ -22,11 +22,9 @@ namespace FEZRepacker.Converter.XNB
 
             if (FormatConverter == null)
             {
-                if(fileBundle.Count > 0)
-                {
-                    fileBundle[0].Data.CopyTo(output);
-                    output.Seek(0, SeekOrigin.Begin);
-                }
+                fileBundle.GetData("").CopyTo(output);
+                output.Seek(0, SeekOrigin.Begin);
+                
                 Converted = false;
                 return output;
             }

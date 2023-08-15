@@ -42,18 +42,17 @@ namespace FEZRepacker.Converter.XNB.Formats
             var texture = SaveTexture(font);
             var data = SaveAdditionalData(font);
 
-            return new FileBundle(FileFormat)
-            {
-                (".png", texture),
-                (".json", data)
-            };
+            var bundle = new FileBundle(FileFormat);
+            bundle.AddFile(texture, ".png");
+            bundle.AddFile(data, ".json");
+            return bundle;
         }
 
         public override void WriteXnbContent(FileBundle bundle, BinaryWriter xnbWriter)
         {
             SpriteFont font = new SpriteFont();
 
-            foreach(var file in bundle)
+            foreach(var file in bundle.Files)
             {
                 if (file.Extension == ".png") LoadTexture(file.Data, ref font);
                 if (file.Extension == ".json") LoadAdditionalData(file.Data, ref font);

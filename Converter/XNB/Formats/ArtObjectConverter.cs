@@ -46,13 +46,12 @@ namespace FEZRepacker.Converter.XNB.Formats
             var emissionTexture = SaveCubemap(ao, true);
             var data = SaveAdditionalData(ao);
 
-            return new FileBundle(FileFormat)
-            {
-                (".obj", geometry),
-                (".png", albedoTexture),
-                (".apng", emissionTexture),
-                (".json", data)
-            };
+            var bundle = new FileBundle(FileFormat);
+            bundle.AddFile(geometry, ".obj");
+            bundle.AddFile(albedoTexture, ".png");
+            bundle.AddFile(emissionTexture, ".apng");
+            bundle.AddFile(data, ".json");
+            return bundle;
         }
 
         public override void WriteXnbContent(FileBundle bundle, BinaryWriter xnbWriter)
@@ -62,7 +61,7 @@ namespace FEZRepacker.Converter.XNB.Formats
             Stream albedoData = null;
             Stream emissionData = null;
 
-            foreach(var file in bundle)
+            foreach(var file in bundle.Files)
             {
                 if (file.Extension == ".obj") LoadGeometry(file.Data, ref ao);
                 if (file.Extension == ".png") albedoData = file.Data;
