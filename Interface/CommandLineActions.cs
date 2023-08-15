@@ -117,7 +117,7 @@ namespace FEZRepacker.Interface
                         if (converter.Converted)
                         {
                             extension = converter.FormatConverter!.FileFormat;
-                            var storageTypeName = (outputBundle.Count > 1 ? "bundle" : "file");
+                            var storageTypeName = (outputBundle.Files.Count > 1 ? "bundle" : "file");
                             Console.WriteLine($"  Format {formatName} converted into {extension} {storageTypeName}.");
                         }
                         else
@@ -141,7 +141,7 @@ namespace FEZRepacker.Interface
                         Directory.CreateDirectory(outputDirectory);
                     }
 
-                    foreach(var outputFile in outputBundle)
+                    foreach(var outputFile in outputBundle.Files)
                     {
                         using var fileOutputStream = File.Open(outputBundle.BundlePath + outputFile.Extension, FileMode.Create);
                         outputFile.Data.CopyTo(fileOutputStream);
@@ -222,7 +222,7 @@ namespace FEZRepacker.Interface
                 if (converter.Converted)
                 {
                     outputBundle.MainExtension = converter.FormatConverter!.FileFormat;
-                    var storageTypeName = (outputBundle.Count > 1 ? "bundle" : "file");
+                    var storageTypeName = (outputBundle.Files.Count > 1 ? "bundle" : "file");
                     Console.WriteLine($"  Format {formatName} converted into {outputBundle.MainExtension} {storageTypeName}.");
                 }
                 else
@@ -241,7 +241,7 @@ namespace FEZRepacker.Interface
                     Directory.CreateDirectory(outputDirectory);
                 }
 
-                foreach (var outputFile in outputBundle)
+                foreach (var outputFile in outputBundle.Files)
                 {
                     using var fileOutputStream = File.Open(outputBundle.BundlePath + outputFile.Extension, FileMode.Create);
                     outputFile.Data.CopyTo(fileOutputStream);
@@ -316,7 +316,7 @@ namespace FEZRepacker.Interface
                     {
                         Console.WriteLine($"  Format {fileBundle.MainExtension} doesn't have a converter - packing asset as raw files.");
 
-                        foreach (var file in fileBundle)
+                        foreach (var file in fileBundle.Files)
                         {
                             file.Data.Seek(0, SeekOrigin.Begin);
                             var ext = fileBundle.MainExtension + file.Extension;
@@ -415,7 +415,7 @@ namespace FEZRepacker.Interface
                     {
                         Console.WriteLine($"  Format {fileBundle.MainExtension} doesn't have a converter - packing asset as raw files.");
 
-                        foreach(var file in fileBundle)
+                        foreach(var file in fileBundle.Files)
                         {
                             file.Data.Seek(0, SeekOrigin.Begin);
                             tempPak.WriteFile(fileBundle.BundlePath, file.Data);
