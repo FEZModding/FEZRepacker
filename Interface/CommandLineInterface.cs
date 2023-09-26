@@ -125,7 +125,12 @@ namespace FEZRepacker.Interface
             }
         }
 
-        public static void ParseCommandLine(string[] args)
+        /// <summary>
+        /// Attempts to executes a command and returns <code>true</code> if a command was executed
+        /// </summary>
+        /// <param name="args">The command to execute</param>
+        /// <returns><code>true</code> if a command was executed</returns>
+        public static bool ParseCommandLine(string[] args)
         {
             var debugMode = false;
 
@@ -137,13 +142,13 @@ namespace FEZRepacker.Interface
                 args = Regex.Matches(input, @"[\""].+?[\""]|[^ ]+").Cast<Match>().Select(m => m.Value).ToArray();
             }
 
-            if (args.Length == 0) return;
+            if (args.Length == 0) return false;
 
             if (!FindCommand(args[0], out Command command))
             {
                 Console.WriteLine($"Unknown command \"{args[0]}\".");
                 Console.WriteLine($"Type \"FEZRepacker.exe --help\" for a list of commands.");
-                return;
+                return false;
             }
 
             string[] cmdArgs = args.Skip(1).ToArray();
@@ -155,7 +160,7 @@ namespace FEZRepacker.Interface
             {
                 Console.WriteLine($"Invalid usage for command \"{args[0]}\" (incorrect number of parameters).");
                 Console.WriteLine($"Use \"FEZRepacker.exe --help {args[0]}\" for a usage instruction for that command.");
-                return;
+                return false;
             }
 
             try
@@ -167,6 +172,7 @@ namespace FEZRepacker.Interface
                 if (debugMode) throw;
                 else Console.Error.WriteLine($"Error while executing command: {ex.Message}");
             }
+            return true;
         }
 
     }
