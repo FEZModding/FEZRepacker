@@ -105,16 +105,29 @@ namespace FEZRepacker.Interface
         /// <returns>The array of arguments</returns>
         private static string[] ParseArguments(string argstr)
         {
+            //basically, it splits the string at spaces that are not in quotation marks, and strips quotation marks
+
+            //basically does the PCRE '/(?|"([^"]+?)"|([^ "]+))/' but regexes are slow and wouldn't allow for easy escaping of double quotes
+            //Note: if you change the [^"]+? in the above regex to [^"]*? it could capture empty strings in double quotes
+
+            //Note: in this code, '\n' functions as the argument delimiter. 
             char[] parmChars = argstr.ToCharArray();
             bool inQuote = false;
             for (int index = 0; index < parmChars.Length; index++)
             {
                 if (parmChars[index] == '"')
+                {
                     inQuote = !inQuote;
+                    parmChars[index] = '\n';//strip quotes
+                }
                 if (!inQuote && parmChars[index] == ' ')
-                    parmChars[index] = '\n';
+                {
+                    parmChars[index] = '\n';//new argument
+                }
             }
-            return (new string(parmChars)).Split('\n').Where(s => !string.IsNullOrEmpty(s)).ToArray();
+            return (new string(parmChars)).Split('\n')
+                    .Where(s => !string.IsNullOrEmpty(s))//This `Where` statement removes blank arguments
+                    .ToArray();
         }
     }
 }
