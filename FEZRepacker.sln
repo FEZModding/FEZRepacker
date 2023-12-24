@@ -5,12 +5,14 @@ VisualStudioVersion = 17.1.32407.343
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FEZRepacker.Converter", "Converter\FEZRepacker.Converter.csproj", "{B0186A91-03B6-4E71-8A4A-547CCAAA1300}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FEZRepacker.Interface", "Interface\FEZRepacker.Interface.csproj", "{390DE9FA-4CE4-42BA-871B-064A3C5027B6}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{14BA18E6-0546-4326-B548-B44F64C2C627}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FEZRepacker.CLI", "CLI\FEZRepacker.CLI.csproj", "{94FEB74A-D3D2-4B13-AD46-3B4CC3BCCF94}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FEZRepacker.GUI", "GUI\FEZRepacker.GUI.csproj", "{BAEEC9B0-1D79-4D9A-B33C-8EFE11E7FE37}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,10 +24,14 @@ Global
 		{B0186A91-03B6-4E71-8A4A-547CCAAA1300}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B0186A91-03B6-4E71-8A4A-547CCAAA1300}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B0186A91-03B6-4E71-8A4A-547CCAAA1300}.Release|Any CPU.Build.0 = Release|Any CPU
-		{390DE9FA-4CE4-42BA-871B-064A3C5027B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{390DE9FA-4CE4-42BA-871B-064A3C5027B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{390DE9FA-4CE4-42BA-871B-064A3C5027B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{390DE9FA-4CE4-42BA-871B-064A3C5027B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94FEB74A-D3D2-4B13-AD46-3B4CC3BCCF94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94FEB74A-D3D2-4B13-AD46-3B4CC3BCCF94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94FEB74A-D3D2-4B13-AD46-3B4CC3BCCF94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94FEB74A-D3D2-4B13-AD46-3B4CC3BCCF94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAEEC9B0-1D79-4D9A-B33C-8EFE11E7FE37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAEEC9B0-1D79-4D9A-B33C-8EFE11E7FE37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAEEC9B0-1D79-4D9A-B33C-8EFE11E7FE37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAEEC9B0-1D79-4D9A-B33C-8EFE11E7FE37}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
