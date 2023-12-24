@@ -195,7 +195,7 @@ namespace FEZRepacker.GUI
 
         private void ReportIssue(object sender, ExecutedRoutedEventArgs e)
         {
-
+            OpenURL("https://github.com/FEZModding/FEZRepacker/issues");
         }
 
         private void CheckUpdates(object sender, ExecutedRoutedEventArgs e)
@@ -205,17 +205,27 @@ namespace FEZRepacker.GUI
 
         private void OpenDocs(object sender, ExecutedRoutedEventArgs e)
         {
+            OpenURL("https://github.com/FEZModding/FEZRepacker/wiki");
 
         }
 
         private void JoinDiscord(object sender, ExecutedRoutedEventArgs e)
         {
-
+            OpenURL("https://discord.gg/wwVB86HhJz");
         }
 
         private void ShowAbout(object sender, ExecutedRoutedEventArgs e)
         {
 
+        }
+
+        private void OpenURL(string url)
+        {
+            var sInfo = new System.Diagnostics.ProcessStartInfo(url)
+            {
+                UseShellExecute = true,
+            };
+            System.Diagnostics.Process.Start(sInfo);
         }
     }
 
