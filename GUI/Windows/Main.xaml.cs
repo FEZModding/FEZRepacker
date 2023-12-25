@@ -19,19 +19,29 @@ namespace FEZRepacker.GUI
         {
             public Dictionary<string, DirectoryRecord> ContainedDirectories = new();
             public FileBundle? LinkedBundle = null;
+            public Button? ListButton = null;
             public bool Opened = false;
         }
 
         private readonly string initialTitle;
         private readonly App app;
 
+        private readonly Style baseFileButtonStyle;
+        private readonly Style openFileButtonStyle;
+        private readonly Style closedFileButtonStyle;
+
         private DirectoryRecord mainDirectory = new();
+        private DirectoryRecord? selectedDirectory = null;
 
         public Main()
         {
             InitializeComponent();
             app = (Application.Current as App)!;
             initialTitle = Title;
+
+            baseFileButtonStyle = (Style)fileList.FindResource("FileButton");
+            openFileButtonStyle = (Style)fileList.FindResource("OpenDirectoryFileButton");
+            closedFileButtonStyle = (Style)fileList.FindResource("DirectoryFileButton");
 
             Refresh();
         }
@@ -55,6 +65,8 @@ namespace FEZRepacker.GUI
             var fileBundles = app.FileBundleList;
 
             mainDirectory = new();
+            if (fileBundles.Count > 0) mainDirectory.Opened = true;
+
             foreach (var bundle in fileBundles)
             {
                 var dirs = bundle.BundlePath.Split("\\");
@@ -69,42 +81,63 @@ namespace FEZRepacker.GUI
                 }
                 currentDirRecord.LinkedBundle = bundle;
             }
-        }
 
-        private void RefreshFileListDisplay()
-        {
             fileList.Children.Clear();
-            AddRecordToList(app.CurrentPackageName, mainDirectory);
+            CreateRecordButton(app.CurrentPackageName, mainDirectory);
         }
-
-        private void AddRecordToList(string name, DirectoryRecord record, int depth = 0)
+        private void CreateRecordButton(string name, DirectoryRecord record, int depth = 0)
         {
             Button recordButton = new Button();
             recordButton.Content = name;
-
-            var styleName = "FileButton";
-            if(record.LinkedBundle == null)
-            {
-                styleName = record.Opened ? "OpenDirectoryFileButton" : "DirectoryFileButton";
-            }
-            recordButton.Style = (Style)fileList.FindResource(styleName);
 
             recordButton.Padding = new Thickness(depth * 10, 0, 0, 0);
 
             recordButton.Click += (sender, e) =>
             {
                 record.Opened = !record.Opened;
+                selectedDirectory = record;
                 RefreshFileListDisplay();
             };
 
             fileList.Children.Add(recordButton);
 
-            if (record.Opened)
+            record.ListButton = recordButton;
+
+            foreach (var dir in record.ContainedDirectories)
             {
-                foreach(var dir in record.ContainedDirectories)
+                CreateRecordButton(dir.Key, dir.Value, depth + 1);
+            }
+        }
+
+
+        private void RefreshFileListDisplay(DirectoryRecord? record = null, bool visible = true)
+        {
+            var dirRecord = record ?? mainDirectory;
+
+            if (dirRecord.ListButton != null)
+            {
+                dirRecord.ListButton.Visibility = visible ? Visibility.Visible : Visibility.Collapsed;
+
+                var style = baseFileButtonStyle;
+                if (dirRecord.LinkedBundle == null)
                 {
-                    AddRecordToList(dir.Key, dir.Value, depth + 1);
+                    style = dirRecord.Opened ? openFileButtonStyle : closedFileButtonStyle;
                 }
+                dirRecord.ListButton.Style = style;
+
+                if(dirRecord == selectedDirectory)
+                {
+                    dirRecord.ListButton.Background = new SolidColorBrush(new Color() { R = 255, G = 255, B = 255, A = 64 });
+                }
+                else
+                {
+                    dirRecord.ListButton.ClearValue(Button.BackgroundProperty);
+                }
+            }
+
+            foreach (var dir in dirRecord.ContainedDirectories)
+            {
+                RefreshFileListDisplay(dir.Value, dirRecord.Opened && visible);
             }
         }
 
