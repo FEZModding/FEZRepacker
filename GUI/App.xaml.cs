@@ -5,6 +5,7 @@ using System.IO;
 using System.Windows;
 
 using FEZRepacker.Converter.FileSystem;
+using FEZRepacker.GUI.Windows;
 
 namespace FEZRepacker.GUI
 {
@@ -34,22 +35,38 @@ namespace FEZRepacker.GUI
 
         public void OpenPackage(string path)
         {
-            FileBundleList = new();
+            var status = new ProgressStatus("Opening package");
 
-            using var pakStream = File.OpenRead(path);
-            using var pakReader = new PakReader(pakStream);
-
-            foreach (var pakFile in pakReader.ReadFiles())
+            status.Task += () =>
             {
-                var bundle = FileBundle.Single(pakFile.Data, ".xnb");
-                bundle.BundlePath = pakFile.Path;
-                FileBundleList.Add(bundle);
-            }
+                status.SetStageCount(1);
+                status.SetStageName("Unpacking package (1/4)");
 
-            CurrentPackageName = Path.GetFileName(path);
-            BundleDirty = false;
+                FileBundleList = new();
 
-            (MainWindow as Main)?.Refresh();
+                using var pakStream = File.OpenRead(path);
+                using var pakReader = new PakReader(pakStream);
+
+                int filesProcessed = 0;
+                foreach (var pakFile in pakReader.ReadFiles())
+                {
+                    status.SetStageText($"{pakFile.Path}");
+                    status.SetStageCompletion(filesProcessed / (float)pakReader.FileCount);
+
+                    var bundle = FileBundle.Single(pakFile.Data, ".xnb");
+                    bundle.BundlePath = pakFile.Path;
+                    FileBundleList.Add(bundle);
+
+                    filesProcessed++;
+                }
+
+                CurrentPackageName = Path.GetFileName(path);
+                BundleDirty = false;
+            };
+
+            status.OnComplete += () => (MainWindow as Main)?.Refresh();
+
+            status.Run();
         }
     }
 }
