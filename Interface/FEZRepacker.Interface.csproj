@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Converter\FEZRepacker.Converter.csproj"/>
+    <ProjectReference Include="..\Core\FEZRepacker.Core.csproj" />
   </ItemGroup>
 
 </Project>
