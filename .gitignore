@@ -398,4 +398,7 @@ FodyWeavers.xsd
 *.sln.iml
 
 # FEZRepacker project launch settings. Comment it out if needed.
-Interface/Properties/launchSettings.json
+*/Properties/launchSettings.json
+
+# MSTest results
+Tests/Results/*

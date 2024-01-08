@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <RunConfiguration>
+    <ResultsDirectory>.\Results</ResultsDirectory>
+  </RunConfiguration>
+  <TestRunParameters>
+    <Parameter name="FEZContentDirPath" value="" />
+  </TestRunParameters>
+</RunSettings>
