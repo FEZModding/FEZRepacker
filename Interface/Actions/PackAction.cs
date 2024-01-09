@@ -1,5 +1,6 @@
 ﻿
 using FEZRepacker.Converter.FileSystem;
+using FEZRepacker.Converter.XNB.Formats;
 
 namespace FEZRepacker.Interface.Actions
 {
@@ -63,12 +64,32 @@ namespace FEZRepacker.Interface.Actions
             }
         }
 
+        private void SortBundlesToPreventInvalidOrdering(ref List<FileBundle> fileBundles)
+        {
+            // Occasionally, on the process of repacking, we'll need to store multiple files with the same name.
+            // This happens in the base game for effect files stored in Updates.pak. However, the game doesn't
+            // support such behaviour, and attempts to perform operations only on the last encountered file,
+            // which can create issues when files are ordered incorrectly. Putting file bundles without any
+            // converters available first should solve the issue.
+
+            fileBundles.Sort((a, b) =>
+            {
+                var converterA = XnbFormatList.FindByExtension(a.MainExtension);
+                var converterB = XnbFormatList.FindByExtension(b.MainExtension);
+
+                if (converterA != null && converterB == null) return 1;
+                if (converterA == null && converterB != null) return -1;
+                return a.BundlePath.CompareTo(b.BundlePath);
+            });
+        }
+
         public void Execute(string[] args)
         {
             string inputPath = args[0];
             string outputPackagePath = args[1];
 
             var fileBundlesToAdd = FileBundle.BundleFilesAtPath(inputPath);
+            SortBundlesToPreventInvalidOrdering(ref fileBundlesToAdd);
 
             using var tempPak = new TemporaryPak(outputPackagePath);
 

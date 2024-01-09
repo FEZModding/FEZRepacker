@@ -2,7 +2,7 @@
 
 namespace FEZRepacker.Converter.XNB.Formats
 {
-    internal static class XnbFormatList
+    public static class XnbFormatList
     {
         private static List<XnbFormatConverter> converters = new List<XnbFormatConverter>();
 
