@@ -98,12 +98,13 @@ namespace FEZRepacker.Interface.Actions
                 {
                     using var outputBundle = UnpackFile(extension, pakFile.Data, mode);
 
-                    outputBundle.BundlePath = Path.Combine(outputDir, pakFile.Path + extension);
+                    outputBundle.BundlePath = Path.Combine(outputDir, pakFile.Path);
                     Directory.CreateDirectory(Path.GetDirectoryName(outputBundle.BundlePath) ?? "");
 
                     foreach (var outputFile in outputBundle.Files)
                     {
-                        using var fileOutputStream = File.Open(outputBundle.BundlePath + outputFile.Extension, FileMode.Create);
+                        var fileName = outputBundle.BundlePath + outputBundle.MainExtension + outputFile.Extension;
+                        using var fileOutputStream = File.Open(fileName, FileMode.Create);
                         outputFile.Data.CopyTo(fileOutputStream);
                     }
                 }

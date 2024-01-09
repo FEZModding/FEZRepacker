@@ -75,6 +75,17 @@
             return bundle;
         }
 
+        private static string GetRelativePath(string path, string relativeRootPath)
+        {
+            var fullPath = Path.GetFullPath(path);
+            var fullRelativeRootPath = Path.GetFullPath(relativeRootPath + "\\");
+            if (fullPath.StartsWith(fullRelativeRootPath))
+            {
+                return fullPath.Substring(fullRelativeRootPath.Length);
+            }
+            return path;
+        }
+
         /// <summary>
         /// Bundles given list of files based on their extensions.
         /// </summary>
@@ -130,12 +141,7 @@
             var fileList = new Dictionary<string, Stream>();
             foreach (var filePath in filePaths)
             {
-                // PAK archives require backwards slashes for their paths
-                var relativePath = filePath.Replace("/", "\\");
-                if (relativePath.StartsWith(mainDirectory))
-                {
-                    relativePath = relativePath.Substring(mainDirectory.Length);
-                }
+                var relativePath = GetRelativePath(filePath, mainDirectory).Replace("/", "\\");
                 fileList[relativePath] = File.OpenRead(filePath);
             }
             return FileBundle.BundleFiles(fileList);
