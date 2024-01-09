@@ -1,150 +1,44 @@
-﻿using System.Text.RegularExpressions;
+﻿using FEZRepacker.Interface.Actions;
 
 namespace FEZRepacker.Interface
 {
-    internal static partial class CommandLine
+    internal static class CommandLineInterface
     {
-        public struct Argument
+
+        public static CommandLineAction[] Commands = new CommandLineAction[]
         {
-            public string Name;
-            public bool Optional;
-
-            public Argument(string name, bool optional = false)
-            {
-                Name = name;
-                Optional = optional;
-            }
-        }
-
-        public struct Command
-        {
-            public string Name;
-            public string HelpText;
-            public string[] Aliases;
-            public Argument[] Arguments;
-            public Action<string[]>? Operation;
-
-            public Command()
-            {
-                Name = "";
-                HelpText = "";
-                Aliases = new string[0];
-                Arguments = new Argument[0];
-                Operation = null;
-            }
-        }
-
-        public static Command[] Commands = new Command[]
-        {
-            new Command
-            {
-                Name = "--help", Aliases = new[]{"help", "?", "-?", "-h"},
-                HelpText = "Displays help for all commands or help for given command.",
-                Arguments = new[]{ new Argument("command", true) },
-                Operation = CommandHelp
-            },
-            new Command
-            {
-                Name = "--unpack", Aliases = new[]{"-u"},
-                HelpText = "Unpacks entire .PAK package into specified directory (creates one if doesn't exist) " +
-                "and attempts to convert XNB assets into their corresponding format in the process.",
-                Arguments = new[]{ new Argument("pak-path"), new Argument("destination-folder") },
-                Operation = delegate(string[] args){ UnpackPackage(args[0], args[1], UnpackingMode.Converted); }
-            },
-            new Command
-            {
-                Name = "--unpack-raw",
-                HelpText = "Unpacks entire .PAK package into specified directory (creates one if doesn't exist) " +
-                "leaving XNB assets in their original form.",
-                Arguments = new[]{ new Argument("pak-path"), new Argument("destination-folder") },
-                Operation = delegate(string[] args){ UnpackPackage(args[0], args[1], UnpackingMode.Raw); }
-            },
-            new Command
-            {
-                Name = "--unpack-decompressed",
-                HelpText = "Unpacks entire .PAK package into specified directory (creates one if doesn't exist)." +
-                "and attempts to decompress all XNB assets, but does not convert them.",
-                Arguments = new[]{ new Argument("pak-path"), new Argument("destination-folder") },
-                Operation = delegate(string[] args){ UnpackPackage(args[0], args[1], UnpackingMode.DecompressedXNB); }
-            },
-            new Command
-            {
-                Name = "--unpack-fez-content", Aliases = new[]{"-g"},
-                HelpText = "Unpacks and converts all game assets into specified directory (creates one if doesn't exist).",
-                Arguments = new[]{ new Argument("fez-content-directory"), new Argument("destination-folder") },
-                Operation = delegate(string[] args){ UnpackGameAssets(args[0], args[1], UnpackingMode.Converted); }
-            },
-            new Command
-            {
-                Name = "--pack", Aliases = new[]{"-p"},
-                HelpText = "Loads files from given input directory path, tries to deconvert them and pack into a destination " +
-                ".PAK file with given path. If include .PAK path is provided, it'll add its content into the new .PAK package.",
-                Arguments = new[]{ new Argument("input-directory-path"), new Argument("destination-pak-path"), new Argument("include-pak-path", true) },
-                Operation = delegate(string[] args){ AddToPackage(args[0], args[1], args.Length>2 ? args[2] : args[1]); }
-            },
-            new Command
-            {
-                Name = "--list", Aliases = new[]{"-l"},
-                HelpText = "Lists all files contained withing given .PAK package.",
-                Arguments = new[]{ new Argument("pak-path") },
-                Operation = delegate(string[] args){ ListPackageContent(args[0]); }
-            },
-            new Command
-            {
-                Name = "--convert-from-xnb", Aliases = new[]{"-x"},
-                HelpText = "Attempts to convert given XNB input (this can be a path to a single asset or an entire directory) " +
-                "and save it at given output directory. If input is a directory, dumps all converted files in specified path " +
-                "recursively. If output directory is not given, outputs next to the input file(s).",
-                Arguments = new[]{ new Argument("xnb-input"), new Argument("file-output", true) },
-                Operation = delegate(string[] args){ ConvertFromXNB(args[0], args.Length > 1 ? args[1] : ""); }
-            },
-            new Command
-            {
-                Name = "--convert-to-xnb", Aliases = new[]{"-X"},
-                HelpText = "Attempts to convert given input (this can be a path to a single file or an entire directory) " +
-                "into XNB file(s) and save it at given output directory. If input is a directory, dumps all converted files in" +
-                "specified path recursively. If output directory is not given, outputs next to the input file(s).",
-                Arguments = new[]{ new Argument("file-input"), new Argument("xnb-output", true) },
-                Operation = delegate(string[] args){ ConvertIntoXNB(args[0], args.Length > 1 ? args[1] : ""); }
-            },
+            new HelpAction(),
+            new ListPackageContentAction(),
+            new UnpackConvertAction(),
+            new UnpackRawAction(),
+            new UnpackDecompressedAction(),
+            new PackAction(),
+            new UnpackGameAction(),
+            new ConvertFromXnbAction(),
+            new ConvertToXnbAction()
         };
 
-
-        private static bool FindCommand(string name, out Command outCommand)
+        public static CommandLineAction? FindCommand(string name)
         {
             var validCommands = Commands.Where(command => command.Name == name || command.Aliases.Contains(name));
             if (validCommands.Any())
             {
-                outCommand = validCommands.First();
-                return true;
+                return validCommands.First();
             }
             else
             {
-                outCommand = new();
-                return false;
+                return null;
             }
         }
 
-        /// <summary>
-        /// Attempts to executes a command and returns <code>true</code> if a command was executed
-        /// </summary>
         /// <param name="args">The command to execute</param>
-        /// <returns><code>true</code> if a command was executed</returns>
+        /// <returns>True if a command was executed, false otherwise.</returns>
         public static bool ParseCommandLine(string[] args)
         {
-            var debugMode = false;
-
-            if (args.Length == 1 && args[0] == "debug")
-            {
-                debugMode = true;
-                Console.WriteLine("Running debug mode! Type your command line arguments: ");
-                var input = Console.ReadLine() ?? "";
-                args = Regex.Matches(input, @"[\""].+?[\""]|[^ ]+").Cast<Match>().Select(m => m.Value).ToArray();
-            }
-
             if (args.Length == 0) return false;
 
-            if (!FindCommand(args[0], out Command command))
+            var command = FindCommand(args[0]);
+            if (command == null)
             {
                 Console.WriteLine($"Unknown command \"{args[0]}\".");
                 Console.WriteLine($"Type \"FEZRepacker.exe --help\" for a list of commands.");
@@ -165,15 +59,80 @@ namespace FEZRepacker.Interface
 
             try
             {
-                command.Operation!(cmdArgs);
+                command.Execute(cmdArgs);
             }
             catch (Exception ex)
             {
-                if (debugMode) throw;
-                else Console.Error.WriteLine($"Error while executing command: {ex.Message}");
+                #if DEBUG
+                    throw;
+                #else
+                    Console.Error.WriteLine($"Error while executing command: {ex.Message}");
+                #endif
             }
             return true;
         }
 
+        /// <summary>
+        /// Runs interactive mode which repeadetly requests user input and parses it as commands.
+        /// </summary>
+        public static void RunInteractiveMode()
+        {
+            Console.Write('\a'); //alert user
+
+            ShowInteractiveModeHelp();
+
+            while (true)
+            {
+                Console.WriteLine();
+                Console.Write("> FEZRepacker.exe ");
+
+                string? line = Console.ReadLine();
+                if (line == null) return; // No lines remain to read. Exit the program.
+
+                var args = ParseArguments(line);
+                
+                if (ParseInteractiveModeCommands(args)) continue;
+                if (ParseCommandLine(args)) continue;
+                
+                ShowInteractiveModeHelp();
+                
+            }
+        }
+
+        private static void ShowInteractiveModeHelp()
+        {
+            Console.WriteLine("To get usage help, use '--help'");
+            Console.WriteLine("To exit, use 'exit'");
+        }
+
+        private static bool ParseInteractiveModeCommands(string[] args)
+        {
+            if (args.Length == 0) return false;
+
+            switch (args[0].ToLower())
+            {
+                case "cls":
+                case "clear":
+                    Console.Clear();
+                    return true;
+                case "exit":
+                case "end":
+                case "stop":
+                case "terminate":
+                    Console.WriteLine("Exiting...");
+                    return true;
+                default:
+                    Console.WriteLine();
+                    return false;
+            }
+        }
+
+        private static string[] ParseArguments(string argumentsString)
+        {
+            return argumentsString.Split('"')
+                .SelectMany((element, index) => (index % 2 == 0) ? element.Split(' ') : new[] { element })
+                .Where(s => !string.IsNullOrEmpty(s))
+                .ToArray();
+        }
     }
 }

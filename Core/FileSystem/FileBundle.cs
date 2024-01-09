@@ -78,7 +78,7 @@
         /// <summary>
         /// Bundles given list of files based on their extensions.
         /// </summary>
-        /// <param name="files">Dictionary containing file names paired with corresponding file streams.</param>
+        /// <param name="files">Dictionary containing file paths paired with corresponding file streams.</param>
         /// <returns>List of organized file bundles.</returns>
         public static List<FileBundle> BundleFiles(Dictionary<string, Stream> files)
         {
@@ -113,6 +113,62 @@
             }
 
             return bundles;
+        }
+
+
+        /// <summary>
+        /// Opens listed files and bundles them based on their extensions.
+        /// </summary>
+        /// <param name="filePaths">List of file paths to open and bundle.</param>
+        /// <param name="mainDirectory">
+        /// Optional path to main directory. 
+        /// If specified, file bundle paths will be relative to given directory.
+        /// </param>
+        /// <returns>List of organized file bundles.</returns>
+        public static List<FileBundle> BundleFiles(IEnumerable<string> filePaths, string mainDirectory = "")
+        {
+            var fileList = new Dictionary<string, Stream>();
+            foreach (var filePath in filePaths)
+            {
+                // PAK archives require backwards slashes for their paths
+                var relativePath = filePath.Replace("/", "\\");
+                if (relativePath.StartsWith(mainDirectory))
+                {
+                    relativePath = relativePath.Substring(mainDirectory.Length);
+                }
+                fileList[relativePath] = File.OpenRead(filePath);
+            }
+            return FileBundle.BundleFiles(fileList);
+        }
+
+        /// <summary>
+        /// Loads all files at given path and then bundles them into file bundles.
+        /// </summary>
+        /// <remarks>
+        /// If the path is a directory, all files in that directory will be bundled recursively.
+        /// If the path points to a single file instead, it will be bundled into a single file bundle
+        /// with all of the files in the directory which belong to the same bundle.
+        /// </remarks>
+        /// <param name="path">Path of a file or a directory to bundle its content from.</param>
+        /// <returns>List of file bundles found at given path.</returns>
+        public static List<FileBundle> BundleFilesAtPath(string path)
+        {
+            if (Directory.Exists(path))
+            {
+                string[] filePaths = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories);
+                return BundleFiles(filePaths, path);
+            }
+            else if (File.Exists(path))
+            {
+                var fileName = Path.GetFileNameWithoutExtension(path);
+                path = Path.GetDirectoryName(path) ?? "";
+                string[] filePaths = Directory.GetFiles(path, $"{fileName}.*");
+                return BundleFiles(filePaths, path);
+            }
+            else
+            {
+                throw new FileNotFoundException("Specified path does not lead to any file or a directory");
+            }
         }
 
         /// <summary>
