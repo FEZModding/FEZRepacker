@@ -95,7 +95,7 @@ Most of the work with building is handled by MSBuild.
 
 The solution is separated into two projects: `Core` and `Interface`.
 
-`Core` contains nearly all of the logic, and is meant to be a stand-alone binary that can be used by other software (most notably, HAT mod loader). In order to allow easy distribution, all of its dependencies are automatically merged using ILRepack on build process.
+`Core` contains nearly all of the logic, and is meant to be a stand-alone binary that can be used by other software (most notably, HAT mod loader). In order to allow easy distribution, all of its dependencies are automatically merged using ILRepack on build process when `ReleaseCore` configuration is used.
 
 `Interface` contains console line interface layer and can be used as a reference for interacting with `Core` library. It is distributed as a self-contained executable using the following command:
 `dotnet publish -c Release -r win-x86 --self-contained`
