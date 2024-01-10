@@ -12,6 +12,8 @@
     
     <Configurations>Debug;Release;ReleaseRepacked</Configurations>
 
+    <Version>1.0.0</Version>
+
   </PropertyGroup>
 
   <Target Name="ILRepacker" AfterTargets="Build" Condition="'$(Configuration)' == 'ReleaseRepacked'">
