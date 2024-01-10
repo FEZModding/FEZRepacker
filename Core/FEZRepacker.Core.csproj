@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Library</OutputType>
@@ -7,14 +7,28 @@
     
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 
-    <!-- TODO: Should we really have this at 0? -->
-    <WarningLevel>0</WarningLevel>
   </PropertyGroup>
 
+  <Target Name="ILRepacker" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
+    <ItemGroup>
+      <InputAssemblies Include="$(TargetDir)/*.dll" Exclude="$(TargetPath)"/>
+    </ItemGroup>
+
+    <ILRepack
+      OutputType="$(OutputType)"
+      MainAssembly="$(TargetPath)"
+      InputAssemblies="@(InputAssemblies)"
+      OutputAssembly="$(TargetPath)"
+      WorkingDirectory="$(TargetDir)"/>
+  </Target>
+
   <ItemGroup>
-    <PackageReference Include="System.Text.Json" Version="7.0.1" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.3" />
+    <PackageReference Include="ILRepack.MSBuild.Task" Version="2.0.13" GeneratePathProperty="true"/>
+    <PackageReference Include="System.Text.Json" Version="7.0.1" GeneratePathProperty="true"/>
+    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.3" GeneratePathProperty="true"/>
   </ItemGroup>
 
 </Project>
