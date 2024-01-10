@@ -2,7 +2,7 @@
 
 ## Overview
 
-**FEZ Repacker** is a tool created for unpacking and packing FEZ's `.pak` asset packages. It allows two-way conversion of game assets into easily modifiable file formats, which makes modding of FEZ more accessible. Currently, this tool is in development and supports a full two-way conversion only for a handful of data types.
+**FEZ Repacker** is a tool created for unpacking and packing FEZ's `.pak` asset packages. It allows two-way conversion of game assets into easily modifiable file formats, which makes modding of FEZ more accessible.
 
 ## Assets conversion description
 
@@ -38,7 +38,7 @@ If you want to learn more about the technical process of reading PAK packages an
 
 ## Usage
 
-As of right now, FEZ Repacker is a command line tool. In order to see a list of available commands, use `FEZRepacker.exe --help`.
+As of right now, FEZ Repacker is a command line tool. In order to see a list of available commands, use `FEZRepacker.exe --help`. Launching executable with no parameters will start an interactive mode.
 
 To make the usage of the tool easier, you can put it within `Content` directory of your FEZ installation.
 
@@ -68,18 +68,41 @@ Attempts to convert given XNB input (this can be a path to a single asset or an 
 - `[--convert-to-xnb, -X] [file-input] [xnb-output]`
 Attempts to convert given input (this can be a path to a single file or an entire directory) into XNB file(s) and save it at given output (if input is a directory, converts all files within it recursively and dumps all converted files in specified path).
 
+## Examples
+
 Here are some examples how you can use these commands:
 
+- To unpack every game asset from the game into `Unpacked` directory (assuming your working directory is `Content`), use:
+`FEZRepacker.exe --unpack-fez-content * Unpacked`
 - To unpack `Other.pak` into a directory called `Other unpacked`, use:
 `FEZRepacker.exe --unpack Other.pak "Other unpacked"`
 - To repack files contained in `Other unpacked` directory into a package named `Other.pak` while also including the contents of `Other_old.pak`, use:
 `FEZRepacker.exe --pack "Other unpacked" Other.pak Other_old.pak`
+- To convert all file bundles located in the `files_in` directory into XNB assets, and then store them in `files_out` directory, use:
+`FEZRepacker.exe --convert-to-xnb files_in files_out`
+
+## Game modding remarks
 
 It is recommended to use mod loader to swap original assets, but if you're trying to do it manually by recompiling them into one of the archives and your changes didn't affect the game, here's a couple of things to keep in mind:
 
 - directory tree created in unpacking process **does matter** - putting modified files in the main directory after changing them doesn't give them their original location and name in PAK file after repacking, preventing the game from finding the new asset.
 - Packages are loaded in this order: `Essentials.pak`, `Updates.pak` and `Other.pak`. If you're trying to override an existing file, it has to be in the same package or in a package that's loaded sooner.
 - Music is handled separately and has to be packed in `Music.pak`.
+
+## Building
+
+Most of the work with building is handled by MSBuild.
+
+The solution is separated into two projects: `Core` and `Interface`.
+
+`Core` contains nearly all of the logic, and is meant to be a stand-alone binary that can be used by other software (most notably, HAT mod loader). In order to allow easy distribution, all of its dependencies are automatically merged using ILRepack on build process.
+
+`Interface` contains console line interface layer and can be used as a reference for interacting with `Core` library. It is distributed as a self-contained executable using the following command:
+`dotnet publish -c Release -r win-x86 --self-contained`
+
+## Credits
+
+This project uses [ImageSharp](https://github.com/SixLabors/ImageSharp) for image-based assets in the conversion step.
 
 ## Sources
 
