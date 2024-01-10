@@ -142,7 +142,10 @@ namespace FEZRepacker.Converter.XNB.Formats
             {
                 var id = int.Parse(objRecord.Key);
 
-                if (!trileSet.Triles.ContainsKey(id)) trileSet.Triles[id] = new Trile();
+                if (!trileSet.Triles.ContainsKey(id))
+                {
+                    trileSet.Triles[id] = new Trile();
+                }
                 trileSet.Triles[id].Geometry = objRecord.Value;
             }
         }
@@ -187,8 +190,8 @@ namespace FEZRepacker.Converter.XNB.Formats
                 if (trileSet.Triles.ContainsKey(trileRecord.Key))
                 {
                     trileRecord.Value.Geometry = trileSet.Triles[trileRecord.Key].Geometry;
-                    trileSet.Triles[trileRecord.Key] = trileRecord.Value;
                 }
+                trileSet.Triles[trileRecord.Key] = trileRecord.Value;
             }
         }
     }
