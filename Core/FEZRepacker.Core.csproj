@@ -10,29 +10,31 @@
     
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     
-    <Configurations>Debug;Release;ReleaseRepacked</Configurations>
+    <Configurations>Debug;ReleaseRaw;Release</Configurations>
 
     <Version>1.0.0</Version>
 
   </PropertyGroup>
 
-  <Target Name="ILRepacker" AfterTargets="Build" Condition="'$(Configuration)' == 'ReleaseRepacked'">
+  <Target Name="ILRepacker" AfterTargets="Build" Condition="'$(Configuration)'=='Release'">
     <ItemGroup>
-      <InputAssemblies Include="$(TargetDir)/*.dll" Exclude="$(TargetPath)"/>
+      <InputAssemblies 
+        Include="$(TargetDir)*.dll" 
+        Exclude="$(TargetPath);$(TargetDir)Microsoft.Build.*.dll"/>
     </ItemGroup>
 
-    <ILRepack
-      OutputType="$(OutputType)"
-      MainAssembly="$(TargetPath)"
-      InputAssemblies="@(InputAssemblies)"
-      OutputAssembly="$(TargetPath)"
-      WorkingDirectory="$(TargetDir)"/>
+    <ILRepack 
+      OutputType="$(OutputType)" 
+      MainAssembly="$(TargetPath)" 
+      InputAssemblies="@(InputAssemblies)" 
+      OutputAssembly="$(TargetPath)" 
+      WorkingDirectory="$(TargetDir)" />
   </Target>
 
   <ItemGroup>
-    <PackageReference Include="ILRepack.MSBuild.Task" Version="2.0.13"/>
-    <PackageReference Include="System.Text.Json" Version="7.0.1"/>
-    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.3"/>
+    <PackageReference Include="ILRepack.MSBuild.Task" Version="2.0.13" />
+    <PackageReference Include="System.Text.Json" Version="7.0.1" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.3" />
   </ItemGroup>
 
 </Project>
