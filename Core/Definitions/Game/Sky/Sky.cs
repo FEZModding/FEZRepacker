@@ -5,10 +5,10 @@
     public class Sky
     {
         [XnbProperty]
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
 
         [XnbProperty]
-        public string Background { get; set; }
+        public string Background { get; set; } = "";
 
         [XnbProperty]
         public float WindSpeed { get; set; }
@@ -20,19 +20,19 @@
         public float FogDensity { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public List<SkyLayer> Layers { get; set; }
+        public List<SkyLayer> Layers { get; set; } = new();
 
         [XnbProperty(UseConverter = true)]
-        public List<string> Clouds { get; set; }
+        public List<string> Clouds { get; set; } = new();
 
         [XnbProperty(UseConverter = true)]
-        public string Shadows { get; set; }
+        public string Shadows { get; set; } = "";
 
         [XnbProperty(UseConverter = true)]
-        public string Stars { get; set; }
+        public string Stars { get; set; } = "";
 
         [XnbProperty(UseConverter = true)]
-        public string CloudTint { get; set; }
+        public string CloudTint { get; set; } = "";
 
         [XnbProperty]
         public bool VerticalTiling { get; set; }

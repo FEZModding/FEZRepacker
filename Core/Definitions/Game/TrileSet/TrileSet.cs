@@ -10,20 +10,13 @@ namespace FEZRepacker.Core.Definitions.Game.TrileSet
     public class TrileSet
     {
         [XnbProperty]
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
 
         [XnbProperty(UseConverter = true)]
-        public Dictionary<int, Trile> Triles { get; set; }
+        public Dictionary<int, Trile> Triles { get; set; } = new();
 
         [JsonIgnore]
         [XnbProperty(UseConverter = true)]
-        public Texture2D TextureAtlas { get; set; }
-
-
-        public TrileSet()
-        {
-            TextureAtlas = new Texture2D();
-            Triles = new Dictionary<int, Trile>();
-        }
+        public Texture2D TextureAtlas { get; set; } = new();
     }
 }

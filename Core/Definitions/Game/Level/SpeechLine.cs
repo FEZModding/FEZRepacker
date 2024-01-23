@@ -5,16 +5,9 @@
     public class SpeechLine
     {
         [XnbProperty(UseConverter = true)]
-        public string Text { get; set; }
+        public string Text { get; set; } = "";
 
         [XnbProperty(UseConverter = true)]
-        public NpcActionContent OverrideContent { get; set; }
-
-
-        public SpeechLine()
-        {
-            Text = "";
-            OverrideContent = new();
-        }
+        public NpcActionContent OverrideContent { get; set; } = new();
     }
 }

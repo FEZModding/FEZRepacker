@@ -5,24 +5,15 @@
     public class ScriptCondition
     {
         [XnbProperty(UseConverter = true)]
-        public Entity Object { get; set; }
+        public Entity Object { get; set; } = new();
 
         [XnbProperty(UseConverter = true)]
-        public ComparisonOperator Operator { get; set; }
+        public ComparisonOperator Operator { get; set; } = ComparisonOperator.None;
 
         [XnbProperty]
-        public string Property { get; set; }
+        public string Property { get; set; } = "";
 
         [XnbProperty]
-        public string Value { get; set; }
-
-
-        public ScriptCondition()
-        {
-            Object = new();
-            Operator = ComparisonOperator.None;
-            Property = "";
-            Value = "";
-        }
+        public string Value { get; set; } = "";
     }
 }

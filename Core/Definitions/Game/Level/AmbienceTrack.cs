@@ -5,7 +5,7 @@
     public class AmbienceTrack
     {
         [XnbProperty(UseConverter = true)]
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
 
         [XnbProperty]
         public bool Day { get; set; }
@@ -18,11 +18,5 @@
 
         [XnbProperty]
         public bool Dawn { get; set; }
-
-
-        public AmbienceTrack()
-        {
-            Name = "";
-        }
     }
 }

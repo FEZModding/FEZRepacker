@@ -12,18 +12,18 @@ namespace FEZRepacker.Core.Definitions.Game.ArtObject
     public class ArtObject
     {
         [XnbProperty]
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
 
         [JsonIgnore]
         [XnbProperty(UseConverter = true)]
-        public Texture2D Cubemap { get; set; }
+        public Texture2D Cubemap { get; set; } = new();
 
         [XnbProperty]
         public Vector3 Size { get; set; }
 
         [JsonIgnore]
         [XnbProperty(UseConverter = true)]
-        public ShaderInstancedIndexedPrimitives<VertexPositionNormalTextureInstance, Matrix> Geometry { get; set; }
+        public ShaderInstancedIndexedPrimitives<VertexPositionNormalTextureInstance, Matrix> Geometry { get; set; } = new();
 
         [XnbProperty(UseConverter = true)]
         public ActorType ActorType { get; set; }

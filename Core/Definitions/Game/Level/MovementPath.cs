@@ -5,7 +5,7 @@
     public class MovementPath
     {
         [XnbProperty(UseConverter = true)]
-        public List<PathSegment> Segments { get; set; }
+        public List<PathSegment> Segments { get; set; } = new();
 
         [XnbProperty]
         public bool NeedsTrigger { get; set; }
@@ -14,7 +14,7 @@
         public PathEndBehavior EndBehavior { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public string SoundName { get; set; }
+        public string SoundName { get; set; } = "";
 
         [XnbProperty]
         public bool IsSpline { get; set; }
@@ -24,12 +24,5 @@
 
         [XnbProperty]
         public bool SaveTrigger { get; set; }
-
-
-        public MovementPath()
-        {
-            Segments = new();
-            SoundName = "";
-        }
     }
 }

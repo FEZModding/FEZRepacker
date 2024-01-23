@@ -7,15 +7,9 @@ namespace FEZRepacker.Core.Definitions.Game.Level
     public class TrileFace
     {
         [XnbProperty(UseConverter = true)]
-        public TrileEmplacement Id { get; set; }
+        public TrileEmplacement Id { get; set; } = new();
 
         [XnbProperty(UseConverter = true)]
         public FaceOrientation Face { get; set; }
-
-
-        public TrileFace()
-        {
-            Id = new();
-        }
     }
 }

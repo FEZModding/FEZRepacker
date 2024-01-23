@@ -32,38 +32,27 @@ namespace FEZRepacker.Core.Definitions.Game.Level
         public Vector3 RotationCenter { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public VibrationMotor[] VibrationPattern { get; set; }
+        public VibrationMotor[] VibrationPattern { get; set; } = { };
 
         [XnbProperty(UseConverter = true)]
-        public CodeInput[] CodePattern { get; set; }
+        public CodeInput[] CodePattern { get; set; } = { };
 
         [XnbProperty(UseConverter = true)]
-        public PathSegment Segment { get; set; }
+        public PathSegment Segment { get; set; } = new();
 
         [XnbProperty(Optional = true)]
         public int? NextNode { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public string DestinationLevel { get; set; }
+        public string DestinationLevel { get; set; } = "";
 
         [XnbProperty(UseConverter = true)]
-        public string TreasureMapName { get; set; }
+        public string TreasureMapName { get; set; } = "";
 
         [XnbProperty(UseConverter = true)]
-        public FaceOrientation[] InvisibleSides { get; set; }
+        public FaceOrientation[] InvisibleSides { get; set; } = { };
 
         [XnbProperty]
         public float TimeswitchWindBackSpeed { get; set; }
-
-
-        public ArtObjectActorSettings()
-        {
-            VibrationPattern = new VibrationMotor[0];
-            CodePattern = new CodeInput[0];
-            Segment = new();
-            DestinationLevel = "";
-            TreasureMapName = "";
-            InvisibleSides = new FaceOrientation[0];
-        }
     }
 }

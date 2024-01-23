@@ -20,16 +20,9 @@
         public int FrameHeight { get; set; }
 
         [XnbProperty(UseConverter = true, SkipIdentifier = true)]
-        public byte[] TextureData { get; set; }
+        public byte[] TextureData { get; set; } = { };
 
         [XnbProperty(UseConverter = true)]
-        public List<FrameContent> Frames { get; set; }
-
-
-        public AnimatedTexture()
-        {
-            Frames = new();
-            TextureData = new byte[0];
-        }
+        public List<FrameContent> Frames { get; set; } = new();
     }
 }

@@ -13,15 +13,9 @@ namespace FEZRepacker.Core.Definitions.Game.NpcMetadata
         public bool AvoidsGomez { get;set; }
 
         [XnbProperty(UseConverter = true)]
-        public string SoundPath { get; set; }
+        public string SoundPath { get; set; } = "";
 
         [XnbProperty(UseConverter = true)]
-        public List<NpcAction> SoundActions { get; set; }
-
-
-        public NpcMetadata()
-        {
-            SoundActions = new List<NpcAction>();
-        }
+        public List<NpcAction> SoundActions { get; set; } = new();
     }
 }

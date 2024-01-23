@@ -34,7 +34,7 @@
         public short ExtraParameter { get; set; }
 
         [XnbProperty(UseConverter = true, SkipIdentifier = true)]
-        public byte[] DataChunk { get; set; }
+        public byte[] DataChunk { get; set; } = { };
 
         [XnbProperty]
         public int LoopStart { get; set; }
@@ -44,11 +44,5 @@
 
         [XnbProperty]
         public int UnknownValue { get; set; }
-
-
-        public SoundEffect()
-        {
-            DataChunk = new byte[0];
-        }
     }
 }

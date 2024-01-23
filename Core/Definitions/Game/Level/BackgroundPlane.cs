@@ -11,16 +11,16 @@ namespace FEZRepacker.Core.Definitions.Game.Level
         public Vector3 Position { get; set; }
 
         [XnbProperty]
-        public Quaternion Rotation { get; set; }
+        public Quaternion Rotation { get; set; } = Quaternion.Identity;
 
         [XnbProperty]
-        public Vector3 Scale { get; set; }
+        public Vector3 Scale { get; set; } = new Vector3(1.0f, 1.0f, 1.0f);
 
         [XnbProperty]
         public Vector3 Size { get; set; }
 
         [XnbProperty]
-        public string TextureName { get; set; }
+        public string TextureName { get; set; } = "";
 
         [XnbProperty]
         public bool LightMap { get; set; }
@@ -29,7 +29,7 @@ namespace FEZRepacker.Core.Definitions.Game.Level
         public bool AllowOverbrightness { get; set; }
 
         [XnbProperty]
-        public Color Filter { get; set; }
+        public Color Filter { get; set; } = new Color(255, 255, 255, 255);
 
         [XnbProperty]
         public bool Animated { get; set; }
@@ -38,7 +38,7 @@ namespace FEZRepacker.Core.Definitions.Game.Level
         public bool Doublesided { get; set; }
 
         [XnbProperty]
-        public float Opacity { get; set; }
+        public float Opacity { get; set; } = 1.0f;
 
         [XnbProperty(Optional = true)]
         public int? AttachedGroup { get; set; }
@@ -83,15 +83,5 @@ namespace FEZRepacker.Core.Definitions.Game.Level
 
         [XnbProperty]
         public float ParallaxFactor { get; set; }
-
-
-        public BackgroundPlane()
-        {
-            Scale = new Vector3(1.0f, 1.0f, 1.0f);
-            Opacity = 1.0f;
-            Filter = new Color(255,255,255,255);
-            Rotation = Quaternion.Identity;
-            TextureName = "";
-        }
     }
 }

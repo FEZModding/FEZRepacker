@@ -8,11 +8,6 @@
         // Stored data is simply a raw FXB file.
 
         [XnbProperty(UseConverter = true, SkipIdentifier = true)]
-        public byte[] Data { get; set; }
-
-        public Effect()
-        {
-            Data = new byte[0];
-        }
+        public byte[] Data { get; set; } = { };
     }
 }

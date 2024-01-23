@@ -8,10 +8,10 @@ namespace FEZRepacker.Core.Definitions.Game.Level
     public class TrileGroup
     {
         [XnbProperty(UseConverter = true)]
-        public List<TrileInstance> Triles { get; set; }
+        public List<TrileInstance> Triles { get; set; } = new();
 
         [XnbProperty(UseConverter = true, Optional = true, SkipIdentifier = true)]
-        public MovementPath? Path { get; set; }
+        public MovementPath? Path { get; set; } = null;
 
         [XnbProperty]
         public bool Heavy { get; set; }
@@ -53,14 +53,6 @@ namespace FEZRepacker.Core.Definitions.Game.Level
         public float SpinOffset { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public string AssociatedSound { get; set; }
-
-
-        public TrileGroup()
-        {
-            Triles = new List<TrileInstance>();
-            Path = null;
-            AssociatedSound = "";
-        }
+        public string AssociatedSound { get; set; } = "";
     }
 }

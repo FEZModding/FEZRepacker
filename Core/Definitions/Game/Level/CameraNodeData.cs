@@ -11,13 +11,6 @@
         public int PixelsPerTrixel { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public string SoundName { get; set; }
-
-
-        public CameraNodeData()
-        {
-            SoundName = "";
-
-        }
+        public string SoundName { get; set; } = "";
     }
 }

@@ -11,6 +11,6 @@ namespace FEZRepacker.Core.Definitions.Game.Graphics
         public TimeSpan Duration { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public Rectangle Rectangle { get; set; }
+        public Rectangle Rectangle { get; set; } = new();
     }
 }

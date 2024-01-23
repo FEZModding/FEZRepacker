@@ -16,16 +16,9 @@ namespace FEZRepacker.Core.Definitions.Game.Level
         public byte PhiLight { get; set; }
 
         [XnbProperty(UseConverter = true, Optional = true)]
-        public TrileInstanceActorSettings? ActorSettings { get; set; }
+        public TrileInstanceActorSettings? ActorSettings { get; set; } = null;
 
         [XnbProperty(UseConverter = true)]
-        public List<TrileInstance> OverlappedTriples { get; set; }
-
-
-        public TrileInstance()
-        {
-            ActorSettings = null;
-            OverlappedTriples = new();
-        }
+        public List<TrileInstance> OverlappedTriples { get; set; } = new();
     }
 }

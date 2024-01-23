@@ -5,26 +5,18 @@
     public class ScriptAction
     {
         [XnbProperty(UseConverter = true)]
-        public Entity Object { get; set; }
+        public Entity Object { get; set; } = new();
 
         [XnbProperty]
-        public string Operation { get; set; }
+        public string Operation { get; set; } = "";
 
         [XnbProperty(UseConverter = true)]
-        public string[] Arguments { get; set; }
+        public string[] Arguments { get; set; } = { };
 
         [XnbProperty]
         public bool Killswitch { get; set; } // whether action should kill this script
 
         [XnbProperty]
         public bool Blocking { get; set; } // should action be blocked from execution if another one is executing already
-
-
-        public ScriptAction()
-        {
-            Object = new();
-            Operation = "";
-            Arguments = new string[0];
-        }
     }
 }

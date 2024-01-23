@@ -10,15 +10,9 @@ namespace FEZRepacker.Core.Definitions.Game.MapTree
         public FaceOrientation Face { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public MapNode Node { get; set; }
+        public MapNode Node { get; set; } = new();
 
         [XnbProperty]
         public float BranchOversize { get;set; }
-
-
-        public MapNodeConnection()
-        {
-            Node = new MapNode();
-        }
     }
 }

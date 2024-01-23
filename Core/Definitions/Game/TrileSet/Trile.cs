@@ -12,10 +12,10 @@ namespace FEZRepacker.Core.Definitions.Game.TrileSet
     public class Trile
     {
         [XnbProperty]
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
 
         [XnbProperty]
-        public string CubemapPath { get; set; }
+        public string CubemapPath { get; set; } = "";
 
         [XnbProperty]
         public Vector3 Size { get; set; }
@@ -36,11 +36,11 @@ namespace FEZRepacker.Core.Definitions.Game.TrileSet
         public bool ForceHugging { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public Dictionary<FaceOrientation, CollisionType> Faces { get; set; }
+        public Dictionary<FaceOrientation, CollisionType> Faces { get; set; } = new();
 
         [JsonIgnore]
         [XnbProperty(UseConverter = true)]
-        public ShaderInstancedIndexedPrimitives<VertexPositionNormalTextureInstance, Vector4> Geometry { get; set; }
+        public ShaderInstancedIndexedPrimitives<VertexPositionNormalTextureInstance, Vector4> Geometry { get; set; } = new();
 
         [XnbProperty(UseConverter = true)]
         public ActorType Type { get; set; }
@@ -54,11 +54,5 @@ namespace FEZRepacker.Core.Definitions.Game.TrileSet
         [XnbProperty]
         public Vector2 AtlasOffset { get; set; }
 
-        
-        public Trile()
-        {
-            Faces = new Dictionary<FaceOrientation, CollisionType>();
-            Geometry = new ShaderInstancedIndexedPrimitives<VertexPositionNormalTextureInstance, Vector4>();
-        }
     }
 }

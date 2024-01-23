@@ -7,7 +7,7 @@ namespace FEZRepacker.Core.Definitions.Game.Level
     public class ArtObjectInstance
     {
         [XnbProperty]
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
 
         [XnbProperty]
         public Vector3 Position { get; set; }
@@ -19,13 +19,6 @@ namespace FEZRepacker.Core.Definitions.Game.Level
         public Vector3 Scale { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public ArtObjectActorSettings ActorSettings { get; set; }
-
-
-        public ArtObjectInstance()
-        {
-            Name = "";
-            ActorSettings = new();
-        }
+        public ArtObjectActorSettings ActorSettings { get; set; } = new();
     }
 }

@@ -13,13 +13,13 @@ namespace FEZRepacker.Core.Definitions.Game.Level
         public bool IsPointOfInterest { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public List<DotDialogueLine> DotDialogue { get; set; }
+        public List<DotDialogueLine> DotDialogue { get; set; } = new();
 
         [XnbProperty]
         public bool WaterLocked { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public CodeInput[] CodePattern { get; set; }
+        public CodeInput[] CodePattern { get; set; } = { };
 
         [XnbProperty]
         public bool IsBlackHole { get; set; }
@@ -29,12 +29,5 @@ namespace FEZRepacker.Core.Definitions.Game.Level
 
         [XnbProperty]
         public bool IsSecretPassage { get; set; }
-
-
-        public VolumeActorSettings()
-        {
-            DotDialogue = new List<DotDialogueLine>();
-            CodePattern = new CodeInput[0];
-        }
     }
 }

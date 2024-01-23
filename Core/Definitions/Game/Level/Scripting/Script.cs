@@ -5,19 +5,19 @@
     public class Script
     {
         [XnbProperty]
-        public string Name { get; set; }
+        public string Name { get; set; } = "Untitled";
 
         [XnbProperty(Optional = true)]
         public TimeSpan? Timeout { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public List<ScriptTrigger> Triggers { get; set; }
+        public List<ScriptTrigger> Triggers { get; set; } = new();
 
         [XnbProperty(UseConverter = true)]
-        public List<ScriptCondition> Conditions { get; set; }
+        public List<ScriptCondition> Conditions { get; set; } = new();
 
         [XnbProperty(UseConverter = true)]
-        public List<ScriptAction> Actions { get; set; }
+        public List<ScriptAction> Actions { get; set; } = new();
 
         [XnbProperty]
         public bool OneTime { get; set; }
@@ -36,13 +36,5 @@
 
         [XnbProperty]
         public bool IsWinCondition { get; set; }
-
-        public Script()
-        {
-            Name = "Untitled";
-            Triggers = new();
-            Conditions = new();
-            Actions = new();
-        }
     }
 }

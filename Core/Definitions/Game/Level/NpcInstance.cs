@@ -8,7 +8,7 @@ namespace FEZRepacker.Core.Definitions.Game.Level
     public class NpcInstance
     {
         [XnbProperty]
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
 
         [XnbProperty]
         public Vector3 Position { get; set; }
@@ -32,18 +32,9 @@ namespace FEZRepacker.Core.Definitions.Game.Level
         public ActorType ActorType { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public List<SpeechLine> Speech { get; set; }
+        public List<SpeechLine> Speech { get; set; } = new();
 
         [XnbProperty(UseConverter = true)]
-        public Dictionary<NpcAction, NpcActionContent> Actions { get; set; }
-
-
-        public NpcInstance()
-        {
-            Speech = new List<SpeechLine>();
-            Actions = new Dictionary<NpcAction, NpcActionContent>();
-
-            Name = "";
-        }
+        public Dictionary<NpcAction, NpcActionContent> Actions { get; set; } = new();
     }
 }

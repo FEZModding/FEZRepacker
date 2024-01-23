@@ -5,7 +5,7 @@
     public class SkyLayer
     {
         [XnbProperty]
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
 
         [XnbProperty]
         public bool InFront { get; set; }

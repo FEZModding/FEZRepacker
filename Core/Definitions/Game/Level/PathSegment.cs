@@ -10,7 +10,7 @@ namespace FEZRepacker.Core.Definitions.Game.Level
         public Vector3 Destination { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public TimeSpan Duration { get; set; }
+        public TimeSpan Duration { get; set; } = TimeSpan.FromSeconds(1.0f);
 
         [XnbProperty(UseConverter = true)]
         public TimeSpan WaitTimeOnStart { get; set; }
@@ -28,17 +28,9 @@ namespace FEZRepacker.Core.Definitions.Game.Level
         public float JitterFactor { get; set; }
 
         [XnbProperty]
-        public Quaternion Orientation { get; set; }
+        public Quaternion Orientation { get; set; } = Quaternion.Identity;
 
         [XnbProperty(UseConverter = true, Optional = true)]
-        public CameraNodeData? CustomData { get; set; }
-
-
-        public PathSegment()
-        {
-            CustomData = null;
-            Duration = TimeSpan.FromSeconds(1.0f);
-            Orientation = Quaternion.Identity;
-        }
+        public CameraNodeData? CustomData { get; set; } = null;
     }
 }
