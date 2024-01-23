@@ -2,7 +2,7 @@
 {
     [XnbType("FezEngine.Structure.Scripting.ScriptCondition")]
     [XnbReaderType("FezEngine.Readers.ScriptConditionReader")]
-    class ScriptCondition
+    public class ScriptCondition
     {
         [XnbProperty(UseConverter = true)]
         public Entity Object { get; set; }

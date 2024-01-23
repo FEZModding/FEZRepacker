@@ -3,7 +3,7 @@ using FEZRepacker.Core.Definitions.Game.MapTree;
 
 namespace FEZRepacker.Core.Definitions.Json
 {
-    internal class MapTreeJsonModel : Dictionary<int, MapNodeJsonModel>, JsonModel<MapTree>
+    public class MapTreeJsonModel : Dictionary<int, MapNodeJsonModel>, JsonModel<MapTree>
     {
         public MapTree Deserialize()
         {

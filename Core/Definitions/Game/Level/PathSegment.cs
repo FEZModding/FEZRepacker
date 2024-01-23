@@ -4,7 +4,7 @@ namespace FEZRepacker.Core.Definitions.Game.Level
 {
     [XnbType("FezEngine.Structure.PathSegment")]
     [XnbReaderType("FezEngine.Readers.PathSegmentReader")]
-    internal class PathSegment
+    public class PathSegment
     {
         [XnbProperty]
         public Vector3 Destination { get; set; }

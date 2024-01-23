@@ -5,7 +5,7 @@ namespace FEZRepacker.Core.Definitions.Game.Graphics
 {
     [XnbType("FezEngine.Content.FrameContent")]
     [XnbReaderType("FezEngine.Readers.FrameReader")]
-    internal class FrameContent
+    public class FrameContent
     {
         [XnbProperty(UseConverter = true)]
         public TimeSpan Duration { get; set; }

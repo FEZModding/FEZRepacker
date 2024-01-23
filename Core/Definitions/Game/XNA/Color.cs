@@ -2,7 +2,7 @@
 {
     [XnbType("Microsoft.Xna.Framework.Color")]
     [XnbReaderType("Microsoft.Xna.Framework.Content.ColorReader")]
-    internal class Color
+    public class Color
     {
         [XnbProperty]
         public byte R { get; set; }

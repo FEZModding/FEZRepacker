@@ -9,7 +9,7 @@ namespace FEZRepacker.Core.Definitions.Game.ArtObject
 {
     [XnbType("FezEngine.Structure.ArtObject")]
     [XnbReaderType("FezEngine.Readers.ArtObjectReader")]
-    internal class ArtObject
+    public class ArtObject
     {
         [XnbProperty]
         public string Name { get; set; }

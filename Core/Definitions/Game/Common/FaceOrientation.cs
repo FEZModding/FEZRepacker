@@ -1,7 +1,7 @@
 ﻿namespace FEZRepacker.Core.Definitions.Game.Common
 {
     [XnbType("FezEngine.FaceOrientation")]
-    internal enum FaceOrientation
+    public enum FaceOrientation
     {
         Left,
         Down,

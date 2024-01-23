@@ -2,7 +2,7 @@
 {
     [XnbType("FezEngine.Structure.MapTree")]
     [XnbReaderType("FezEngine.Readers.MapTreeReader")]
-    internal class MapTree
+    public class MapTree
     {
         [XnbProperty(UseConverter = true)]
         public MapNode Root { get; set; }

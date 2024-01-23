@@ -4,7 +4,7 @@ namespace FEZRepacker.Core.Definitions.Game.NpcMetadata
 {
     [XnbType("FezEngine.Structure.NpcMetadata")]
     [XnbReaderType("FezEngine.Readers.NpcMetadataReader")]
-    internal class NpcMetadata
+    public class NpcMetadata
     {
         [XnbProperty]
         public float WalkSpeed { get; set; }

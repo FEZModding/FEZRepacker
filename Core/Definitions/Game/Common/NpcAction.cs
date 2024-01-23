@@ -1,7 +1,7 @@
 ﻿namespace FEZRepacker.Core.Definitions.Game.Common
 {
     [XnbType("FezEngine.Structure.NpcAction")]
-    internal enum NpcAction
+    public enum NpcAction
     {
         None,
         Idle,

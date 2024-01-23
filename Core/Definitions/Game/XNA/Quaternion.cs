@@ -2,7 +2,7 @@
 {
     [XnbType("Microsoft.Xna.Framework.Quaternion")]
     [XnbReaderType("Microsoft.Xna.Framework.Content.QuaternionReader")]
-    internal class Quaternion
+    public class Quaternion
     {
         [XnbProperty]
         public float X { get; set; }

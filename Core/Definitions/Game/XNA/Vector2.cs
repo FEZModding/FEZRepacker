@@ -2,7 +2,7 @@
 {
     [XnbType("Microsoft.Xna.Framework.Vector2")]
     [XnbReaderType("Microsoft.Xna.Framework.Content.Vector2Reader")]
-    internal class Vector2
+    public class Vector2
     {
         [XnbProperty]
         public float X { get; set; }

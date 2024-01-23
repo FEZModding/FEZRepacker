@@ -4,7 +4,7 @@ namespace FEZRepacker.Core.Definitions.Game.Level
 {
     [XnbType("FezEngine.Structure.TrileEmplacement")]
     [XnbReaderType("FezEngine.Readers.TrileEmplacementReader")]
-    internal class TrileEmplacement : IEquatable<TrileEmplacement>, IComparable<TrileEmplacement>
+    public class TrileEmplacement : IEquatable<TrileEmplacement>, IComparable<TrileEmplacement>
     {
         [XnbProperty]
         public int X { get; set; }

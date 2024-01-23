@@ -2,7 +2,7 @@
 {
     [XnbType("FezEngine.Structure.Scripting.Entity")]
     [XnbReaderType("FezEngine.Readers.EntityReader")]
-    class Entity
+    public class Entity
     {
         [XnbProperty]
         public string Type { get; set; }

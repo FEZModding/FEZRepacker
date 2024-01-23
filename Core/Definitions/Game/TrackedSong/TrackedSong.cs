@@ -2,7 +2,7 @@
 {
     [XnbType("FezEngine.Structure.TrackedSong")]
     [XnbReaderType("FezEngine.Readers.TrackedSongReader")]
-    internal class TrackedSong
+    public class TrackedSong
     {
         [XnbProperty(UseConverter = true)]
         public List<Loop> Loops { get; set; }

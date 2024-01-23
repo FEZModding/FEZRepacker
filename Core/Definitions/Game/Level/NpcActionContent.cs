@@ -2,7 +2,7 @@
 {
     [XnbType("FezEngine.Structure.NpcActionContent")]
     [XnbReaderType("FezEngine.Readers.NpcActionContentReader")]
-    internal class NpcActionContent
+    public class NpcActionContent
     {
         [XnbProperty(UseConverter = true)]
         public string AnimationName { get; set; }

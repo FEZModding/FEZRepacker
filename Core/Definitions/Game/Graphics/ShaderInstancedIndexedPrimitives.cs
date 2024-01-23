@@ -4,7 +4,7 @@ namespace FEZRepacker.Core.Definitions.Game.Graphics
 {
     [XnbType("FezEngine.Structure.Geometry.ShaderInstancedIndexedPrimitives")]
     [XnbReaderType("FezEngine.Readers.ShaderInstancedIndexedPrimitivesReader")]
-    internal class ShaderInstancedIndexedPrimitives<TemplateType, InstanceType>
+    public class ShaderInstancedIndexedPrimitives<TemplateType, InstanceType>
     {
         [XnbProperty(UseConverter = true)]
         public PrimitiveType PrimitiveType { get; set; }

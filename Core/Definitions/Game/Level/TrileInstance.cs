@@ -4,7 +4,7 @@ namespace FEZRepacker.Core.Definitions.Game.Level
 {
     [XnbType("FezEngine.Structure.TrileInstance")]
     [XnbReaderType("FezEngine.Readers.TrileInstanceReader")]
-    internal class TrileInstance
+    public class TrileInstance
     {
         [XnbProperty]
         public Vector3 Position { get; set; }

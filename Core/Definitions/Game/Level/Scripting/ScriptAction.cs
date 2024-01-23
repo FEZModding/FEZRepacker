@@ -2,7 +2,7 @@
 {
     [XnbType("FezEngine.Structure.Scripting.ScriptAction")]
     [XnbReaderType("FezEngine.Readers.ScriptActionReader")]
-    class ScriptAction
+    public class ScriptAction
     {
         [XnbProperty(UseConverter = true)]
         public Entity Object { get; set; }

@@ -4,7 +4,7 @@ namespace FEZRepacker.Core.Definitions.Game.Level
 {
     [XnbType("FezEngine.Structure.ArtObjectInstance")]
     [XnbReaderType("FezEngine.Readers.ArtObjectInstanceReader")]
-    internal class ArtObjectInstance
+    public class ArtObjectInstance
     {
         [XnbProperty]
         public string Name { get; set; }

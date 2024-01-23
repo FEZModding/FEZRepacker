@@ -4,7 +4,7 @@ using FEZRepacker.Core.Definitions.Game.XNA;
 
 namespace FEZRepacker.Core.Definitions.Json
 {
-    internal class SpriteFontPropertiesJsonModel : JsonModel<SpriteFont>
+    public class SpriteFontPropertiesJsonModel : JsonModel<SpriteFont>
     {
         public class CharacterData
         {

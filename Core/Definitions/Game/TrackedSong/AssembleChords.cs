@@ -1,7 +1,7 @@
 ﻿namespace FEZRepacker.Core.Definitions.Game.TrackedSong
 {
     [XnbType("FezEngine.Structure.AssembleChords")]
-    internal enum AssembleChords
+    public enum AssembleChords
     {
         C_maj,
         Csharp_maj,

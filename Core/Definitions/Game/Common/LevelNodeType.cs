@@ -1,7 +1,7 @@
 ﻿namespace FEZRepacker.Core.Definitions.Game.Common
 {
     [XnbType("FezEngine.LevelNodeType")]
-    internal enum LevelNodeType
+    public enum LevelNodeType
     {
         Node,
         Hub,

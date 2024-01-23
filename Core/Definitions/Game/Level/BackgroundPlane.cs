@@ -5,7 +5,7 @@ namespace FEZRepacker.Core.Definitions.Game.Level
 {
     [XnbType("FezEngine.Structure.BackgroundPlane")]
     [XnbReaderType("FezEngine.Readers.BackgroundPlaneReader")]
-    internal class BackgroundPlane
+    public class BackgroundPlane
     {
         [XnbProperty]
         public Vector3 Position { get; set; }

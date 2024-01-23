@@ -2,7 +2,7 @@
 {
     [XnbType("FezEngine.Structure.AmbienceTrack")]
     [XnbReaderType("FezEngine.Readers.AmbienceTrackReader")]
-    internal class AmbienceTrack
+    public class AmbienceTrack
     {
         [XnbProperty(UseConverter = true)]
         public string Name { get; set; }

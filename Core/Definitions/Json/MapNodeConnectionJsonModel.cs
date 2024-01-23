@@ -4,7 +4,7 @@ using FEZRepacker.Core.Definitions.Game.MapTree;
 
 namespace FEZRepacker.Core.Definitions.Json
 {
-    internal class MapNodeConnectionJsonModel : JsonModel<MapNodeConnection>
+    public class MapNodeConnectionJsonModel : JsonModel<MapNodeConnection>
     {
         public FaceOrientation Face { get; set; }
         public int Node { get; set; }

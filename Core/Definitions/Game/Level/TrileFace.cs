@@ -4,7 +4,7 @@ namespace FEZRepacker.Core.Definitions.Game.Level
 {
     [XnbType("FezEngine.Structure.TrileFace")]
     [XnbReaderType("FezEngine.Readers.TrileFaceReader")]
-    internal class TrileFace
+    public class TrileFace
     {
         [XnbProperty(UseConverter = true)]
         public TrileEmplacement Id { get; set; }

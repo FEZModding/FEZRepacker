@@ -2,7 +2,7 @@
 {
     [XnbType("FezEngine.Structure.DotDialogueLine")]
     [XnbReaderType("FezEngine.Readers.DotDialogueLineReader")]
-    internal class DotDialogueLine
+    public class DotDialogueLine
     {
         [XnbProperty(UseConverter = true)]
         public string ResourceText { get; set; }

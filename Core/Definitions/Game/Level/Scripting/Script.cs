@@ -2,7 +2,7 @@
 {
     [XnbType("FezEngine.Structure.Scripting.Script")]
     [XnbReaderType("FezEngine.Readers.ScriptReader")]
-    class Script
+    public class Script
     {
         [XnbProperty]
         public string Name { get; set; }

@@ -4,7 +4,7 @@ namespace FEZRepacker.Core.Definitions.Game.Level
 {
     [XnbType("FezEngine.Structure.VolumeActorSettings")]
     [XnbReaderType("FezEngine.Readers.VolumeActorSettingsReader")]
-    internal class VolumeActorSettings
+    public class VolumeActorSettings
     {
         [XnbProperty]
         public Vector2 FarawayPlaneOffset { get; set; }

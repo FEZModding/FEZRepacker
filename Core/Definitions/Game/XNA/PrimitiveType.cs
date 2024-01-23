@@ -1,7 +1,7 @@
 ﻿namespace FEZRepacker.Core.Definitions.Game.XNA
 {
     [XnbType("Microsoft.Xna.Framework.Graphics.PrimitiveType")]
-    internal enum PrimitiveType
+    public enum PrimitiveType
     {
         TriangleList,
         TriangleStrip,

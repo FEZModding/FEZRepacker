@@ -1,7 +1,7 @@
 ﻿namespace FEZRepacker.Core.Definitions.Game.Level
 {
     [XnbType("FezEngine.Structure.LiquidType")]
-    internal enum LiquidType
+    public enum LiquidType
     {
         None,
         Water,

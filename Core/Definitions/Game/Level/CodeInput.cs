@@ -2,7 +2,7 @@
 {
     [XnbType("FezEngine.Structure.Input.CodeInput")]
     [Flags]
-    internal enum CodeInput
+    public enum CodeInput
     {
         None = 0,
         Up = 1,

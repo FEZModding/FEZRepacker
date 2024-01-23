@@ -2,7 +2,7 @@
 {
     [XnbType("Microsoft.Xna.Framework.Audio.SoundEffect")]
     [XnbReaderType("Microsoft.Xna.Framework.Content.SoundEffectReader")]
-    internal class SoundEffect
+    public class SoundEffect
     {
         // Definition of this class is nothing alike what's actually in the game.
         // Stored data is extremely similar to WAV format and its chunks,

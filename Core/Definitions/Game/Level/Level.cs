@@ -6,7 +6,7 @@ namespace FEZRepacker.Core.Definitions.Game.Level
 {
     [XnbType("FezEngine.Structure.Level")]
     [XnbReaderType("FezEngine.Readers.LevelReader")]
-    internal class Level
+    public class Level
     {
         [XnbProperty(UseConverter = true)]
         public string Name { get; set; }

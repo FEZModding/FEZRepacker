@@ -2,7 +2,7 @@
 {
     [XnbType("Microsoft.Xna.Framework.Graphics.Texture2D")]
     [XnbReaderType("Microsoft.Xna.Framework.Content.Texture2DReader")]
-    internal class Texture2D
+    public class Texture2D
     {
         [XnbProperty(UseConverter = true, SkipIdentifier = true)]
         public SurfaceFormat Format { get; set; }

@@ -2,7 +2,7 @@
 {
     [XnbType("FezEngine.Structure.AnimatedTexture")]
     [XnbReaderType("FezEngine.Readers.AnimatedTextureReader")]
-    internal class AnimatedTexture
+    public class AnimatedTexture
     {
         // Definition has been altered since the Texture property is
         // serialized in a different way than Texture reader does it

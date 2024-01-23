@@ -4,7 +4,7 @@ namespace FEZRepacker.Core.Definitions.Game.MapTree
 {
     [XnbType("FezEngine.Structure.MapNode+Connection")]
     [XnbReaderType("FezEngine.Readers.MapNodeConnectionReader")]
-    internal class MapNodeConnection
+    public class MapNodeConnection
     {
         [XnbProperty(UseConverter = true)]
         public FaceOrientation Face { get; set; }

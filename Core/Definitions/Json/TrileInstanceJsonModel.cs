@@ -4,7 +4,7 @@ using FEZRepacker.Core.Definitions.Game.XNA;
 
 namespace FEZRepacker.Core.Definitions.Json
 {
-    internal class TrileInstanceJsonModel : JsonModel<TrileInstance>
+    public class TrileInstanceJsonModel : JsonModel<TrileInstance>
     {
         public TrileEmplacement Emplacement { get; set; }
         public Vector3 Position { get; set; }

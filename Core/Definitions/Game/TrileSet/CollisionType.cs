@@ -1,7 +1,7 @@
 ﻿namespace FEZRepacker.Core.Definitions.Game.TrileSet
 {
     [XnbType("FezEngine.CollisionType")]
-    internal enum CollisionType
+    public enum CollisionType
     {
         AllSides,
         TopOnly,

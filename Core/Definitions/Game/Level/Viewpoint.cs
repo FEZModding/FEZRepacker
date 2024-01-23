@@ -1,7 +1,7 @@
 ﻿namespace FEZRepacker.Core.Definitions.Game.Level
 {
     [XnbType("FezEngine.Viewpoint")]
-    internal enum Viewpoint
+    public enum Viewpoint
     {
         None,
         Front,

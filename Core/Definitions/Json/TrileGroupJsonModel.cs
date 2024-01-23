@@ -7,7 +7,7 @@ namespace FEZRepacker.Core.Definitions.Json
 {
     // storing TrileEmplacements instead of TrileInstances since the game is using 
     // just that to identify TrileInstance from Level's Triles dictionary anyway.
-    internal class TrileGroupJsonModel : JsonModel<TrileGroup>
+    public class TrileGroupJsonModel : JsonModel<TrileGroup>
     {
         public List<TrileEmplacement> Triles { get; set; }
         public MovementPath Path { get; set; }

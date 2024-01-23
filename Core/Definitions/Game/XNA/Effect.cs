@@ -2,7 +2,7 @@
 {
     [XnbType("Microsoft.Xna.Framework.Graphics.Effect")]
     [XnbReaderType("Microsoft.Xna.Framework.Content.EffectReader")]
-    internal class Effect
+    public class Effect
     {
         // Definition of this class is nothing alike what's actually in the game.
         // Stored data is simply a raw FXB file.

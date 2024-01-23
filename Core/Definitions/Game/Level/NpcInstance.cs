@@ -5,7 +5,7 @@ namespace FEZRepacker.Core.Definitions.Game.Level
 {
     [XnbType("FezEngine.Structure.NpcInstance")]
     [XnbReaderType("FezEngine.Readers.NpcInstanceReader")]
-    internal class NpcInstance
+    public class NpcInstance
     {
         [XnbProperty]
         public string Name { get; set; }

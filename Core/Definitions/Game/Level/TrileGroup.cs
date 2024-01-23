@@ -5,7 +5,7 @@ namespace FEZRepacker.Core.Definitions.Game.Level
 {
     [XnbType("FezEngine.Structure.TrileGroup")]
     [XnbReaderType("FezEngine.Readers.TrileGroupReader")]
-    internal class TrileGroup
+    public class TrileGroup
     {
         [XnbProperty(UseConverter = true)]
         public List<TrileInstance> Triles { get; set; }

@@ -9,7 +9,7 @@ namespace FEZRepacker.Core.Definitions.Game.TrileSet
 {
     [XnbType("FezEngine.Structure.Trile")]
     [XnbReaderType("FezEngine.Readers.TrileReader")]
-    internal class Trile
+    public class Trile
     {
         [XnbProperty]
         public string Name { get; set; }

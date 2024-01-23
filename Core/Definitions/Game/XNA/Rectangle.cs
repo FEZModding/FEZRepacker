@@ -2,7 +2,7 @@
 {
     [XnbType("Microsoft.Xna.Framework.Rectangle")]
     [XnbReaderType("Microsoft.Xna.Framework.Content.RectangleReader")]
-    internal class Rectangle
+    public class Rectangle
     {
         [XnbProperty]
         public int X { get; set; }

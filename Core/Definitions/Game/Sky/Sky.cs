@@ -2,7 +2,7 @@
 { 
     [XnbType("FezEngine.Structure.Sky")]
     [XnbReaderType("FezEngine.Readers.SkyReader")]
-    internal class Sky
+    public class Sky
     {
         [XnbProperty]
         public string Name { get; set; }

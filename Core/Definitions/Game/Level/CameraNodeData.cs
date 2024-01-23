@@ -2,7 +2,7 @@
 {
     [XnbType("FezEngine.Structure.CameraNodeData")]
     [XnbReaderType("FezEngine.Readers.CameraNodeDataReader")]
-    internal class CameraNodeData
+    public class CameraNodeData
     {
         [XnbProperty]
         public bool Perspective { get; set; }

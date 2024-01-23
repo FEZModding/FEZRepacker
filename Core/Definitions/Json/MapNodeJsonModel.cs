@@ -4,7 +4,7 @@ using FEZRepacker.Core.Definitions.Game.MapTree;
 
 namespace FEZRepacker.Core.Definitions.Json
 {
-    internal class MapNodeJsonModel : JsonModel<MapNode>
+    public class MapNodeJsonModel : JsonModel<MapNode>
     {
         public string LevelName { get; set; }
         public LevelNodeType NodeType { get; set; }

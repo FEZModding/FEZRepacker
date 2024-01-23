@@ -6,7 +6,7 @@ using FEZRepacker.Core.Definitions.Game.XNA;
 
 namespace FEZRepacker.Core.Definitions.Json
 {
-    internal class LevelJsonModel : JsonModel<Level>
+    public class LevelJsonModel : JsonModel<Level>
     {
         public string Name { get; set; }
         public LevelNodeType NodeType { get; set; }

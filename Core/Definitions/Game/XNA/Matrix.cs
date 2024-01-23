@@ -2,7 +2,7 @@
 {
     [XnbType("Microsoft.Xna.Framework.Matrix")]
     [XnbReaderType("Microsoft.Xna.Framework.Content.MatrixReader")]
-    internal class Matrix
+    public class Matrix
     {
         [XnbProperty]
         public float M11 { get; set; }

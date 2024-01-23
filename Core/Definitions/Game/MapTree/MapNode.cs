@@ -4,7 +4,7 @@ namespace FEZRepacker.Core.Definitions.Game.MapTree
 {
     [XnbType("FezEngine.Structure.MapNode")]
     [XnbReaderType("FezEngine.Readers.MapNodeReader")]
-    internal class MapNode
+    public class MapNode
     {
         [XnbProperty]
         public string LevelName { get; set; }

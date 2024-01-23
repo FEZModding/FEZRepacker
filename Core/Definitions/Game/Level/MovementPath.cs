@@ -2,7 +2,7 @@
 {
     [XnbType("FezEngine.Structure.MovementPath")]
     [XnbReaderType("FezEngine.Readers.MovementPathReader")]
-    internal class MovementPath
+    public class MovementPath
     {
         [XnbProperty(UseConverter = true)]
         public List<PathSegment> Segments { get; set; }

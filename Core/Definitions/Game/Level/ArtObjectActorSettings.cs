@@ -5,7 +5,7 @@ namespace FEZRepacker.Core.Definitions.Game.Level
 {
     [XnbType("FezEngine.Structure.ArtObjectActorSettings")]
     [XnbReaderType("FezEngine.Readers.ArtObjectActorSettingsReader")]
-    internal class ArtObjectActorSettings
+    public class ArtObjectActorSettings
     {
         [XnbProperty]
         public bool Inactive { get; set; }

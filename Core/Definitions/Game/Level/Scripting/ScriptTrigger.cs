@@ -2,7 +2,7 @@
 {
     [XnbType("FezEngine.Structure.Scripting.ScriptTrigger")]
     [XnbReaderType("FezEngine.Readers.ScriptTriggerReader")]
-    class ScriptTrigger
+    public class ScriptTrigger
     {
         [XnbProperty(UseConverter = true)]
         public Entity Object { get; set; }

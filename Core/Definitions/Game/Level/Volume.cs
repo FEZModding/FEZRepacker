@@ -5,7 +5,7 @@ namespace FEZRepacker.Core.Definitions.Game.Level
 {
     [XnbType("FezEngine.Structure.Volume")]
     [XnbReaderType("FezEngine.Readers.VolumeReader")]
-    internal class Volume
+    public class Volume
     {
         [XnbProperty(UseConverter = true)]
         public FaceOrientation[] Orientations { get; set; }

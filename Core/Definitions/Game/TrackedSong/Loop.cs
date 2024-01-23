@@ -2,7 +2,7 @@
 {
     [XnbType("FezEngine.Structure.Loop")]
     [XnbReaderType("FezEngine.Readers.LoopReader")]
-    internal class Loop
+    public class Loop
     {
         [XnbProperty]
         public int Duration { get; set; }

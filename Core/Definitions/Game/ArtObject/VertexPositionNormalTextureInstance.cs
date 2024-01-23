@@ -4,7 +4,7 @@ namespace FEZRepacker.Core.Definitions.Game.ArtObject
 {
     [XnbType("FezEngine.Structure.Geometry.VertexPositionNormalTextureInstance")]
     [XnbReaderType("FezEngine.Readers.VertexPositionNormalTextureInstanceReader")]
-    internal class VertexPositionNormalTextureInstance
+    public class VertexPositionNormalTextureInstance
     {
         [XnbProperty]
         public Vector3 Position { get; set; }

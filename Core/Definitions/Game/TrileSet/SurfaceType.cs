@@ -1,7 +1,7 @@
 ﻿namespace FEZRepacker.Core.Definitions.Game.TrileSet
 {
     [XnbType("FezEngine.Structure.SurfaceType")]
-    internal enum SurfaceType
+    public enum SurfaceType
     {
         Grass,
         Metal,

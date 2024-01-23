@@ -3,7 +3,7 @@ namespace FEZRepacker.Core.Definitions.Game.XNA
 {
     [XnbType("Microsoft.Xna.Framework.Graphics.SpriteFont")]
     [XnbReaderType("Microsoft.Xna.Framework.Content.SpriteFontReader")]
-    internal class SpriteFont
+    public class SpriteFont
     {
         [XnbProperty(UseConverter = true)]
         public Texture2D Texture { get; set; }

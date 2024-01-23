@@ -2,7 +2,7 @@
 {
     [XnbType("FezEngine.Structure.WinConditions")]
     [XnbReaderType("FezEngine.Readers.WinConditionsReader")]
-    internal class WinConditions
+    public class WinConditions
     {
         [XnbProperty]
         public int ChestCount { get; set; }

@@ -2,7 +2,7 @@
 {
     [XnbType("FezEngine.Structure.SpeechLine")]
     [XnbReaderType("FezEngine.Readers.SpeechLineReader")]
-    internal class SpeechLine
+    public class SpeechLine
     {
         [XnbProperty(UseConverter = true)]
         public string Text { get; set; }

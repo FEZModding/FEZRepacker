@@ -1,7 +1,7 @@
 ﻿namespace FEZRepacker.Core.Definitions.Game.Common
 {
     [XnbType("FezEngine.Structure.ActorType")]
-    internal enum ActorType
+    public enum ActorType
     {
         None,
         Ladder,
