@@ -50,6 +50,7 @@ namespace FEZRepacker.Interface.Actions
                 {
                     var outputData = XnbSerializer.Deserialize(data)!;
                     outputBundle = FormatConversion.Convert(outputData);
+                    Console.WriteLine($"  {outputData.GetType()} converted into {outputBundle.MainExtension} format.");
                 }
                 catch (Exception ex)
                 {
