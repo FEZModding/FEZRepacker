@@ -15,7 +15,8 @@ namespace FEZRepacker.Core.XNB.ContentTypes
             new ArrayContentSerializer<ShardNotes>(),
             new EnumContentSerializer<ShardNotes>(),
             new Int32ContentSerializer(),
-            new EnumContentSerializer<AssembleChords>()
+            new EnumContentSerializer<AssembleChords>(),
+            new ArrayContentSerializer<int>(),
         };
     }
 }
