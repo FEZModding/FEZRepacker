@@ -2,7 +2,7 @@
 {
     [XnbType("Microsoft.Xna.Framework.Quaternion")]
     [XnbReaderType("Microsoft.Xna.Framework.Content.QuaternionReader")]
-    public class Quaternion
+    public struct Quaternion : IEquatable<Quaternion>
     {
         [XnbProperty]
         public float X { get; set; }
@@ -18,7 +18,12 @@
 
         public static Quaternion Identity => new Quaternion(0, 0, 0, 1);
 
-        public Quaternion() { }
+        public Quaternion() {
+            X = 0;
+            Y = 0; 
+            Z = 0;
+            W = 1;
+        }
 
         public Quaternion(float x, float y, float z, float w)
         {
@@ -27,5 +32,10 @@
             Z = z;
             W = w;
         }
+
+        public bool Equals(Quaternion other) =>
+            this.X == other.X && this.Y == other.Y && this.Z == other.Z && this.W == other.W;
+        public static bool operator ==(Quaternion left, Quaternion right) => left.Equals(right);
+        public static bool operator !=(Quaternion left, Quaternion right) => !left.Equals(right);
     }
 }

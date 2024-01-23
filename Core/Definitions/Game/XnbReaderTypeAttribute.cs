@@ -7,7 +7,7 @@ namespace FEZRepacker.Core.Definitions.Game
     /// XNB files use reader type assembly qualifers to identify types which
     /// aren't handled by generic readers (like enums).
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false, AllowMultiple = false)]
     internal sealed class XnbReaderTypeAttribute : Attribute
     {
         public XnbAssemblyQualifier Qualifier { get; set; }

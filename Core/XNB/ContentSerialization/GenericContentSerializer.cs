@@ -13,7 +13,7 @@ namespace FEZRepacker.Core.XNB.ContentSerialization
     /// This replaces the need of creating a content type for each custom asset type.
     /// </summary>
     /// <typeparam name="T">Class type with <c>XnbTypeAttribute</c> to form content type from.</typeparam>
-    internal class GenericContentSerializer<T> : XnbContentSerializer<T> where T : class
+    internal class GenericContentSerializer<T> : XnbContentSerializer<T>
     {
         private XnbAssemblyQualifier _name;
         public GenericContentSerializer() : base()

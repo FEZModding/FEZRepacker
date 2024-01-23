@@ -2,7 +2,7 @@
 {
     [XnbType("Microsoft.Xna.Framework.Vector2")]
     [XnbReaderType("Microsoft.Xna.Framework.Content.Vector2Reader")]
-    public class Vector2
+    public struct Vector2 : IEquatable<Vector2>
     {
         [XnbProperty]
         public float X { get; set; }
@@ -17,5 +17,10 @@
             X = x;
             Y = y;
         }
+
+        public bool Equals(Vector2 other) =>
+            this.X == other.X && this.Y == other.Y;
+        public static bool operator ==(Vector2 left, Vector2 right) => left.Equals(right);
+        public static bool operator !=(Vector2 left, Vector2 right) => !left.Equals(right);
     }
 }

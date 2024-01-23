@@ -9,7 +9,6 @@ namespace FEZRepacker.Core.XNB
     {
         public static object? Deserialize(Stream xnbStream)
         {
-            Stream output = new MemoryStream();
             using Stream decompressedInput = XnbCompressor.Decompress(xnbStream);
 
             if (!XnbHeader.TryRead(decompressedInput, out var header))

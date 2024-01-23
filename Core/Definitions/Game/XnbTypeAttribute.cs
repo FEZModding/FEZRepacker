@@ -7,7 +7,7 @@ namespace FEZRepacker.Core.Definitions.Game
     /// Instead of matching namespaces and specification, each content type has an assembly
     /// qualifier structure containing name actually used within the XNB file.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Enum, Inherited = false, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Enum | AttributeTargets.Struct, Inherited = false, AllowMultiple = false)]
     internal sealed class XnbTypeAttribute : Attribute
     {
         public XnbAssemblyQualifier Qualifier { get; set; }

@@ -2,7 +2,7 @@
 {
     [XnbType("Microsoft.Xna.Framework.Vector3")]
     [XnbReaderType("Microsoft.Xna.Framework.Content.Vector3Reader")]
-    public class Vector3
+    public struct Vector3 : IEquatable<Vector3>
     {
         [XnbProperty]
         public float X { get; set; }
@@ -38,5 +38,10 @@
         public static Vector3 operator -(Vector3 v, Vector3 w) => new Vector3(v.X - w.X, v.Y - w.Y, v.Z - w.Z);
         public static Vector3 operator *(Vector3 v, Vector3 w) => new Vector3(v.X * w.X, v.Y * w.Y, v.Z * w.Y);
         public static Vector3 operator /(Vector3 v, Vector3 w) => new Vector3(v.X / w.X, v.Y / w.Y, v.Z / w.Z);
+
+        public bool Equals(Vector3 other) =>
+            this.X == other.X && this.Y == other.Y && this.Z == other.Z;
+        public static bool operator ==(Vector3 left, Vector3 right) => left.Equals(right);
+        public static bool operator !=(Vector3 left, Vector3 right) => !left.Equals(right);
     }
 }

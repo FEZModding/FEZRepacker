@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework.Content;
+﻿using System.Text;
+
+using Microsoft.Xna.Framework.Content;
 
 namespace FEZRepacker.Core.XNB
 {
@@ -30,7 +32,7 @@ namespace FEZRepacker.Core.XNB
 
                 using var decompressedDataStream = new MemoryStream();
 
-                using var xnbReader = new BinaryReader(xnbStream);
+                using var xnbReader = new BinaryReader(xnbStream, Encoding.UTF8, true);
                 LzxDecoder decoder = new LzxDecoder(16);
 
                 int compressedSize = xnbReader.ReadInt32();
