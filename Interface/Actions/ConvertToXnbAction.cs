@@ -38,7 +38,7 @@ namespace FEZRepacker.Interface.Actions
                     object convertedData = FormatConversion.Deconvert(fileBundle)!;
                     var data = XnbSerializer.Serialize(convertedData);
 
-                    Console.WriteLine($"  Format {fileBundle.MainExtension} deconverted into {convertedData.GetType()}.");
+                    Console.WriteLine($"  Format {fileBundle.MainExtension} deconverted into {convertedData.GetType().Name}.");
                     processFileFunc(fileBundle.BundlePath, ".xnb", data, true);
                 }
                 catch (Exception ex)

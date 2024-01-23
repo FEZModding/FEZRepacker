@@ -38,7 +38,7 @@ namespace FEZRepacker.Core.XNB
 
             if (primaryContentType == null)
             {
-                throw new XnbSerializationException("Additional XNB resources in a single file detected.");
+                throw new XnbSerializationException($"Cannot find XNB primary format identity for type {mainResourceQualifier.Name}");
             }
 
             using var xnbReader = new XnbContentReader(decompressedInput, primaryContentType, true);
@@ -53,7 +53,7 @@ namespace FEZRepacker.Core.XNB
 
             if (contentIdentity == null)
             {
-                throw new XnbSerializationException($"Cannot find XNB primary format identity for type {obj.GetType()}");
+                throw new XnbSerializationException($"Cannot find XNB primary format identity for type {obj.GetType().Name}");
             }
 
             var outputStream = new MemoryStream();

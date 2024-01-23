@@ -45,16 +45,18 @@ namespace FEZRepacker.Interface.Actions
             }
             else if (mode == UnpackingMode.Converted)
             {
+                var initialStreamPosition = data.Position;
                 FileBundle outputBundle;
                 try
                 {
                     var outputData = XnbSerializer.Deserialize(data)!;
                     outputBundle = FormatConversion.Convert(outputData);
-                    Console.WriteLine($"  {outputData.GetType()} converted into {outputBundle.MainExtension} format.");
+                    Console.WriteLine($"  {outputData.GetType().Name} converted into {outputBundle.MainExtension} format.");
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine($"  Cannot deserialize XNB file: {ex.Message}. Saving raw file instead.");
+                    data.Seek(initialStreamPosition, SeekOrigin.Begin);
                     return FileBundle.Single(data, extension);
                 }
 
