@@ -1,9 +1,11 @@
 ﻿using System.Text;
 
-using FEZRepacker.Core.XNB.ContentTypes;
-
 namespace FEZRepacker.Core.XNB
 {
+    /// <summary>
+    /// Extension of BinaryWriter that allows writing XNB content to streams,
+    /// using individual type serializers defined within provided <see cref="XnbPrimaryContentIdentity"/>.
+    /// </summary>
     internal class XnbContentWriter : BinaryWriter
     {
         public readonly XnbPrimaryContentIdentity Identity;

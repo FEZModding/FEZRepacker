@@ -23,7 +23,7 @@ namespace FEZRepacker.Core.Definitions.Game.ArtObject
 
         [JsonIgnore]
         [XnbProperty(UseConverter = true)]
-        public ShaderInstancedIndexedPrimitives<VertexPositionNormalTextureInstance, Matrix> Geometry { get; set; } = new();
+        public IndexedPrimitives<VertexInstance, Matrix> Geometry { get; set; } = new();
 
         [XnbProperty(UseConverter = true)]
         public ActorType ActorType { get; set; }

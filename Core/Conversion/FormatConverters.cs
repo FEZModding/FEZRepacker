@@ -1,7 +1,12 @@
-﻿using FEZRepacker.Core.FileSystem;
+﻿using FEZRepacker.Core.Conversion.Formats;
+using FEZRepacker.Core.FileSystem;
 
 namespace FEZRepacker.Core.Conversion
 {
+    /// <summary>
+    /// Contains a statically declared list of all <see cref="FormatConverter"/>
+    /// structures needed to convert all primary content types of FEZ into readable formats.
+    /// </summary>
     public static class FormatConverters
     {
         public static readonly List<FormatConverter> List = new()

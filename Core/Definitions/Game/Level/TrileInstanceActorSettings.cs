@@ -2,7 +2,8 @@
 {
     [XnbType("FezEngine.Structure.InstanceActorSettings")]
     [XnbReaderType("FezEngine.Readers.InstanceActorSettingsReader")]
-    public class TrileInstanceActorSettings // Original name in FezEngine: InstanceActorSettings
+    // Original name in FezEngine: InstanceActorSettings
+    public class TrileInstanceActorSettings 
     {
         [XnbProperty(Optional = true)]
         public int? ContainedTrile { get; set; }

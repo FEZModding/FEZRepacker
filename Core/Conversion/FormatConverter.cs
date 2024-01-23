@@ -2,6 +2,11 @@
 
 namespace FEZRepacker.Core.Conversion
 {
+    /// <summary>
+    /// Defines methods of convertion between specific object types 
+    /// and a <see cref="FileBundle"/>, along with information about
+    /// object types and file extension supported by this converter.
+    /// </summary>
     public abstract class FormatConverter
     {
         public abstract string FileFormat { get; }
@@ -20,6 +25,10 @@ namespace FEZRepacker.Core.Conversion
         }
     }
 
+    /// <summary>
+    /// Generic type which automatically supplies format type property of <see cref="FormatConverter"/>
+    /// </summary>
+    /// <typeparam name="ConvertedType">A type to support for this converter</typeparam>
     public abstract class FormatConverter<ConvertedType> : FormatConverter
     {
         public override Type FormatType => typeof(ConvertedType);

@@ -8,7 +8,7 @@ namespace FEZRepacker.Core.Helpers
 {
     internal static class WavefrontObjUtil
     {
-        public static string ToWavefrontObj<T>(Dictionary<string, ShaderInstancedIndexedPrimitives<VertexPositionNormalTextureInstance, T>> geometries)
+        public static string ToWavefrontObj<T>(Dictionary<string, IndexedPrimitives<VertexInstance, T>> geometries)
         {
             int indicesOffset = 0;
             var objBuilder = new StringBuilder();
@@ -21,7 +21,7 @@ namespace FEZRepacker.Core.Helpers
             return objBuilder.ToString();
         }
 
-        public static string ToWavefrontObj<T>(this ShaderInstancedIndexedPrimitives<VertexPositionNormalTextureInstance,T> geometry, int indicesOffset = 0)
+        public static string ToWavefrontObj<T>(this IndexedPrimitives<VertexInstance,T> geometry, int indicesOffset = 0)
         {
             var objBuilder = new StringBuilder();
 
@@ -82,7 +82,7 @@ namespace FEZRepacker.Core.Helpers
             return objBuilder.ToString();
         }
 
-        public static Dictionary<string, ShaderInstancedIndexedPrimitives<VertexPositionNormalTextureInstance, T>> FromWavefrontObj<T>(string obj)
+        public static Dictionary<string, IndexedPrimitives<VertexInstance, T>> FromWavefrontObj<T>(string obj)
         {
             var vertices = new List<Vector3>();
             var normals = new List<Vector3>();
@@ -151,7 +151,7 @@ namespace FEZRepacker.Core.Helpers
                 }
             }
 
-            var geometryList = new Dictionary<string, ShaderInstancedIndexedPrimitives<VertexPositionNormalTextureInstance, T>>();
+            var geometryList = new Dictionary<string, IndexedPrimitives<VertexInstance, T>>();
 
             for (int i = 0; i < indicesGroup.Count; i++)
             {
@@ -170,7 +170,7 @@ namespace FEZRepacker.Core.Helpers
                     }
                 }
 
-                var verticesList = new List<VertexPositionNormalTextureInstance>();
+                var verticesList = new List<VertexInstance>();
                 foreach (var indexString in stringVerticesList)
                 {
                     var splitIndex = indexString.Split(new char[] { '/' });
@@ -179,7 +179,7 @@ namespace FEZRepacker.Core.Helpers
                     var uvIndex = splitIndex.Length > 1 ? int.Parse(splitIndex[1]) : 0;
                     var normalIndex = splitIndex.Length > 2 ? int.Parse(splitIndex[2]) : 0;
 
-                    var vertex = new VertexPositionNormalTextureInstance();
+                    var vertex = new VertexInstance();
                     if (vertexIndex > 0 && vertexIndex <= vertices.Count) vertex.Position = vertices[vertexIndex-1];
                     if (uvIndex > 0 && uvIndex <= uvs.Count) vertex.TextureCoordinate = uvs[uvIndex-1];
                     if (normalIndex > 0 && normalIndex <= normals.Count) vertex.Normal = normals[normalIndex-1];
@@ -187,7 +187,7 @@ namespace FEZRepacker.Core.Helpers
                     verticesList.Add(vertex);
                 }
 
-                var geometry = new ShaderInstancedIndexedPrimitives<VertexPositionNormalTextureInstance, T>();
+                var geometry = new IndexedPrimitives<VertexInstance, T>();
                 geometry.PrimitiveType = PrimitiveType.TriangleList;
                 geometry.Vertices = verticesList.ToArray();
                 geometry.Indices = indicesList.ToArray();

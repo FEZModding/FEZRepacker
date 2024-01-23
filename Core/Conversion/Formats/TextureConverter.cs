@@ -1,5 +1,4 @@
-﻿
-using FEZRepacker.Core.Definitions.Game.XNA;
+﻿using FEZRepacker.Core.Definitions.Game.XNA;
 using FEZRepacker.Core.FileSystem;
 using FEZRepacker.Core.Helpers;
 
@@ -7,7 +6,7 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
 
-namespace FEZRepacker.Core.Conversion
+namespace FEZRepacker.Core.Conversion.Formats
 {
     internal class TextureConverter : FormatConverter<Texture2D>
     {

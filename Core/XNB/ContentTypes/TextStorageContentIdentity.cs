@@ -1,5 +1,4 @@
-﻿
-using FEZRepacker.Core.XNB.ContentSerialization;
+﻿using FEZRepacker.Core.XNB.ContentSerialization;
 using FEZRepacker.Core.XNB.ContentSerialization.System;
 
 namespace FEZRepacker.Core.XNB.ContentTypes

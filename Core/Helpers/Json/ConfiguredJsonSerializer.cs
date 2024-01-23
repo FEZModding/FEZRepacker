@@ -7,6 +7,11 @@ using FEZRepacker.Core.Helpers.Json.CustomConverters;
 
 namespace FEZRepacker.Core.Helpers.Json
 {
+    /// <summary>
+    /// Wrapper for <see cref="JsonSerializer"/> that passes custom options 
+    /// tailored for format conversion. Additionally, supplies some helper
+    /// methods for interacting directly with <see cref="FileBundle"/> 
+    /// </summary>
     internal static class ConfiguredJsonSerializer
     {
         static JsonSerializerOptions? _serializerOptions;

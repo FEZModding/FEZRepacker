@@ -40,7 +40,7 @@ namespace FEZRepacker.Core.Definitions.Game.TrileSet
 
         [JsonIgnore]
         [XnbProperty(UseConverter = true)]
-        public ShaderInstancedIndexedPrimitives<VertexPositionNormalTextureInstance, Vector4> Geometry { get; set; } = new();
+        public IndexedPrimitives<VertexInstance, Vector4> Geometry { get; set; } = new();
 
         [XnbProperty(UseConverter = true)]
         public ActorType Type { get; set; }

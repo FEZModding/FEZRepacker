@@ -1,5 +1,4 @@
-﻿
-using FEZRepacker.Core.Definitions.Game.Graphics;
+﻿using FEZRepacker.Core.Definitions.Game.Graphics;
 using FEZRepacker.Core.Definitions.Game.XNA;
 using FEZRepacker.Core.FileSystem;
 using FEZRepacker.Core.Helpers;
@@ -8,9 +7,10 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Gif;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+
 using Color = SixLabors.ImageSharp.Color;
 
-namespace FEZRepacker.Core.Conversion
+namespace FEZRepacker.Core.Conversion.Formats
 {
     internal class AnimatedTextureConverter : FormatConverter<AnimatedTexture>
     {
@@ -83,7 +83,7 @@ namespace FEZRepacker.Core.Conversion
 
         private static AnimatedTexture AnimationImageToAnimatedTexture(Image<Rgba32> animation)
         {
-            (var atlasWidth, var atlasHeight) = CalculateAtlasSize(animation);
+            (var atlasWidth, var atlasHeight) = FindMinimumPowerOfTwoAtlasSize(animation);
             var frames = ExtractFrameDataFromGif(animation, atlasWidth);
 
             using var atlasImage = new Image<Rgba32>(atlasWidth, atlasHeight, Color.Transparent);
@@ -146,7 +146,7 @@ namespace FEZRepacker.Core.Conversion
 
         // Calculating the minimum size of the atlas for the animation
         // with both width and height being powers of two
-        private static (int Width, int Height) CalculateAtlasSize(Image animatedImage)
+        private static (int Width, int Height) FindMinimumPowerOfTwoAtlasSize(Image animatedImage)
         {
             int atlasWidth = 0;
             int atlasHeight = 0;

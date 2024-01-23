@@ -1,7 +1,7 @@
 ﻿using FEZRepacker.Core.FileSystem;
 using FEZRepacker.Core.Helpers.Json;
 
-namespace FEZRepacker.Core.Conversion
+namespace FEZRepacker.Core.Conversion.Formats
 {
     using TextStorage = Dictionary<string, Dictionary<string, string>>;
     internal class TextStorageConverter : FormatConverter<TextStorage>

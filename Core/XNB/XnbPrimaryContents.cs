@@ -1,5 +1,11 @@
-﻿namespace FEZRepacker.Core.XNB.ContentTypes
+﻿using FEZRepacker.Core.XNB.ContentTypes;
+
+namespace FEZRepacker.Core.XNB
 {
+    /// <summary>
+    /// Contains a statically declared list of all <see cref="XnbPrimaryContentIdentity"/>
+    /// structures needed to parse all XNB files contained within FEZ.
+    /// </summary>
     internal static class XnbPrimaryContents
     {
         public static readonly List<XnbPrimaryContentIdentity> List = new()

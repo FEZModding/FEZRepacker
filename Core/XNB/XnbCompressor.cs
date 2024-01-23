@@ -12,7 +12,7 @@ namespace FEZRepacker.Core.XNB
         /// </summary>
         /// <param name="xnbStream">A stream to convert</param>
         /// <returns>
-        /// New stream containing decompressed XNB file. 
+        /// New stream containing decompressed XNB file, with position at its start.
         /// If given stream doesn't have a valid XNB file, returns a copy of input stream.
         /// </returns>
         /// <exception cref="InvalidDataException">Thrown when compressed data is invalid.</exception>

@@ -10,7 +10,7 @@ using FEZRepacker.Core.Helpers.Json;
 
 using SixLabors.ImageSharp.Formats.Png;
 
-namespace FEZRepacker.Core.Conversion
+namespace FEZRepacker.Core.Conversion.Formats
 {
     internal class TrileSetConverter : FormatConverter<TrileSet>
     {
@@ -45,7 +45,7 @@ namespace FEZRepacker.Core.Conversion
 
         private static Stream GetModelStream(TrileSet data)
         {
-            var geometryDict = new Dictionary<string, ShaderInstancedIndexedPrimitives<VertexPositionNormalTextureInstance, Vector4>>();
+            var geometryDict = new Dictionary<string, IndexedPrimitives<VertexInstance, Vector4>>();
 
             foreach (var trileRecord in data.Triles)
             {

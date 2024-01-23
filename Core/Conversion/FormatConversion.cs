@@ -2,8 +2,31 @@
 
 namespace FEZRepacker.Core.Conversion
 {
+    /// <summary>
+    /// Main format conversion handling logic. Contains methods for converting
+    /// and deconverting objects to and from easily readable file formats.
+    /// </summary>
+    /// <remarks>
+    /// A <see cref="FormatConverter"/> specific to to given object type is used
+    /// in order to convert and deconvert it. A list of format converters defining
+    /// supported object types is stored in <see cref="FormatConverters"/>.
+    /// </remarks>
     public static class FormatConversion
     {
+        /// <summary>
+        /// Finds converter for a type of given object, then attempts to
+        /// convert it and store in a <see cref="FileBundle"/>.
+        /// </summary>
+        /// <param name="data">A reference to object to convert</param>
+        /// <returns>
+        /// A <see cref="FileBundle"/> containing file or files converted from given object.
+        /// </returns>
+        /// <exception cref="NullReferenceException">
+        /// Thrown when null object was given
+        /// </exception>
+        /// <exception cref="FormatConversionException">
+        /// Thrown when a type of given object is not supported by Repacker
+        /// </exception>
         public static FileBundle Convert(object? data)
         {
             if(data == null)
@@ -21,6 +44,17 @@ namespace FEZRepacker.Core.Conversion
             return converter.Convert(data);
         }
 
+        /// <summary>
+        /// Finds converter for main extension of given <see cref="FileBundle"/>,
+        /// then attempts to deconvert it back to an object with a type assigned to this converter.
+        /// </summary>
+        /// <param name="bundle">A <see cref="FileBundle"/> containing files to convert.</param>
+        /// <returns>
+        /// An object deconverted from files contained in given <see cref="FileBundle"/>.
+        /// </returns>
+        /// <exception cref="FormatConversionException">
+        /// Thrown when main extension of given <see cref="FileBundle"/> is not supported by Repacker
+        /// </exception>
         public static object? Deconvert(FileBundle bundle)
         {
             var converter = FormatConverters.FindForFileBundle(bundle);

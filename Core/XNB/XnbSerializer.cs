@@ -1,12 +1,32 @@
 ﻿using System.Text;
 
 using FEZRepacker.Core.Helpers;
-using FEZRepacker.Core.XNB.ContentTypes;
 
 namespace FEZRepacker.Core.XNB
 {
+    /// <summary>
+    /// Main XNB serialization handling logic. Contains methods for deserializing
+    /// XNB asset streams into objects and serializing objects into XNB streams.
+    /// </summary>
+    /// <remarks>
+    /// Despite XNB files containing references to specific types within FEZ,
+    /// this serializer is not using them, and instead is relying on Repacker's
+    /// definitions, which can be found in "FEZRepacker.Core.Definitions".
+    /// Additionally, asset will not be serialized nor deserialized if it's not
+    /// one of the primary content types for FEZ, which are defined in 
+    /// "FEZRepacker.Core.XNB.ContentTypes".
+    /// </remarks>
     public static class XnbSerializer
     {
+        /// <summary>
+        /// Deserializes XNB asset encoded in given stream. Additionally, attempts
+        /// to decompress it if a compressed XNB asset was given.
+        /// </summary>
+        /// <param name="xnbStream">A stream to deserialize XNB asset from</param>
+        /// <returns>A reference to an object which was serialized within given stream.</returns>
+        /// <exception cref="XnbSerializationException">
+        /// Thrown when the stream does not contain a valid XNB file.
+        /// </exception>
         public static object? Deserialize(Stream xnbStream)
         {
             using Stream decompressedInput = XnbCompressor.Decompress(xnbStream);
@@ -44,8 +64,16 @@ namespace FEZRepacker.Core.XNB
             return xnbReader.ReadContent(primaryContentType.PrimaryContentType.ContentType, true);
         }
 
-
-
+        /// <summary>
+        /// Produces a stream containing a given object, serialized into XNB format.
+        /// </summary>
+        /// <param name="obj">
+        /// Object to serialize into an XNB asset. Must be a valid primary content type for FEZ.
+        /// </param>
+        /// <returns>The stream containing serialized data, positioned at the beginning.</returns>
+        /// <exception cref="XnbSerializationException">
+        /// Thrown when given object is not a valid primary content type for FEZ.
+        /// </exception>
         public static Stream Serialize(object obj)
         {
             var contentIdentity = XnbPrimaryContents.FindByType(obj.GetType());

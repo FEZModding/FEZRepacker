@@ -1,8 +1,7 @@
-﻿
-using FEZRepacker.Core.Definitions.Game.XNA;
+﻿using FEZRepacker.Core.Definitions.Game.XNA;
 using FEZRepacker.Core.FileSystem;
 
-namespace FEZRepacker.Core.Conversion
+namespace FEZRepacker.Core.Conversion.Formats
 {
     internal class SoundEffectConverter : FormatConverter<SoundEffect>
     {

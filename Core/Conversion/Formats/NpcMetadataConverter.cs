@@ -1,9 +1,8 @@
-﻿
-using FEZRepacker.Core.Definitions.Game.NpcMetadata;
+﻿using FEZRepacker.Core.Definitions.Game.NpcMetadata;
 using FEZRepacker.Core.FileSystem;
 using FEZRepacker.Core.Helpers.Json;
 
-namespace FEZRepacker.Core.Conversion
+namespace FEZRepacker.Core.Conversion.Formats
 {
     internal class NpcMetadataConverter : FormatConverter<NpcMetadata>
     {

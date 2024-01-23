@@ -1,10 +1,9 @@
-﻿
-using FEZRepacker.Core.Definitions.Game.MapTree;
+﻿using FEZRepacker.Core.Definitions.Game.MapTree;
 using FEZRepacker.Core.Definitions.Json;
 using FEZRepacker.Core.FileSystem;
 using FEZRepacker.Core.Helpers.Json;
 
-namespace FEZRepacker.Core.Conversion
+namespace FEZRepacker.Core.Conversion.Formats
 {
     internal class MapTreeConverter : FormatConverter<MapTree>
     {

@@ -8,7 +8,7 @@ using FEZRepacker.Core.Helpers.Json;
 
 using SixLabors.ImageSharp.Formats.Png;
 
-namespace FEZRepacker.Core.Conversion
+namespace FEZRepacker.Core.Conversion.Formats
 {
     internal class ArtObjectConverter : FormatConverter<ArtObject>
     {

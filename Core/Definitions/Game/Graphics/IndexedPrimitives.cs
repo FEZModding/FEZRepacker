@@ -4,7 +4,8 @@ namespace FEZRepacker.Core.Definitions.Game.Graphics
 {
     [XnbType("FezEngine.Structure.Geometry.ShaderInstancedIndexedPrimitives")]
     [XnbReaderType("FezEngine.Readers.ShaderInstancedIndexedPrimitivesReader")]
-    public class ShaderInstancedIndexedPrimitives<TemplateType, InstanceType>
+    // Original name in FezEngine: ShaderInstancedIndexedPrimitives
+    public class IndexedPrimitives<TemplateType, InstanceType> 
     {
         [XnbProperty(UseConverter = true)]
         public PrimitiveType PrimitiveType { get; set; }
@@ -15,7 +16,7 @@ namespace FEZRepacker.Core.Definitions.Game.Graphics
         [XnbProperty(UseConverter = true)]
         public ushort[] Indices { get; set; }
 
-        public ShaderInstancedIndexedPrimitives()
+        public IndexedPrimitives()
         {
             Vertices = new TemplateType[0];
             Indices = new ushort[0];

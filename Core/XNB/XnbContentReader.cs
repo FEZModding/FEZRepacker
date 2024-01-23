@@ -6,6 +6,10 @@ using FEZRepacker.Core.XNB.ContentTypes;
 
 namespace FEZRepacker.Core.XNB
 {
+    /// <summary>
+    /// Extension of BinaryReader that allows reading XNB content from streams,
+    /// using individual type serializers defined within provided <see cref="XnbPrimaryContentIdentity"/>.
+    /// </summary>
     internal class XnbContentReader : BinaryReader
     {
         public readonly XnbPrimaryContentIdentity Identity;

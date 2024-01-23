@@ -4,7 +4,8 @@ namespace FEZRepacker.Core.Definitions.Game.ArtObject
 {
     [XnbType("FezEngine.Structure.Geometry.VertexPositionNormalTextureInstance")]
     [XnbReaderType("FezEngine.Readers.VertexPositionNormalTextureInstanceReader")]
-    public class VertexPositionNormalTextureInstance
+    // Original name in FezEngine: VertexPositionNormalTextureInstance
+    public class VertexInstance 
     {
         [XnbProperty]
         public Vector3 Position { get; set; }
@@ -61,7 +62,7 @@ namespace FEZRepacker.Core.Definitions.Game.ArtObject
 
         public override bool Equals(object obj)
         {
-            var other = obj as VertexPositionNormalTextureInstance;
+            var other = obj as VertexInstance;
             return other != null 
                 && other.Position == this.Position
                 && other.NormalByte == this.NormalByte
