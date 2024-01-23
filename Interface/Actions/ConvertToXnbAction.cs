@@ -1,8 +1,9 @@
 ﻿
 using System.IO;
 
-using FEZRepacker.Converter.FileSystem;
-using FEZRepacker.Converter.XNB;
+using FEZRepacker.Core.Conversion;
+using FEZRepacker.Core.FileSystem;
+using FEZRepacker.Core.XNB;
 
 namespace FEZRepacker.Interface.Actions
 {
@@ -34,29 +35,21 @@ namespace FEZRepacker.Interface.Actions
 
                 try
                 {
-                    var deconverter = new XnbDeconverter();
-                    using var deconverterStream = deconverter.Deconvert(fileBundle);
+                    object convertedData = FormatConversion.Deconvert(fileBundle)!;
+                    var data = XnbSerializer.Serialize(convertedData);
 
-                    if (deconverter.Converted)
-                    {
-                        Console.WriteLine($"  Format {fileBundle.MainExtension} deconverted into {deconverter.FormatConverter!.FormatName} XNB asset.");
-                        processFileFunc(fileBundle.BundlePath, ".xnb", deconverterStream, true);
-                    }
-                    else
-                    {
-                        Console.WriteLine($"  Format {fileBundle.MainExtension} doesn't have a converter.");
-
-                        foreach (var file in fileBundle.Files)
-                        {
-                            file.Data.Seek(0, SeekOrigin.Begin);
-                            var ext = fileBundle.MainExtension + file.Extension;
-                            processFileFunc(fileBundle.BundlePath, ext, deconverterStream, false);
-                        }
-                    }
+                    Console.WriteLine($"  Format {fileBundle.MainExtension} deconverted into {convertedData.GetType()}.");
+                    processFileFunc(fileBundle.BundlePath, ".xnb", data, true);
                 }
                 catch (Exception ex)
                 {
-                    Console.Error.WriteLine($"  Unable to convert asset {fileBundle.BundlePath} - {ex.Message}");
+                    Console.Error.WriteLine($"  Unable to convert asset: {ex.Message}");
+                    foreach (var file in fileBundle.Files)
+                    {
+                        file.Data.Seek(0, SeekOrigin.Begin);
+                        var ext = fileBundle.MainExtension + file.Extension;
+                        processFileFunc(fileBundle.BundlePath, ext, file.Data, false);
+                    }
                 }
                 filesDone++;
 

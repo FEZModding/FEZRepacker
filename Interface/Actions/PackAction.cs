@@ -1,6 +1,7 @@
 ﻿
-using FEZRepacker.Converter.FileSystem;
-using FEZRepacker.Converter.XNB.Formats;
+using FEZRepacker.Core.Conversion;
+using FEZRepacker.Core.FileSystem;
+using FEZRepacker.Core.XNB;
 
 namespace FEZRepacker.Interface.Actions
 {
@@ -74,8 +75,8 @@ namespace FEZRepacker.Interface.Actions
 
             fileBundles.Sort((a, b) =>
             {
-                var converterA = XnbFormatList.FindByExtension(a.MainExtension);
-                var converterB = XnbFormatList.FindByExtension(b.MainExtension);
+                var converterA = FormatConverters.FindByExtension(a.MainExtension);
+                var converterB = FormatConverters.FindByExtension(b.MainExtension);
 
                 if (converterA != null && converterB == null) return 1;
                 if (converterA == null && converterB != null) return -1;

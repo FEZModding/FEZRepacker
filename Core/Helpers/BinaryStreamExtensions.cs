@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Numerics;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FEZRepacker.Core.Definitions.Game.XNA;
 
-namespace FEZRepacker.Converter.Helpers
+namespace FEZRepacker.Core.Helpers
 {
     internal static class BinaryStreamExtensions
     {
@@ -48,11 +41,11 @@ namespace FEZRepacker.Converter.Helpers
 
         public static Color ReadColor(this BinaryReader reader)
         {
-            int r = reader.ReadByte();
-            int g = reader.ReadByte();
-            int b = reader.ReadByte();
-            int a = reader.ReadByte();
-            return Color.FromArgb(a, r, g, b);
+            byte r = reader.ReadByte();
+            byte g = reader.ReadByte();
+            byte b = reader.ReadByte();
+            byte a = reader.ReadByte();
+            return new Color(r, g, b, a);
         }
 
         public static void Write(this BinaryWriter writer, Color color)
@@ -64,7 +57,6 @@ namespace FEZRepacker.Converter.Helpers
         }
 
         // Source: hhttps://source.dot.net/#Microsoft.Build.Framework/BinaryReaderExtensions.cs,20
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int Read7BitEncodedInt(this BinaryReader reader)
         {
             // Read out an Int32 7 bits at a time.  The high bit
@@ -90,7 +82,6 @@ namespace FEZRepacker.Converter.Helpers
         }
 
         // Source: https://source.dot.net/#Microsoft.Build.Framework/BinaryWriterExtensions.cs,35
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Write7BitEncodedInt(this BinaryWriter writer, int value)
         {
             // Write out an int 7 bits at a time.  The high bit of the byte,

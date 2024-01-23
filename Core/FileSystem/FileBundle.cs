@@ -1,4 +1,4 @@
-﻿namespace FEZRepacker.Converter.FileSystem
+﻿namespace FEZRepacker.Core.FileSystem
 {
 
     /// <summary>
@@ -39,7 +39,7 @@
                     if (record.Extension == extension) return record.Data;
                 }
             }
-            return new MemoryStream();
+            return null;
         }
 
         public HashSet<string> GetSubExtensions()

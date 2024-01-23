@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace FEZRepacker.Converter.XNB
+namespace FEZRepacker.Core.XNB
 {
     /// <summary>
     /// Stores information present in XNB file header.

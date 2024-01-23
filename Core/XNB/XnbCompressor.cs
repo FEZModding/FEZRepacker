@@ -1,8 +1,6 @@
-﻿using System.Text;
+﻿using Microsoft.Xna.Framework.Content;
 
-using Microsoft.Xna.Framework.Content;
-
-namespace FEZRepacker.Converter.XNB
+namespace FEZRepacker.Core.XNB
 {
     public class XnbCompressor
     {

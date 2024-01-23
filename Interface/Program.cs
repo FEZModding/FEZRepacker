@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 
-using FEZRepacker.Converter.XNB;
+using FEZRepacker.Core.XNB;
+
 
 namespace FEZRepacker.Interface
 {
@@ -8,7 +9,7 @@ namespace FEZRepacker.Interface
     {
         static void Main(string[] args)
         {
-            string version = typeof(XnbConverter).Assembly.GetName().Version?.ToString() ?? "";
+            string version = typeof(XnbSerializer).Assembly.GetName().Version?.ToString() ?? "";
             version = string.Join(".", version.Split('.').Take(3));
             // showoff
             Console.WriteLine($"=== FEZRepacker {version} by Krzyhau & FEZModding Team ===\n");

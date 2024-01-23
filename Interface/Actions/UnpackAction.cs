@@ -1,5 +1,9 @@
-﻿using FEZRepacker.Converter.FileSystem;
-using FEZRepacker.Converter.XNB;
+﻿using System;
+
+using FEZRepacker.Core.Conversion;
+using FEZRepacker.Core.FileSystem;
+using FEZRepacker.Core.XNB;
+
 
 namespace FEZRepacker.Interface.Actions
 {
@@ -41,23 +45,18 @@ namespace FEZRepacker.Interface.Actions
             }
             else if (mode == UnpackingMode.Converted)
             {
-                var converter = new XnbConverter();
-                var outputBundle = converter.Convert(data);
-                var formatName = converter.HeaderValid ? converter.FileType.Name.Replace("Reader", "") : "";
-                if (converter.Converted)
+                FileBundle outputBundle;
+                try
                 {
-                    extension = converter.FormatConverter!.FileFormat;
-                    var storageTypeName = (outputBundle.Files.Count > 1 ? "bundle" : "file");
-                    Console.WriteLine($"  Format {formatName} converted into {extension} {storageTypeName}.");
+                    var outputData = XnbSerializer.Deserialize(data)!;
+                    outputBundle = FormatConversion.Convert(outputData);
                 }
-                else
+                catch (Exception ex)
                 {
-                    Console.WriteLine(
-                        converter.HeaderValid 
-                        ? $"  Unknown format {formatName}."
-                        : $"  Not a valid XNB file."
-                    );
+                    Console.WriteLine($"  Cannot deserialize XNB file: {ex.Message}. Saving raw file instead.");
+                    return FileBundle.Single(data, extension);
                 }
+
                 return outputBundle;
             }
             else

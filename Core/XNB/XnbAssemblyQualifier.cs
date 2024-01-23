@@ -1,4 +1,6 @@
-﻿namespace FEZRepacker.Converter
+﻿using FEZRepacker.Core.Definitions.Game;
+
+namespace FEZRepacker.Core
 {
     /// <summary>
     /// Represents an assembly qualified name, tailored for converting FEZ-specific structures 
@@ -106,6 +108,47 @@
         {
             return new XnbAssemblyQualifier(s);
         }
+
+        public void AppendGenericTypesFromType(Type type)
+        {
+            if (!type.IsGenericType) return;
+
+            var genericQualifiers = new List<XnbAssemblyQualifier>();
+
+            foreach (Type genericType in type.GetGenericArguments())
+            {
+                var genericQualifier = GetFromXnbType(genericType);
+                if (!genericQualifier.HasValue) continue;
+                genericQualifiers.Add(genericQualifier.Value);
+            }
+
+            Templates = genericQualifiers.ToArray();
+        }
+
+        public static XnbAssemblyQualifier? GetFromXnbType(Type type)
+        {
+            var attributes = type.GetCustomAttributes(typeof(XnbTypeAttribute), false);
+            if (attributes.Length > 0)
+            {
+                var qualifier = (attributes.First() as XnbTypeAttribute)!.Qualifier;
+                qualifier.AppendGenericTypesFromType(type);
+                return qualifier;
+            }
+            return null;
+        }
+
+        public static XnbAssemblyQualifier? GetFromXnbReaderType(Type type)
+        {
+            var attributes = type.GetCustomAttributes(typeof(XnbReaderTypeAttribute), false);
+            if (attributes.Length > 0)
+            {
+                var qualifier = (attributes.First() as XnbReaderTypeAttribute)!.Qualifier;
+                qualifier.AppendGenericTypesFromType(type);
+                return qualifier;
+            }
+            return null;
+        }
+
 
         /// <summary>
         /// Creates a string representing assembly qualified name.

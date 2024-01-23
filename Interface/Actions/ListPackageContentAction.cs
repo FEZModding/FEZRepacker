@@ -1,4 +1,4 @@
-﻿using FEZRepacker.Converter.FileSystem;
+﻿using FEZRepacker.Core.FileSystem;
 
 namespace FEZRepacker.Interface.Actions
 {

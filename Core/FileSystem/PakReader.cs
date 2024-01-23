@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
+﻿using System.Text;
 
-namespace FEZRepacker.Converter.FileSystem
+namespace FEZRepacker.Core.FileSystem
 {
     /// <summary>
     /// Allows accessing individual files in a FEZ PAK package contained in the given stream.

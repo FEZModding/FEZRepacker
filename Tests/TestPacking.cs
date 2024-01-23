@@ -1,5 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using FEZRepacker.Converter.FileSystem;
+using FEZRepacker.Core.FileSystem;
 
 namespace FEZRepacker.Tests
 {

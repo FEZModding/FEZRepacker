@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml.Linq;
+﻿using System.Text;
 
-namespace FEZRepacker.Converter.FileSystem
+namespace FEZRepacker.Core.FileSystem
 {
     /// <summary>
     /// Allows creation of a FEZ PAK package.

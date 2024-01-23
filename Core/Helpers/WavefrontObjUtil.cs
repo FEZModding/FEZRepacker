@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Numerics;
-using System.Text;
+﻿using System.Text;
 
-using FEZRepacker.Converter.Definitions.FezEngine.Structure.Geometry;
-using FEZRepacker.Converter.Definitions.MicrosoftXna;
+using FEZRepacker.Core.Definitions.Game.ArtObject;
+using FEZRepacker.Core.Definitions.Game.Graphics;
+using FEZRepacker.Core.Definitions.Game.XNA;
 
-namespace FEZRepacker.Converter.Helpers
+namespace FEZRepacker.Core.Helpers
 {
     internal static class WavefrontObjUtil
     {

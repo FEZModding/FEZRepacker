@@ -1,6 +1,6 @@
 ﻿
-using FEZRepacker.Converter.FileSystem;
-using FEZRepacker.Converter.XNB;
+using FEZRepacker.Core.FileSystem;
+using FEZRepacker.Core.XNB;
 
 namespace FEZRepacker.Interface.Actions
 {
