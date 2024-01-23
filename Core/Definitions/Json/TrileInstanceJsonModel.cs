@@ -12,7 +12,12 @@ namespace FEZRepacker.Core.Definitions.Json
         public int Id { get; set; }
         public TrileInstanceActorSettings? ActorSettings { get; set; }
 
-        public TrileInstanceJsonModel(TrileEmplacement emplacement)
+        public TrileInstanceJsonModel()
+        {
+
+        }
+
+        public TrileInstanceJsonModel(TrileEmplacement emplacement) : this()
         {
             Emplacement = emplacement;
         }

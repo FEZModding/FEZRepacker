@@ -64,7 +64,7 @@ namespace FEZRepacker.Core.Helpers
             if (imageAlbedoStream == null && imageEmissionStream == null) 
                 return new Image<Rgba32>(1, 1, Color.Pink);
 
-            using var albedoImage = Image.Load<Rgba32>(imageAlbedoStream ?? imageEmissionStream);
+            var albedoImage = Image.Load<Rgba32>(imageAlbedoStream ?? imageEmissionStream);
 
             using var emissionImage =
                 imageEmissionStream != null
