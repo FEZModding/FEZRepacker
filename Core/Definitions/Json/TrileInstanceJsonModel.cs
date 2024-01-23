@@ -14,7 +14,7 @@ namespace FEZRepacker.Core.Definitions.Json
 
         public TrileInstanceJsonModel()
         {
-
+            Emplacement = new();
         }
 
         public TrileInstanceJsonModel(TrileEmplacement emplacement) : this()

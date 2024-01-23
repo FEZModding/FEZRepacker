@@ -8,10 +8,10 @@ namespace FEZRepacker.Core.Definitions.Json
 {
     public class LevelJsonModel : JsonModel<Level>
     {
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
         public LevelNodeType NodeType { get; set; }
         public Vector3 Size { get; set; }
-        public TrileFace StartingPosition { get; set; }
+        public TrileFace StartingPosition { get; set; } = new();
         public bool Flat { get; set; }
         public bool Quantum { get; set; }
         public bool Descending { get; set; }
@@ -19,29 +19,29 @@ namespace FEZRepacker.Core.Definitions.Json
         public bool Rainy { get; set; }
         public float BaseDiffuse { get; set; }
         public float BaseAmbient { get; set; }
-        public string SkyName { get; set; }
+        public string SkyName { get; set; } = "";
         public bool SkipPostProcess { get; set; }
-        public string GomezHaloName { get; set; }
+        public string GomezHaloName { get; set; } = "";
         public bool HaloFiltering { get; set; }
         public bool BlinkingAlpha { get; set; }
         public float WaterHeight { get; set; }
         public LiquidType WaterType { get; set; }
-        public string SongName { get; set; }
-        public List<string> MutedLoops { get; set; }
-        public List<AmbienceTrack> AmbienceTracks { get; set; }
-        public string SequenceSamplesPath { get; set; }
+        public string SongName { get; set; } = "";
+        public List<string> MutedLoops { get; set; } = new();
+        public List<AmbienceTrack> AmbienceTracks { get; set; } = new();
+        public string SequenceSamplesPath { get; set; } = "";
         public bool LowPass { get; set; }
         public int FAPFadeOutStart { get; set; }
         public int FAPFadeOutLength { get; set; }
-        public string TrileSetName { get; set; }
-        public List<TrileInstanceJsonModel> Triles { get; set; }
-        public Dictionary<int, TrileGroupJsonModel> Groups { get; set; }
-        public Dictionary<int, Volume> Volumes { get; set; }
-        public Dictionary<int, Script> Scripts { get; set; }
-        public Dictionary<int, ArtObjectInstance> ArtObjects { get; set; }
-        public Dictionary<int, BackgroundPlane> BackgroundPlanes { get; set; }
-        public Dictionary<int, MovementPath> Paths { get; set; }
-        public Dictionary<int, NpcInstance> NonPlayerCharacters { get; set; }
+        public string TrileSetName { get; set; } = "";
+        public List<TrileInstanceJsonModel> Triles { get; set; } = new();
+        public Dictionary<int, TrileGroupJsonModel> Groups { get; set; } = new();
+        public Dictionary<int, Volume> Volumes { get; set; } = new();
+        public Dictionary<int, Script> Scripts { get; set; } = new();
+        public Dictionary<int, ArtObjectInstance> ArtObjects { get; set; } = new();
+        public Dictionary<int, BackgroundPlane> BackgroundPlanes { get; set; } = new();
+        public Dictionary<int, MovementPath> Paths { get; set; } = new();
+        public Dictionary<int, NpcInstance> NonPlayerCharacters { get; set; } = new();
 
         public LevelJsonModel()
         {

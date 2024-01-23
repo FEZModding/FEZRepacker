@@ -32,6 +32,7 @@ namespace FEZRepacker.Core.Helpers
                     0 => (3, new Vector3(0, 0, 1), new Vector3(0, -1, 0)), // left
                     4 => (4, new Vector3(1, 0, 0), new Vector3(0, 0, 1)), // top
                     1 => (5, new Vector3(1, 0, 0), new Vector3(0, 0, -1)), // bottom
+                    _ => (0, new Vector3(), new Vector3())
                 };
 
                 var texturePlanePosition = vertex.Position / geometryBounds;

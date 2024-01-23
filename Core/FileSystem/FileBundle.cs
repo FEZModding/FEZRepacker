@@ -21,6 +21,8 @@
         public List<FileRecord> Files { get; private set; }
 
         public FileBundle() {
+            BundlePath = "";
+            MainExtension = "";
             Files = new();
         }
 

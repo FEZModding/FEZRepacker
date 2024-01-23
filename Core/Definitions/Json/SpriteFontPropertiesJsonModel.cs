@@ -9,8 +9,8 @@ namespace FEZRepacker.Core.Definitions.Json
         public class CharacterData
         {
             public char Character;
-            public Rectangle GlyphBounds;
-            public Rectangle Cropping;
+            public Rectangle GlyphBounds = new();
+            public Rectangle Cropping = new();
             public Vector3 KerningData;
         }
 
