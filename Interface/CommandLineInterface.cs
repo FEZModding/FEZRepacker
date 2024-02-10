@@ -91,11 +91,19 @@ namespace FEZRepacker.Interface
 
                 var args = ParseArguments(line);
                 
-                if (ParseInteractiveModeCommands(args)) continue;
-                if (ParseCommandLine(args)) continue;
-                
-                ShowInteractiveModeHelp();
-                
+                if (ParseInteractiveModeCommands(args, out var shouldTerminate))
+                {
+                    if (shouldTerminate) break;
+                    else continue;
+                }
+                else if (ParseCommandLine(args))
+                {
+                    continue;
+                }
+                else
+                {
+                    ShowInteractiveModeHelp();
+                }
             }
         }
 
@@ -105,8 +113,9 @@ namespace FEZRepacker.Interface
             Console.WriteLine("To exit, use 'exit'");
         }
 
-        private static bool ParseInteractiveModeCommands(string[] args)
+        private static bool ParseInteractiveModeCommands(string[] args, out bool terminationRequested)
         {
+            terminationRequested = false;
             if (args.Length == 0) return false;
 
             switch (args[0].ToLower())
@@ -119,6 +128,7 @@ namespace FEZRepacker.Interface
                 case "end":
                 case "stop":
                 case "terminate":
+                    terminationRequested = true;
                     Console.WriteLine("Exiting...");
                     return true;
                 default:
