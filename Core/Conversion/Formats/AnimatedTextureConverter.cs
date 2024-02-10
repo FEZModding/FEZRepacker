@@ -56,7 +56,7 @@ namespace FEZRepacker.Core.Conversion.Formats
 
                 var frameMetadata = frameImg.Frames.RootFrame.Metadata.GetGifMetadata();
                 frameMetadata.FrameDelay = frame.Duration.Milliseconds / 10;
-                frameMetadata.DisposalMethod = GifDisposalMethod.RestoreToPrevious;
+                frameMetadata.DisposalMethod = GifDisposalMethod.RestoreToBackground;
 
                 animation.Frames.AddFrame(frameImg.Frames.RootFrame);
             }
