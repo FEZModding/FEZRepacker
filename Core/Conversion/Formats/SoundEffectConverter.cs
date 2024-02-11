@@ -1,4 +1,6 @@
-﻿using FEZRepacker.Core.Definitions.Game.XNA;
+﻿using System.Text;
+
+using FEZRepacker.Core.Definitions.Game.XNA;
 using FEZRepacker.Core.FileSystem;
 
 namespace FEZRepacker.Core.Conversion.Formats
@@ -10,7 +12,7 @@ namespace FEZRepacker.Core.Conversion.Formats
         public override FileBundle ConvertTyped(SoundEffect data)
         {
             var outStream = new MemoryStream();
-            var outWriter = new BinaryWriter(outStream);
+            using var outWriter = new BinaryWriter(outStream, Encoding.UTF8, true);
 
             outWriter.Write("RIFF".ToCharArray());
             var fileSize = 4 + 8 + 18 + 8 + data.DataChunk.Length;
@@ -36,7 +38,7 @@ namespace FEZRepacker.Core.Conversion.Formats
         {
             var soundEffect = new SoundEffect();
 
-            var inReader = new BinaryReader(bundle.GetData(""));
+            using var inReader = new BinaryReader(bundle.GetData(""), Encoding.UTF8, true);
 
             var riffHeader = new string(inReader.ReadChars(4));
             var fileSize = inReader.ReadInt32();
