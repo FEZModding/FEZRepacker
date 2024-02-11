@@ -17,6 +17,13 @@
             this.containsData = false;
         }
 
+        public PakFileRecord(string path, byte[] payload)
+        {
+            this.path = path;
+            this.payload = payload;
+            this.containsData = true;
+        }
+
         public Stream Open()
         {
             if (!containsData)
@@ -30,6 +37,11 @@
         }
 
         public string FindExtension()
+        {
+            return FindExtensionFromPayload(payload);
+        }
+
+        public static string FindExtensionFromPayload(byte[] payload)
         {
             var extension = "";
 

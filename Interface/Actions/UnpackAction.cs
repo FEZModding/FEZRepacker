@@ -35,7 +35,7 @@ namespace FEZRepacker.Interface.Actions
 
         public static FileBundle UnpackFile(string extension, Stream data, UnpackingMode mode)
         {
-            if(extension != ".xnb" || mode == UnpackingMode.Raw)
+            if (extension != ".xnb" || mode == UnpackingMode.Raw)
             {
                 return FileBundle.Single(data, extension);
             }
@@ -80,17 +80,18 @@ namespace FEZRepacker.Interface.Actions
                 Directory.CreateDirectory(outputDir);
             }
 
-            var pakPackage = PakPackage.ReadFrom(pakPath);
+            using var pakStream = File.OpenRead(pakPath);
+            using var pakReader = new PakReader(pakStream);
 
-            Console.WriteLine($"Unpacking archive {pakPath} containing {pakPackage.Entries.Count} files...");
+            Console.WriteLine($"Unpacking archive {pakPath} containing {pakReader.FileCount} files...");
 
             int filesDone = 0;
-            foreach (var pakFile in pakPackage.Entries)
+            foreach (var pakFile in pakReader.ReadFiles())
             {
                 var extension = pakFile.FindExtension();
 
                 Console.WriteLine(
-                    $"({filesDone + 1}/{pakPackage.Entries.Count})" +
+                    $"({filesDone + 1}/{pakReader.FileCount})" +
                     $"{pakFile.Path} ({(extension.Length == 0 ? "unknown" : extension)} file," +
                     $"size: {pakFile.Length} bytes)"
                 );
@@ -98,7 +99,6 @@ namespace FEZRepacker.Interface.Actions
                 try
                 {
                     using var fileStream = pakFile.Open();
-
                     using var outputBundle = UnpackFile(extension, fileStream, mode);
 
                     outputBundle.BundlePath = Path.Combine(outputDir, pakFile.Path);

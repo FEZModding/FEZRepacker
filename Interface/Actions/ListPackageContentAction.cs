@@ -15,7 +15,7 @@ namespace FEZRepacker.Interface.Actions
         {
             var pakPath = args[0];
 
-            var pakPackage = PakPackage.ReadFrom(pakPath);
+            var pakPackage = PakPackage.ReadFromFile(pakPath);
 
             Console.WriteLine($"PAK package \"{pakPath}\" with {pakPackage.Entries.Count} files.");
             Console.WriteLine();

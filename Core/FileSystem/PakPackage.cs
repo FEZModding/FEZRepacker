@@ -2,6 +2,10 @@
 
 namespace FEZRepacker.Core.FileSystem
 {
+    /// <summary>
+    /// A class representing a FEZ PAK package.
+    /// Use this for convenient file I/O with PAK package. Can be memory inefficient.
+    /// </summary>
     public class PakPackage
     {
         private readonly List<PakFileRecord> entries;
@@ -36,6 +40,10 @@ namespace FEZRepacker.Core.FileSystem
             }
         }
 
+        /// <summary>
+        /// Creates a new PAK file record and appends it to the end of this package.
+        /// </summary>
+        /// <param name="localPath">Path to give to created file record</param>
         public PakFileRecord CreateEntry(string localPath)
         {
             var record = new PakFileRecord(localPath);
@@ -43,6 +51,9 @@ namespace FEZRepacker.Core.FileSystem
             return record;
         }
 
+        /// <summary>
+        /// Encodes entire PAK package and its entries into a given stream
+        /// </summary>
         public void WriteTo(Stream stream)
         {
             using var writer = new BinaryWriter(stream, Encoding.UTF8, true);
@@ -56,13 +67,16 @@ namespace FEZRepacker.Core.FileSystem
             }
         }
 
+        /// <summary>
+        /// Encodes entire PAK package and its entries into a file with given file path
+        /// </summary>
         public void SaveTo(string filePath)
         {
             using var stream = File.OpenWrite(filePath);
             WriteTo(stream);
         }
 
-        public static PakPackage ReadFrom(string filePath)
+        public static PakPackage ReadFromFile(string filePath)
         {
             using var stream = File.OpenRead(filePath);
             return new(stream);

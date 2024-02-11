@@ -1,5 +1,4 @@
-﻿
-using FEZRepacker.Core.Conversion;
+﻿using FEZRepacker.Core.Conversion;
 using FEZRepacker.Core.FileSystem;
 using FEZRepacker.Core.XNB;
 
@@ -18,21 +17,45 @@ namespace FEZRepacker.Interface.Actions
             new CommandLineArgument("include-pak-path", true)
         };
 
-        private void IncludePackageIntoWriter(string includePackagePath, PakPackage package)
+        private class TemporaryPak : IDisposable
+        {
+            private readonly string tempPath;
+            private readonly string resultPath;
+
+            public PakWriter Writer { get; private set; }
+
+            public TemporaryPak(string finalPath)
+            {
+                tempPath = GetNewTempPackagePath();
+                resultPath = finalPath;
+
+                var tempPakStream = File.Open(tempPath, FileMode.Create);
+                Writer = new PakWriter(tempPakStream);
+            }
+
+            private static string GetNewTempPackagePath()
+            {
+                return Path.GetTempPath() + "repacker_pak_" + Guid.NewGuid().ToString() + ".pak";
+            }
+            public void Dispose()
+            {
+                Writer.Dispose();
+                File.Move(tempPath, resultPath, overwrite: true);
+            }
+        }
+
+        private void IncludePackageIntoWriter(string includePackagePath, PakWriter writer)
         {
             try
             {
-                var includePackage = PakPackage.ReadFrom(includePackagePath);
-                foreach (var file in includePackage.Entries)
+                using var includePackage = PakReader.FromFile(includePackagePath);
+                foreach (var file in includePackage.ReadFiles())
                 {
-                    var sameNamedFiles = package.Entries.Where(e => e.Path == file.Path && e.FindExtension() == file.FindExtension());
-                    if (sameNamedFiles.Any())
+                    using var fileStream = file.Open();
+                    bool written = writer.WriteFile(file.Path, fileStream, filterExtension: file.FindExtension());
+                    if (!written)
                     {
                         Console.WriteLine($"Skipping asset from included package {file.Path}, as it's already in the output package.");
-                    }
-                    else
-                    {
-                        package.Entries.Add(file);
                     }
                 }
             }
@@ -69,7 +92,7 @@ namespace FEZRepacker.Interface.Actions
             var fileBundlesToAdd = FileBundle.BundleFilesAtPath(inputPath);
             SortBundlesToPreventInvalidOrdering(ref fileBundlesToAdd);
 
-            var package = new PakPackage();
+            using var tempPak = new TemporaryPak(outputPackagePath);
 
             ConvertToXnbAction.PerformBatchConversion(fileBundlesToAdd, (path, extension, stream, converted) =>
             {
@@ -77,20 +100,16 @@ namespace FEZRepacker.Interface.Actions
                 {
                     Console.WriteLine($"  Packing raw file {path}{extension}...");
                 }
-
-                var entry = package.CreateEntry(path);
-                using var entryStream = entry.Open();
-                stream.CopyTo(entryStream);
+                tempPak.Writer.WriteFile(path, stream, extension);
             });
 
-            if(args.Length > 2)
+
+            if (args.Length > 2)
             {
-                IncludePackageIntoWriter(args[2], package);
+                IncludePackageIntoWriter(args[2], tempPak.Writer);
             }
 
-            package.SaveTo(outputPackagePath);
-
-            Console.WriteLine($"Packed {package.Entries.Count} assets into {outputPackagePath}...");
+            Console.WriteLine($"Packed {tempPak.Writer.FileCount} assets into {outputPackagePath}...");
         }
     }
 }
