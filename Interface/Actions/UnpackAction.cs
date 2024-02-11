@@ -80,25 +80,26 @@ namespace FEZRepacker.Interface.Actions
                 Directory.CreateDirectory(outputDir);
             }
 
-            using var pakStream = File.OpenRead(pakPath);
-            using var pakReader = new PakReader(pakStream);
+            var pakPackage = PakPackage.ReadFrom(pakPath);
 
-            Console.WriteLine($"Unpacking archive {pakPath} containing {pakReader.FileCount} files...");
+            Console.WriteLine($"Unpacking archive {pakPath} containing {pakPackage.Entries.Count} files...");
 
             int filesDone = 0;
-            foreach (var pakFile in pakReader.ReadFiles())
+            foreach (var pakFile in pakPackage.Entries)
             {
-                var extension = pakFile.DetectedFileExtension;
+                var extension = pakFile.FindExtension();
 
                 Console.WriteLine(
-                    $"({filesDone + 1}/{pakReader.FileCount})" +
+                    $"({filesDone + 1}/{pakPackage.Entries.Count})" +
                     $"{pakFile.Path} ({(extension.Length == 0 ? "unknown" : extension)} file," +
-                    $"size: {pakFile.Size} bytes)"
+                    $"size: {pakFile.Length} bytes)"
                 );
 
                 try
                 {
-                    using var outputBundle = UnpackFile(extension, pakFile.Data, mode);
+                    using var fileStream = pakFile.Open();
+
+                    using var outputBundle = UnpackFile(extension, fileStream, mode);
 
                     outputBundle.BundlePath = Path.Combine(outputDir, pakFile.Path);
                     Directory.CreateDirectory(Path.GetDirectoryName(outputBundle.BundlePath) ?? "");

@@ -15,15 +15,16 @@ namespace FEZRepacker.Interface.Actions
         {
             var pakPath = args[0];
 
-            using var pakReader = PakReader.FromFile(pakPath);
+            var pakPackage = PakPackage.ReadFrom(pakPath);
 
-            Console.WriteLine($"PAK package \"{pakPath}\" with {pakReader.FileCount} files.");
+            Console.WriteLine($"PAK package \"{pakPath}\" with {pakPackage.Entries.Count} files.");
             Console.WriteLine();
 
-            foreach (var item in pakReader.ReadFiles())
+            foreach (var entry in pakPackage.Entries)
             {
-                var typeText = item.DetectedFileExtension.Length == 0 ? "unknown" : item.DetectedFileExtension;
-                Console.WriteLine($"{item.Path} ({typeText} file, size: {item.Size} bytes)");
+                var extension = entry.FindExtension();
+                var typeText = extension.Length == 0 ? "unknown" : extension;
+                Console.WriteLine($"{entry.Path} ({typeText} file, size: {entry.Length} bytes)");
             }
         }
     }

@@ -18,44 +18,21 @@ namespace FEZRepacker.Interface.Actions
             new CommandLineArgument("include-pak-path", true)
         };
 
-        private class TemporaryPak : IDisposable
-        {
-            private readonly string tempPath;
-            private readonly string resultPath;
-
-            public PakWriter Writer { get; private set; }
-
-            public TemporaryPak(string finalPath)
-            {
-                tempPath = GetNewTempPackagePath();
-                resultPath = finalPath;
-
-                var tempPakStream = File.Open(tempPath, FileMode.Create);
-                Writer = new PakWriter(tempPakStream);
-            }
-
-            private static string GetNewTempPackagePath()
-            {
-                return Path.GetTempPath() + "repacker_pak_" + Guid.NewGuid().ToString() + ".pak";
-            }
-            public void Dispose()
-            {
-                Writer.Dispose();
-                File.Move(tempPath, resultPath, overwrite: true);
-            }
-        }
-
-        private void IncludePackageIntoWriter(string includePackagePath, PakWriter writer)
+        private void IncludePackageIntoWriter(string includePackagePath, PakPackage package)
         {
             try
             {
-                using var includePackage = PakReader.FromFile(includePackagePath);
-                foreach (var file in includePackage.ReadFiles())
+                var includePackage = PakPackage.ReadFrom(includePackagePath);
+                foreach (var file in includePackage.Entries)
                 {
-                    bool written = writer.WriteFile(file.Path, file.Data, filterExtension: file.DetectedFileExtension);
-                    if (!written)
+                    var sameNamedFiles = package.Entries.Where(e => e.Path == file.Path && e.FindExtension() == file.FindExtension());
+                    if (sameNamedFiles.Any())
                     {
                         Console.WriteLine($"Skipping asset from included package {file.Path}, as it's already in the output package.");
+                    }
+                    else
+                    {
+                        package.Entries.Add(file);
                     }
                 }
             }
@@ -92,7 +69,7 @@ namespace FEZRepacker.Interface.Actions
             var fileBundlesToAdd = FileBundle.BundleFilesAtPath(inputPath);
             SortBundlesToPreventInvalidOrdering(ref fileBundlesToAdd);
 
-            using var tempPak = new TemporaryPak(outputPackagePath);
+            var package = new PakPackage();
 
             ConvertToXnbAction.PerformBatchConversion(fileBundlesToAdd, (path, extension, stream, converted) =>
             {
@@ -100,16 +77,20 @@ namespace FEZRepacker.Interface.Actions
                 {
                     Console.WriteLine($"  Packing raw file {path}{extension}...");
                 }
-                tempPak.Writer.WriteFile(path, stream, extension);
+
+                var entry = package.CreateEntry(path);
+                using var entryStream = entry.Open();
+                stream.CopyTo(entryStream);
             });
 
-            
             if(args.Length > 2)
             {
-                IncludePackageIntoWriter(args[2], tempPak.Writer);
+                IncludePackageIntoWriter(args[2], package);
             }
 
-            Console.WriteLine($"Packed {tempPak.Writer.FileCount} assets into {outputPackagePath}...");
+            package.SaveTo(outputPackagePath);
+
+            Console.WriteLine($"Packed {package.Entries.Count} assets into {outputPackagePath}...");
         }
     }
 }
