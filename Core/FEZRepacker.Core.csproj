@@ -16,18 +16,11 @@
 
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 
-    <PackageId>fezrepacker</PackageId>
-
+    <PackageId>FEZRepacker.Core</PackageId>
     <Title>FEZRepacker.Core</Title>
-
     <Authors>Krzyhau</Authors>
-
     <Company>FEZModding</Company>
-
     <Description>Conversion pipeline for FEZ game assets.</Description>
-
-    <PackageProjectUrl></PackageProjectUrl>
-
     <RepositoryUrl>https://github.com/FEZModding/FEZRepacker</RepositoryUrl>
 
   </PropertyGroup>
