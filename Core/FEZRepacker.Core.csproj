@@ -12,7 +12,23 @@
     
     <Configurations>Debug;Release</Configurations>
 
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
+
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+
+    <PackageId>fezrepacker</PackageId>
+
+    <Title>FEZRepacker.Core</Title>
+
+    <Authors>Krzyhau</Authors>
+
+    <Company>FEZModding</Company>
+
+    <Description>Conversion pipeline for FEZ game assets.</Description>
+
+    <PackageProjectUrl></PackageProjectUrl>
+
+    <RepositoryUrl>https://github.com/FEZModding/FEZRepacker</RepositoryUrl>
 
   </PropertyGroup>
 
