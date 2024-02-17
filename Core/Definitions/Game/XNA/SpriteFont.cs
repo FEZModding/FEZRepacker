@@ -27,6 +27,6 @@ namespace FEZRepacker.Core.Definitions.Game.XNA
         public List<Vector3> KerningData { get; set; } = new();
 
         [XnbProperty(UseConverter = true, Optional = true)]
-        public char DefaultCharacter { get; set; }
+        public char DefaultCharacter { get; set; } = '\u0000';
     }
 }

@@ -16,6 +16,7 @@ namespace FEZRepacker.Core.Definitions.Json
 
         public int LineSpacing { get; set; }
         public float Spacing { get; set; }
+        public char DefaultCharacter { get; set; }
         public List<CharacterData> Characters { get; set; }
 
         public SpriteFontPropertiesJsonModel()
@@ -34,6 +35,7 @@ namespace FEZRepacker.Core.Definitions.Json
 
             font.LineSpacing = this.LineSpacing;
             font.Spacing = this.Spacing;
+            font.DefaultCharacter = this.DefaultCharacter;
 
             foreach (var character in this.Characters)
             {
@@ -50,6 +52,7 @@ namespace FEZRepacker.Core.Definitions.Json
         {
             LineSpacing = font.LineSpacing;
             Spacing = font.Spacing;
+            DefaultCharacter = font.DefaultCharacter;
 
             for (int i = 0; i < font.Characters.Count; i++)
             {
