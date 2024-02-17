@@ -100,7 +100,7 @@ namespace FEZRepacker.Core.Definitions.Json
                 }
                 else
                 {
-                    level.Triles[trileModel.Emplacement].OverlappedTriples.Add(trile);
+                    level.Triles[trileModel.Emplacement].OverlappedTriles.Add(trile);
                 }
             }
 
@@ -151,7 +151,7 @@ namespace FEZRepacker.Core.Definitions.Json
                 var pos = trileRecord.Key;
                 var instance = trileRecord.Value;
                 Triles.Add(new TrileInstanceJsonModel(pos, instance));
-                foreach (var overlapping in instance.OverlappedTriples)
+                foreach (var overlapping in instance.OverlappedTriles)
                 {
                     Triles.Add(new TrileInstanceJsonModel(pos, overlapping));
                 }

@@ -19,6 +19,6 @@ namespace FEZRepacker.Core.Definitions.Game.Level
         public TrileInstanceActorSettings? ActorSettings { get; set; } = null;
 
         [XnbProperty(UseConverter = true)]
-        public List<TrileInstance> OverlappedTriples { get; set; } = new();
+        public List<TrileInstance> OverlappedTriles { get; set; } = new();
     }
 }
