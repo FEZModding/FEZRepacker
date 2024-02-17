@@ -32,9 +32,9 @@ Here's a list of all 13 asset types handled by FEZ and file types Repacker conve
 |Effect|Binary XNA effect file container|Binary FNA effect file|
 |SoundEffect|WAV sound effect container|WAV sound file|
 
-You can read about conversion formats in detail [here](https://github.com/Krzyhau/FEZRepacker/wiki/Converted-content-formats).
+You can read about conversion formats in detail [here](https://fezmodding.github.io/wiki/content/content_conversion).
 
-If you want to learn more about the technical process of reading PAK packages and XNB files, read [this page on the wiki.](https://github.com/Krzyhau/FEZRepacker/wiki/FEZ-assets-data-structure).
+If you want to learn more about the technical process of reading PAK packages and XNB files, read [this page on the wiki.](https://fezmodding.github.io/wiki/game/content_formats).
 
 ## Usage
 
@@ -73,7 +73,7 @@ Attempts to convert given input (this can be a path to a single file or an entir
 Here are some examples how you can use these commands:
 
 - To unpack every game asset from the game into `Unpacked` directory (assuming your working directory is `Content`), use:
-`FEZRepacker.exe --unpack-fez-content * Unpacked`
+`FEZRepacker.exe --unpack-fez-content . Unpacked`
 - To unpack `Other.pak` into a directory called `Other unpacked`, use:
 `FEZRepacker.exe --unpack Other.pak "Other unpacked"`
 - To repack files contained in `Other unpacked` directory into a package named `Other.pak` while also including the contents of `Other_old.pak`, use:
@@ -83,7 +83,7 @@ Here are some examples how you can use these commands:
 
 ## Game modding remarks
 
-It is recommended to use mod loader to swap original assets, but if you're trying to do it manually by recompiling them into one of the archives and your changes didn't affect the game, here's a couple of things to keep in mind:
+It is recommended to use mod loader like [HAT](https://github.com/FEZModding/HAT) to swap original assets, but if you're trying to do it manually by recompiling them into one of the archives and your changes didn't affect the game, here's a couple of things to keep in mind:
 
 - directory tree created in unpacking process **does matter** - putting modified files in the main directory after changing them doesn't give them their original location and name in PAK file after repacking, preventing the game from finding the new asset.
 - Packages are loaded in this order: `Essentials.pak`, `Updates.pak` and `Other.pak`. If you're trying to override an existing file, it has to be in the same package or in a package that's loaded sooner.
@@ -95,7 +95,7 @@ Most of the work with building is handled by MSBuild.
 
 The solution is separated into two projects: `Core` and `Interface`.
 
-`Core` contains nearly all of the logic, and is meant to be a stand-alone binary that can be used by other software (most notably, HAT mod loader). In order to allow easy distribution, all of its dependencies are automatically merged using ILRepack on build process when `ReleaseCore` configuration is used.
+`Core` contains nearly all of the logic, and is meant to be a stand-alone binary that can be used by other software (most notably, HAT mod loader).
 
 `Interface` contains console line interface layer and can be used as a reference for interacting with `Core` library. It is distributed as a self-contained executable using the following command:
 `dotnet publish -c Release -r win-x86 --self-contained`
