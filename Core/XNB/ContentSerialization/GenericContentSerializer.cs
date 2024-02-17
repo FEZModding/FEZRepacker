@@ -58,7 +58,7 @@ namespace FEZRepacker.Core.XNB.ContentSerialization
 
         public override object Deserialize(XnbContentReader reader)
         {
-            T content = _typeBuilder();
+            object content = _typeBuilder();
 
             foreach (var propertyMapRecord in _propertyMap)
             {
