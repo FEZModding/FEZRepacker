@@ -41,7 +41,7 @@
                     if (record.Extension == extension) return record.Data;
                 }
             }
-            return null;
+            return default!;
         }
 
         public HashSet<string> GetSubExtensions()

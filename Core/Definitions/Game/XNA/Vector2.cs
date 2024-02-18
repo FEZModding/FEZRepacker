@@ -22,5 +22,16 @@
             this.X == other.X && this.Y == other.Y;
         public static bool operator ==(Vector2 left, Vector2 right) => left.Equals(right);
         public static bool operator !=(Vector2 left, Vector2 right) => !left.Equals(right);
+
+        public override int GetHashCode()
+        {
+            return this.X.GetHashCode() ^ this.Y.GetHashCode() << 2;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Vector2)) return false;
+            return Equals((Vector2)obj);
+        }
     }
 }

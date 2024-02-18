@@ -16,6 +16,13 @@ namespace FEZRepacker.Core.XNB.ContentSerialization
     internal class GenericContentSerializer<T> : XnbContentSerializer<T>
     {
         private XnbAssemblyQualifier _name;
+
+        private readonly Func<T> _typeBuilder;
+        private Dictionary<PropertyInfo, XnbPropertyAttribute> _propertyMap = new();
+        private Dictionary<PropertyInfo, Type> _underlyingTypeMap = new();
+
+        public override XnbAssemblyQualifier Name => _name;
+
         public GenericContentSerializer() : base()
         {
             var qualifier = XnbAssemblyQualifier.GetFromXnbReaderType(typeof(T));
@@ -23,11 +30,6 @@ namespace FEZRepacker.Core.XNB.ContentSerialization
             PopulateReflectionMaps();
             _typeBuilder = CreateContainedTypeConstructor();
         }
-        public override XnbAssemblyQualifier Name => _name;
-
-        private Dictionary<PropertyInfo, XnbPropertyAttribute> _propertyMap = new();
-        private Dictionary<PropertyInfo, Type> _underlyingTypeMap = new();
-
 
         private void PopulateReflectionMaps()
         {
@@ -45,8 +47,6 @@ namespace FEZRepacker.Core.XNB.ContentSerialization
             );
         }
 
-
-        private Func<T> _typeBuilder;
         private Func<T> CreateContainedTypeConstructor()
         {
             var t = typeof(T);
@@ -55,10 +55,9 @@ namespace FEZRepacker.Core.XNB.ContentSerialization
             return Expression.Lambda<Func<T>>(block).Compile();
         }
 
-
         public override object Deserialize(XnbContentReader reader)
         {
-            object content = _typeBuilder();
+            object content = _typeBuilder()!;
 
             foreach (var propertyMapRecord in _propertyMap)
             {

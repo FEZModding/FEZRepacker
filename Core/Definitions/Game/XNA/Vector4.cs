@@ -30,5 +30,16 @@
             this.X == other.X && this.Y == other.Y && this.Z == other.Z && this.W == other.W;
         public static bool operator ==(Vector4 left, Vector4 right) => left.Equals(right);
         public static bool operator !=(Vector4 left, Vector4 right) => !left.Equals(right);
+
+        public override int GetHashCode()
+        {
+            return this.X.GetHashCode() ^ this.Y.GetHashCode() << 2 ^ this.Z.GetHashCode() >> 2 ^ this.Z.GetHashCode() << 4;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Vector4)) return false;
+            return Equals((Vector4)obj);
+        }
     }
 }

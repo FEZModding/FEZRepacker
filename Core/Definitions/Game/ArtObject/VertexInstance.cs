@@ -68,5 +68,10 @@ namespace FEZRepacker.Core.Definitions.Game.ArtObject
                 && other.NormalByte == this.NormalByte
                 && other.TextureCoordinate == this.TextureCoordinate;
         }
+
+        public override int GetHashCode()
+        {
+            return Position.GetHashCode() ^ NormalByte.GetHashCode() ^ TextureCoordinate.GetHashCode();
+        }
     }
 }

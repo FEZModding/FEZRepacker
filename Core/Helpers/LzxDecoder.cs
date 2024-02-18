@@ -52,10 +52,28 @@ namespace Microsoft.Xna.Framework.Content
 
     class LzxDecoder
     {
-        public static uint[] position_base = null;
-        public static byte[] extra_bits = null;
+        public static uint[] position_base;
+        public static byte[] extra_bits;
 
         private LzxState m_state;
+
+        static LzxDecoder()
+        {
+            /* initialize static tables */
+            extra_bits = new byte[52];
+            for (int i = 0, j = 0; i <= 50; i += 2)
+            {
+                extra_bits[i] = extra_bits[i + 1] = (byte)j;
+                if ((i != 0) && (j < 17)) j++;
+            }
+
+            position_base = new uint[51];
+            for (int i = 0, j = 0; i <= 50; i++)
+            {
+                position_base[i] = (uint)j;
+                j += 1 << extra_bits[i];
+            }
+        }
 
         public LzxDecoder(int window)
         {
@@ -73,26 +91,6 @@ namespace Microsoft.Xna.Framework.Content
             m_state.actual_size = wndsize;
             m_state.window_size = wndsize;
             m_state.window_posn = 0;
-
-            /* initialize static tables */
-            if (extra_bits == null)
-            {
-                extra_bits = new byte[52];
-                for (int i = 0, j = 0; i <= 50; i += 2)
-                {
-                    extra_bits[i] = extra_bits[i + 1] = (byte)j;
-                    if ((i != 0) && (j < 17)) j++;
-                }
-            }
-            if (position_base == null)
-            {
-                position_base = new uint[51];
-                for (int i = 0, j = 0; i <= 50; i++)
-                {
-                    position_base[i] = (uint)j;
-                    j += 1 << extra_bits[i];
-                }
-            }
 
             /* calculate required position slots */
             if (window == 20) posn_slots = 42;

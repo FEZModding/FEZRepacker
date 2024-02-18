@@ -37,5 +37,16 @@
             this.X == other.X && this.Y == other.Y && this.Z == other.Z && this.W == other.W;
         public static bool operator ==(Quaternion left, Quaternion right) => left.Equals(right);
         public static bool operator !=(Quaternion left, Quaternion right) => !left.Equals(right);
+
+        public override int GetHashCode()
+        {
+            return this.X.GetHashCode() + this.Y.GetHashCode() + this.Z.GetHashCode() + this.W.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Quaternion)) return false;
+            return Equals((Quaternion)obj);
+        }
     }
 }
