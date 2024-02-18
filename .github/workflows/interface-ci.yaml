@@ -36,7 +36,7 @@ jobs:
         with:
           name: FEZRepacker.Interface.Windows
           path: |
-            Interface/bin/Release/net6.0/win-x86/publish/FEZrepacker.exe
+            Interface/bin/Release/net6.0/win-x86/publish/FEZRepacker.Interface.exe
             Interface/bin/Release/net6.0/win-x86/publish/FEZRepacker.Interface.pdb
             Interface/bin/Release/net6.0/win-x86/publish/FEZRepacker.Core.pdb
           if-no-files-found: error
@@ -46,7 +46,7 @@ jobs:
         with:
           name: FEZRepacker.Interface.Linux
           path: |
-            Interface/bin/Release/net6.0/linux-arm64/publish/FEZrepacker
+            Interface/bin/Release/net6.0/linux-arm64/publish/FEZRepacker.Interface
             Interface/bin/Release/net6.0/linux-arm64/publish/FEZRepacker.Interface.pdb
             Interface/bin/Release/net6.0/linux-arm64/publish/FEZRepacker.Core.pdb
           if-no-files-found: error
