@@ -100,8 +100,6 @@ namespace FEZRepacker.Core.XNB.ContentSerialization
 
         public override void Serialize(object data, XnbContentWriter writer)
         {
-            T content = (T)data;
-
             foreach (var propertyMapRecord in _propertyMap)
             {
                 var property = propertyMapRecord.Key;
@@ -109,7 +107,7 @@ namespace FEZRepacker.Core.XNB.ContentSerialization
 
                 Type propertyType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
 
-                object? writeValue = property.GetValue(content);
+                object? writeValue = property.GetValue(data);
 
                 if (attribute.Optional)
                 {
