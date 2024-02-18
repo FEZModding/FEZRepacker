@@ -26,9 +26,9 @@ namespace FEZRepacker.Core.Definitions.Game.Level
 
         public TrileEmplacement(Vector3 vec)
         {
-            X = (int)Math.Round(vec.X);
-            Y = (int)Math.Round(vec.Y);
-            Z = (int)Math.Round(vec.Z);
+            X = EmplacementPositionRound(vec.X);
+            Y = EmplacementPositionRound(vec.Y);
+            Z = EmplacementPositionRound(vec.Z);
         }
 
         public override bool Equals(object? obj)
@@ -68,6 +68,17 @@ namespace FEZRepacker.Core.Definitions.Game.Level
                 }
             }
             return num;
+        }
+
+        // Making sure numbers are rounded EXACTLY like in the game,
+        // otheriwse the result might differ in some edge cases.
+        private static int EmplacementPositionRound(double value)
+        {
+            if (value < 0.0)
+            {
+                return (int)(value - 0.5);
+            }
+            return (int)(value + 0.5);
         }
     }
 }

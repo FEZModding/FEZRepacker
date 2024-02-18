@@ -65,19 +65,7 @@ namespace FEZRepacker.Core.Definitions.Json
             return trileGroup;
         }
 
-        public TrileGroup Deserialize(Level level)
-        {
-            var trileGroup = Deserialize();
-
-            trileGroup.Triles = Triles
-                .Where(x => level.Triles.ContainsKey(x))
-                .Select(x => level.Triles[x])
-                .Where(x => x != null).ToList();
-
-            return trileGroup;
-        }
-
-        public void SerializeFrom(TrileGroup trileGroup)
+        private void CopyBasicPropertiesOverFrom(TrileGroup trileGroup)
         {
             Path = trileGroup.Path!;
             Heavy = trileGroup.Heavy;
@@ -94,6 +82,11 @@ namespace FEZRepacker.Core.Definitions.Json
             FallOnRotate = trileGroup.FallOnRotate;
             SpinOffset = trileGroup.SpinOffset;
             AssociatedSound = trileGroup.AssociatedSound;
+        }
+
+        public void SerializeFrom(TrileGroup trileGroup)
+        {
+            CopyBasicPropertiesOverFrom(trileGroup);
 
             Triles = trileGroup.Triles.Select(x => new TrileEmplacement(x.Position)).ToList();
         }
