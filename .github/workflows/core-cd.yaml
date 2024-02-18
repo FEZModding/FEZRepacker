@@ -1,0 +1,29 @@
+name: Core CD
+
+on:
+  push:
+    tags: '*'
+
+jobs:
+  release-nuget:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '6.x'
+
+      - name: Fetch version
+        run: echo "VERSION=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
+
+      - name: Restore packages
+        run: dotnet restore Core/FEZRepacker.Core.csproj
+
+      - name: Build
+        run: dotnet build Core/FEZRepacker.Core.csproj -c Release /p:Version=${VERSION}
+
+      - name: Pack
+        run: dotnet pack Core/FEZRepacker.Core.csproj -c Release /p:Version=${VERSION}  --no-build --output .
+
+      - name: Push
+        run: dotnet nuget push FEZRepacker.Core.${VERSION}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
