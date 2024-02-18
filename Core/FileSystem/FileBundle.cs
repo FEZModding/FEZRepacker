@@ -44,11 +44,21 @@
             return default!;
         }
 
+        public Stream RequireData(params string[] validExtensions)
+        {
+            var data = GetData(validExtensions);
+            if(data == null)
+            {
+                var fullExtensions = validExtensions.Select(ext => $"\"{MainExtension}{ext}\"").ToArray();
+                var extensionsString = string.Join(" or ", fullExtensions);
+                throw new FileNotFoundException($"Bundle missing required data: {extensionsString}");
+            }
+            return data;
+        }
+
         public HashSet<string> GetSubExtensions()
         {
-            var extSet = new HashSet<string>();
-            foreach (var item in Files) extSet.Add(item.Extension);
-            return extSet;
+            return new HashSet<string>(Files.Select(file => file.Extension));
         }
 
         public void Dispose()

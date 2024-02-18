@@ -29,7 +29,7 @@ namespace FEZRepacker.Core.Conversion.Formats
         {
             var artObject = ConfiguredJsonSerializer.DeserializeFromFileBundle<ArtObject>(bundle);
 
-            AppendGeometryStream(ref artObject, bundle.GetData(".obj"));
+            AppendGeometryStream(ref artObject, bundle.RequireData(".obj"));
             LoadCubemap(ref artObject, bundle.GetData(".png"), bundle.GetData(".apng"));
 
 

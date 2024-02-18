@@ -35,7 +35,7 @@ namespace FEZRepacker.Core.Helpers.Json
 
         public static T DeserializeFromFileBundle<T>(FileBundle bundle)
         {
-            using var inReader = new BinaryReader(bundle.GetData(".json", ""), Encoding.UTF8, true);
+            using var inReader = new BinaryReader(bundle.RequireData(".json", ""), Encoding.UTF8, true);
             var json = new string(inReader.ReadChars((int)inReader.BaseStream.Length));
 
             try

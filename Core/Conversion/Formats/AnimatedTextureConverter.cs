@@ -31,7 +31,7 @@ namespace FEZRepacker.Core.Conversion.Formats
 
         public override AnimatedTexture DeconvertTyped(FileBundle bundle)
         {
-            using var animation = Image.Load<Rgba32>(bundle.GetData(""));
+            using var animation = Image.Load<Rgba32>(bundle.RequireData(""));
             return AnimationImageToAnimatedTexture(animation);
         }
 

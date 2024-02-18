@@ -31,7 +31,7 @@ namespace FEZRepacker.Core.Conversion.Formats
         {
             var trileSet = ConfiguredJsonSerializer.DeserializeFromFileBundle<TrileSet>(bundle);
 
-            AppendGeometryStream(ref trileSet, bundle.GetData(".obj"));
+            AppendGeometryStream(ref trileSet, bundle.RequireData(".obj"));
             LoadCubemap(ref trileSet, bundle.GetData(".png"), bundle.GetData(".apng"));
 
             return trileSet;

@@ -21,7 +21,7 @@ namespace FEZRepacker.Core.Conversion.Formats
 
         public override Effect DeconvertTyped(FileBundle bundle)
         {
-            var inReader = new BinaryReader(bundle.GetData(""));
+            var inReader = new BinaryReader(bundle.RequireData(""));
             return new Effect()
             {
                 Data = inReader.ReadBytes(inReader.ReadInt32())

@@ -38,7 +38,7 @@ namespace FEZRepacker.Core.Conversion.Formats
         {
             var soundEffect = new SoundEffect();
 
-            using var inReader = new BinaryReader(bundle.GetData(""), Encoding.UTF8, true);
+            using var inReader = new BinaryReader(bundle.RequireData(""), Encoding.UTF8, true);
 
             var riffHeader = new string(inReader.ReadChars(4));
             var fileSize = inReader.ReadInt32();

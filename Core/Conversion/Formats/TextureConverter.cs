@@ -21,7 +21,7 @@ namespace FEZRepacker.Core.Conversion.Formats
 
         public override Texture2D DeconvertTyped(FileBundle bundle)
         {
-            using var importedImage = Image.Load<Rgba32>(bundle.GetData(""));
+            using var importedImage = Image.Load<Rgba32>(bundle.RequireData(""));
             return TexturesUtil.ImageToTexture2D(importedImage);
         }
     }
