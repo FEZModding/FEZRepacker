@@ -19,7 +19,7 @@ Here's a list of all 13 asset types handled by FEZ and file types Repacker conve
 |XNB content type name|Main purpose|Conversion format|
 |-|-|-|
 |Texture2D|Sprites and textures|PNG images|
-|AnimatedTexture|Animated textures|WebP animation|
+|AnimatedTexture|Animated textures|GIF animation|
 |ArtObject|3D models of art objects|Custom `.fezao` file bundle|
 |TrileSet|Texture and models of level blocks (triles)|Custom `.fezts` file bundle|
 |SpriteFont|Bitmap font|Custon `.fezfont` file bundle|
