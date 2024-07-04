@@ -4,12 +4,12 @@
     <OutputType>Library</OutputType>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
-    
+
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    
+
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-    
+
     <Configurations>Debug;Release</Configurations>
 
     <Version>1.1.1</Version>
