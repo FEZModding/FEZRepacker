@@ -20,7 +20,7 @@ namespace FEZRepacker.Tests
 
             foreach (var item in pakReader.ReadFiles())
             {
-                repackWriter.WriteFile(item.Path, item.Data);
+                repackWriter.WriteFile(item.Path, new MemoryStream(item.Payload));
             }
 
             repackWriter.Dispose();
