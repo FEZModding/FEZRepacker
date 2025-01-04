@@ -5,7 +5,7 @@ VisualStudioVersion = 17.1.32407.343
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FEZRepacker.Core", "Core\FEZRepacker.Core.csproj", "{B0186A91-03B6-4E71-8A4A-547CCAAA1300}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FEZRepacker.Interface", "Interface\FEZRepacker.Interface.csproj", "{390DE9FA-4CE4-42BA-871B-064A3C5027B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FEZRepacker.CLI", "CLI\FEZRepacker.CLI.csproj", "{390DE9FA-4CE4-42BA-871B-064A3C5027B6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{14BA18E6-0546-4326-B548-B44F64C2C627}"
 	ProjectSection(SolutionItems) = preProject
