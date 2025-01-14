@@ -1,0 +1,67 @@
+name: Executables CI
+
+on:
+  push:
+    branches: '**'
+    tags-ignore: '**'
+    paths-ignore:
+      - '.github/*'
+      - '.github/workflows/**.yml'
+      - '.gitattributes'
+      - '.gitignore'
+      - 'docs/**'
+      - '**.md'
+      - 'LICENSE'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '6.x'
+
+      - name: Restore packages
+        run: |
+          dotnet restore CLI/FEZRepacker.CLI.csproj
+          dotnet restore GUI/FEZRepacker.GUI.csproj
+
+      - name: Build for Windows
+        run: |
+          dotnet publish CLI/FEZRepacker.CLI.csproj -c Release -r win-x86 --self-contained
+          dotnet publish GUI/FEZRepacker.GUI.csproj -c Release -r win-x86 --self-contained
+
+      - name: Build for Linux
+        run: |
+          dotnet publish CLI/FEZRepacker.CLI.csproj -c Release -r linux-arm64 --self-contained
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: FEZRepacker.CLI.Windows
+          path: |
+            CLI/bin/Release/net6.0/win-x86/publish/FEZRepacker.Core.pdb
+            CLI/bin/Release/net6.0/win-x86/publish/FEZRepacker.CLI.exe
+            CLI/bin/Release/net6.0/win-x86/publish/FEZRepacker.CLI.pdb
+          if-no-files-found: error
+
+      - name: Upload Windows GUI artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: FEZRepacker.GUI.Windows
+          path: |
+            GUI/bin/Release/net6.0/win-x86/publish/FEZRepacker.Core.pdb
+            GUI/bin/Release/net6.0/win-x86/publish/FEZRepacker.GUI.exe
+            GUI/bin/Release/net6.0/win-x86/publish/FEZRepacker.GUI.pdb
+          if-no-files-found: error
+
+      - name: Upload Linux artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: FEZRepacker.CLI.Linux
+          path: |
+            CLI/bin/Release/net6.0/linux-arm64/publish/FEZRepacker.Core.pdb
+            CLI/bin/Release/net6.0/linux-arm64/publish/FEZRepacker.CLI
+            CLI/bin/Release/net6.0/linux-arm64/publish/FEZRepacker.CLI.pdb
+          if-no-files-found: error

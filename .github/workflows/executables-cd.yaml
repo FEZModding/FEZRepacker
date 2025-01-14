@@ -1,0 +1,108 @@
+name: Executables CD
+
+on:
+  push:
+    tags: '*'
+
+jobs:
+  build-executables:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '6.x'
+
+      - name: Restore packages
+        run: |
+          dotnet restore CLI/FEZRepacker.CLI.csproj
+          dotnet restore GUI/FEZRepacker.GUI.csproj
+
+      - name: Build for Windows
+        run: |
+          dotnet publish CLI/FEZRepacker.CLI.csproj -c Release -r win-x86 --self-contained
+          dotnet publish CLI/FEZRepacker.GUI.csproj -c Release -r win-x86 --self-contained
+
+      - name: Build for Linux
+        run: |
+          dotnet publish CLI/FEZRepacker.CLI.csproj -c Release -r linux-arm64 --self-contained
+          dotnet publish CLI/FEZRepacker.GUI.csproj -c Release -r linux-arm64 --self-contained
+
+      - name: Upload Windows CLI artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: FEZRepacker.CLI.Windows
+          path: CLI/bin/Release/net6.0/win-x86/publish/FEZRepacker.CLI.exe
+          if-no-files-found: error
+
+      - name: Upload Linux CLI artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: FEZRepacker.CLI.Linux
+          path: CLI/bin/Release/net6.0/linux-arm64/publish/FEZRepacker.CLI
+          if-no-files-found: error
+      
+      - name: Upload Windows GUI artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: FEZRepacker.GUI.Windows
+          path: GUI/bin/Release/net6.0/win-x86/publish/FEZRepacker.GUI.exe
+          if-no-files-found: error
+
+      - name: Upload Linux GUI artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: FEZRepacker.GUI.Linux
+          path: GUI/bin/Release/net6.0/linux-arm64/publish/FEZRepacker.GUI
+          if-no-files-found: error
+  release:
+    if: github.repository == 'FEZModding/FEZRepacker'
+    needs: [build-executables]
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Download Linux CLI Build
+        uses: actions/download-artifact@v4
+        with:
+          name: FEZRepacker.CLI.Linux
+      - name: Rename Linux CLI Build
+        run: mv FEZRepacker.CLI FEZRepacker
+
+      - name: Download Windows CLI Build
+        uses: actions/download-artifact@v4
+        with:
+          name: FEZRepacker.CLI.Windows
+      - name: Rename Windows CLI Build
+        run: mv FEZRepacker.CLI.exe FEZRepacker.exe
+
+      - name: Download Windows GUI Build
+        uses: actions/download-artifact@v4
+        with:
+          name: FEZRepacker.GUI.Windows
+      - name: Rename Windows GUI Build
+        run: mv FEZRepacker.GUI.exe FEZRepacker.GUI.exe
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          body: |
+            ## Usage
+
+            Download one of the following:
+
+            - `FEZRepacker.GUI.exe` - Windows standalone graphical user interface
+            - `FEZRepacker.exe` - Windows standalone command-line interface
+            - `FEZRepacker` - Linux standalone command-line interface
+
+            ...and consult the README.md for usage details.
+
+            Additionally, Core library can be accessed as a NuGet package: https://www.nuget.org/packages/FEZRepacker.Core
+
+            ## Changelog
+
+            TODO
+          files: |
+            FEZRepacker.GUI.exe
+            FEZRepacker.exe
+            FEZRepacker
+          fail_on_unmatched_files: true
