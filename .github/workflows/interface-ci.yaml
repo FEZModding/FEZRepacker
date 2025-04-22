@@ -2,8 +2,10 @@ name: Interface CI
 
 on:
   push:
-    branches: '**'
-    tags-ignore: '**'
+    branches: 
+    - '**'
+    tags-ignore: 
+    - '**'
     paths-ignore:
       - '.github/*'
       - '.github/workflows/**.yml'
@@ -20,7 +22,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '6.x'
+          dotnet-version: '9.x'
 
       - name: Restore packages
         run: dotnet restore Interface/FEZRepacker.Interface.csproj

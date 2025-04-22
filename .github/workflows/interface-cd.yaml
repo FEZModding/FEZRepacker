@@ -2,7 +2,8 @@ name: Interface CD
 
 on:
   push:
-    tags: '*'
+    tags:
+    - '*'
 
 jobs:
   build-interface:
@@ -11,7 +12,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '6.x'
+          dotnet-version: '9.x'
 
       - name: Restore packages
         run: dotnet restore Interface/FEZRepacker.Interface.csproj

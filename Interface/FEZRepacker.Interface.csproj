@@ -4,6 +4,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
     <AssemblyName>$(SolutionName)</AssemblyName>
+    <LangVersion>latest</LangVersion>
 
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
