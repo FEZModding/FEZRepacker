@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Text;
 
 using FEZRepacker.Core.Definitions.Game.ArtObject;
 using FEZRepacker.Core.Definitions.Game.Graphics;
@@ -123,22 +124,22 @@ namespace FEZRepacker.Core.Helpers
 
                 else if(tokens[0] == "v" && tokens.Length >= 4)
                 {
-                    var x = float.Parse(tokens[1]);
-                    var y = float.Parse(tokens[2]);
-                    var z = float.Parse(tokens[3]);
+                    var x = float.Parse(tokens[1], CultureInfo.InvariantCulture);
+                    var y = float.Parse(tokens[2], CultureInfo.InvariantCulture);
+                    var z = float.Parse(tokens[3], CultureInfo.InvariantCulture);
                     vertices.Add(new Vector3(x, y, z));
                 }
                 else if(tokens[0] == "vt" && tokens.Length >= 3)
                 {
-                    var x = float.Parse(tokens[1]);
-                    var y = float.Parse(tokens[2]);
+                    var x = float.Parse(tokens[1], CultureInfo.InvariantCulture);
+                    var y = float.Parse(tokens[2], CultureInfo.InvariantCulture);
                     uvs.Add(new Vector2(x, 1.0f - y)); // y is inverted
                 }
                 else if(tokens[0] == "vn" && tokens.Length >= 4)
                 {
-                    var x = float.Parse(tokens[1]);
-                    var y = float.Parse(tokens[2]);
-                    var z = float.Parse(tokens[3]);
+                    var x = float.Parse(tokens[1], CultureInfo.InvariantCulture);
+                    var y = float.Parse(tokens[2], CultureInfo.InvariantCulture);
+                    var z = float.Parse(tokens[3], CultureInfo.InvariantCulture);
                     normals.Add(new Vector3(x, y, z));
                 }
 

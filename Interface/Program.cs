@@ -14,9 +14,6 @@ namespace FEZRepacker.Interface
             // showoff
             Console.WriteLine($"=== FEZRepacker {version} by Krzyhau & FEZModding Team ===\n");
 
-            // keep number decimals consistent
-            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-GB");
-
             if (args.Length > 0)
             {
                 CommandLineInterface.ParseCommandLine(args);
