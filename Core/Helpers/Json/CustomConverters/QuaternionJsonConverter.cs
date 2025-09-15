@@ -36,7 +36,13 @@ namespace FEZRepacker.Core.Helpers.Json.CustomConverters
             Quaternion quaternion,
             JsonSerializerOptions options)
         {
-            writer.WriteRawValue($"[{quaternion.X}, {quaternion.Y}, {quaternion.Z}, {quaternion.W}]");
+            // Preserve decimal places in JSON number by converting float value to decimal
+            writer.WriteStartArray();
+            writer.WriteNumberValue((decimal)quaternion.X);
+            writer.WriteNumberValue((decimal)quaternion.Y);
+            writer.WriteNumberValue((decimal)quaternion.Z);
+            writer.WriteNumberValue((decimal)quaternion.W);
+            writer.WriteEndArray();
         }
     }
 }
