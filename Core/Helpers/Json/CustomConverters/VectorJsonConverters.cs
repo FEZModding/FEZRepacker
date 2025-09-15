@@ -33,7 +33,12 @@ namespace FEZRepacker.Core.Helpers.Json.CustomConverters
             Vector3 vector,
             JsonSerializerOptions options)
         {
-            writer.WriteRawValue($"[{vector.X}, {vector.Y}, {vector.Z}]");
+            // Preserve decimal places in JSON number by converting float value to decimal
+            writer.WriteStartArray();
+            writer.WriteNumberValue((decimal)vector.X);
+            writer.WriteNumberValue((decimal)vector.Y);
+            writer.WriteNumberValue((decimal)vector.Z);
+            writer.WriteEndArray();
         }
     }
 
@@ -63,7 +68,11 @@ namespace FEZRepacker.Core.Helpers.Json.CustomConverters
             Vector2 vector,
             JsonSerializerOptions options)
         {
-            writer.WriteRawValue($"[{vector.X}, {vector.Y}]");
+            // Preserve decimal places in JSON number by converting float value to decimal
+            writer.WriteStartArray();
+            writer.WriteNumberValue((decimal)vector.X);
+            writer.WriteNumberValue((decimal)vector.Y);
+            writer.WriteEndArray();
         }
     }
 }
