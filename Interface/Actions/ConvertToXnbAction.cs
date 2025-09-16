@@ -13,6 +13,10 @@ namespace FEZRepacker.Interface.Actions
         
         private const string XnbOutput = "xnb-output";
         
+        private const string UseLegacyAo = "use-legacy-ao";
+        
+        private const string UseLegacyTs =  "use-legacy-ts";
+        
         public string Name => "--convert-to-xnb";
 
         public string[] Aliases => new[] { "-X" };
@@ -24,12 +28,14 @@ namespace FEZRepacker.Interface.Actions
 
         public CommandLineArgument[] Arguments => new[] {
             new CommandLineArgument(FileInput),
-            new CommandLineArgument(XnbOutput, ArgumentType.OptionalPositional)
+            new CommandLineArgument(XnbOutput, ArgumentType.OptionalPositional),
+            new CommandLineArgument(UseLegacyAo, ArgumentType.Flag),
+            new CommandLineArgument(UseLegacyTs, ArgumentType.Flag)
         };
 
         public delegate void ConversionFunc(string path, string extension, Stream stream, bool converted);
         
-        public static void PerformBatchConversion(List<FileBundle> fileBundles, ConversionFunc processFileFunc)
+        public static void PerformBatchConversion(List<FileBundle> fileBundles, ConversionFunc processFileFunc, FormatConverterSettings settings)
         {
             Console.WriteLine($"Converting {fileBundles.Count()} assets...");
             var filesDone = 0;
@@ -39,7 +45,7 @@ namespace FEZRepacker.Interface.Actions
 
                 try
                 {
-                    object convertedData = FormatConversion.Deconvert(fileBundle)!;
+                    object convertedData = FormatConversion.Deconvert(fileBundle, settings)!;
                     var data = XnbSerializer.Serialize(convertedData);
 
                     Console.WriteLine($"  Format {fileBundle.MainExtension} deconverted into {convertedData.GetType().Name}.");
@@ -75,6 +81,11 @@ namespace FEZRepacker.Interface.Actions
             var fileBundles = FileBundle.BundleFilesAtPath(inputPath);
             Console.WriteLine($"Found {fileBundles.Count()} file bundles.");
 
+            var settings = new FormatConverterSettings
+            {
+                UseLegacyArtObjectBundle = args.ContainsKey(UseLegacyAo),
+                UseLegacyTrileSetBundle = args.ContainsKey(UseLegacyTs)
+            };
 
             PerformBatchConversion(fileBundles, (path, extension, stream, converted) =>
             {
@@ -86,7 +97,7 @@ namespace FEZRepacker.Interface.Actions
 
                 using var assetFile = File.Create(assetOutputFullPath);
                 stream.CopyTo(assetFile);
-            });
+            }, settings);
         }
     }
 }

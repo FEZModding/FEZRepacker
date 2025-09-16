@@ -30,6 +30,9 @@
             this.X == other.X && this.Y == other.Y && this.Z == other.Z && this.W == other.W;
         public static bool operator ==(Vector4 left, Vector4 right) => left.Equals(right);
         public static bool operator !=(Vector4 left, Vector4 right) => !left.Equals(right);
+        
+        public System.Numerics.Vector4 ToNumeric() => new(this.X, this.Y, this.Z, this.Z);
+        public static Vector4 FromNumeric(System.Numerics.Vector4 numeric) => new(numeric.X, numeric.Y, numeric.Z, numeric.W);
 
         public override int GetHashCode()
         {

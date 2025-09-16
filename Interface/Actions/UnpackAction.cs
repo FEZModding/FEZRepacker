@@ -11,6 +11,8 @@ namespace FEZRepacker.Interface.Actions
     {
         private const string PakPath = "pak-path";
         private const string DestinationFolder = "destination-folder";
+        private const string UseLegacyAo = "use-legacy-ao";
+        private const string UseLegacyTs = "use-legacy-ts";
         
         public enum UnpackingMode
         {
@@ -25,17 +27,24 @@ namespace FEZRepacker.Interface.Actions
 
         public CommandLineArgument[] Arguments => new[] {
             new CommandLineArgument(PakPath),
-            new CommandLineArgument(DestinationFolder)
+            new CommandLineArgument(DestinationFolder),
+            new CommandLineArgument(UseLegacyAo, ArgumentType.Flag),
+            new CommandLineArgument(UseLegacyTs, ArgumentType.Flag)
         };
 
         public void Execute(Dictionary<string, string> args)
         {
             var pakPath = args[PakPath];
             var outputDir = args[DestinationFolder];
-            UnpackPackage(pakPath, outputDir, Mode);
+            var settings = new FormatConverterSettings
+            {
+                UseLegacyArtObjectBundle = args.ContainsKey(UseLegacyAo),
+                UseLegacyTrileSetBundle = args.ContainsKey(UseLegacyTs)
+            };
+            UnpackPackage(pakPath, outputDir, Mode, settings);
         }
 
-        public static FileBundle UnpackFile(string extension, Stream data, UnpackingMode mode)
+        public static FileBundle UnpackFile(string extension, Stream data, UnpackingMode mode, FormatConverterSettings settings)
         {
             if (extension != ".xnb" || mode == UnpackingMode.Raw)
             {
@@ -52,7 +61,7 @@ namespace FEZRepacker.Interface.Actions
                 try
                 {
                     var outputData = XnbSerializer.Deserialize(data)!;
-                    outputBundle = FormatConversion.Convert(outputData);
+                    outputBundle = FormatConversion.Convert(outputData, settings);
                     Console.WriteLine($"  {outputData.GetType().Name} converted into {outputBundle.MainExtension} format.");
                 }
                 catch (Exception ex)
@@ -70,7 +79,7 @@ namespace FEZRepacker.Interface.Actions
             }
         }
 
-        public static void UnpackPackage(string pakPath, string outputDir, UnpackingMode mode)
+        public static void UnpackPackage(string pakPath, string outputDir, UnpackingMode mode, FormatConverterSettings settings)
         {
             if (Path.GetExtension(pakPath) != ".pak")
             {
@@ -101,7 +110,7 @@ namespace FEZRepacker.Interface.Actions
                 try
                 {
                     using var fileStream = pakFile.Open();
-                    using var outputBundle = UnpackFile(extension, fileStream, mode);
+                    using var outputBundle = UnpackFile(extension, fileStream, mode, settings);
 
                     outputBundle.BundlePath = Path.Combine(outputDir, pakFile.Path);
                     Directory.CreateDirectory(Path.GetDirectoryName(outputBundle.BundlePath) ?? "");

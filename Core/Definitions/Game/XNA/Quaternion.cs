@@ -37,6 +37,9 @@
             this.X == other.X && this.Y == other.Y && this.Z == other.Z && this.W == other.W;
         public static bool operator ==(Quaternion left, Quaternion right) => left.Equals(right);
         public static bool operator !=(Quaternion left, Quaternion right) => !left.Equals(right);
+        
+        public System.Numerics.Quaternion ToNumeric() => new(this.X, this.Y, this.Z, this.W);
+        public static Quaternion FromNumeric(System.Numerics.Quaternion numeric) => new(numeric.X, numeric.Y, numeric.Z, numeric.W);
 
         public override int GetHashCode()
         {
