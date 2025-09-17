@@ -25,10 +25,10 @@ namespace FEZRepacker.Interface.Actions
             new CommandLineArgument("destination-folder")
         };
 
-        public void Execute(string[] args)
+        public void Execute(Dictionary<string, string> args)
         {
-            var pakPath = args[0];
-            var outputDir = args[1];
+            var pakPath = args["pak-path"];
+            var outputDir = args["destination-folder"];
 
             UnpackPackage(pakPath, outputDir, Mode);
         }

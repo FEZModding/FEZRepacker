@@ -11,10 +11,9 @@ namespace FEZRepacker.Interface.Actions
             new CommandLineArgument("pak-path")
         };
 
-        public void Execute(string[] args)
+        public void Execute(Dictionary<string, string> args)
         {
-            var pakPath = args[0];
-
+            var pakPath = args["pak-path"];
             var pakPackage = PakPackage.ReadFromFile(pakPath);
 
             Console.WriteLine($"PAK package \"{pakPath}\" with {pakPackage.Entries.Count} files.");

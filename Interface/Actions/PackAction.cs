@@ -14,7 +14,7 @@ namespace FEZRepacker.Interface.Actions
         public CommandLineArgument[] Arguments => new[] {
             new CommandLineArgument("input-directory-path"),
             new CommandLineArgument("destination-pak-path"),
-            new CommandLineArgument("include-pak-path", true)
+            new CommandLineArgument("include-pak-path", ArgumentType.OptionalPositional)
         };
 
         private class TemporaryPak : IDisposable
@@ -84,10 +84,10 @@ namespace FEZRepacker.Interface.Actions
             });
         }
 
-        public void Execute(string[] args)
+        public void Execute(Dictionary<string, string> args)
         {
-            string inputPath = args[0];
-            string outputPackagePath = args[1];
+            var inputPath = args["input-directory-path"];
+            var outputPackagePath = args["destination-pak-path"];
 
             var fileBundlesToAdd = FileBundle.BundleFilesAtPath(inputPath);
             SortBundlesToPreventInvalidOrdering(ref fileBundlesToAdd);
@@ -104,9 +104,9 @@ namespace FEZRepacker.Interface.Actions
             });
 
 
-            if (args.Length > 2)
+            if (args.TryGetValue("include-pak-path", out var includePackagePath))
             {
-                IncludePackageIntoWriter(args[2], tempPak.Writer);
+                IncludePackageIntoWriter(includePackagePath, tempPak.Writer);
             }
 
             Console.WriteLine($"Packed {tempPak.Writer.FileCount} assets into {outputPackagePath}...");

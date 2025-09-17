@@ -16,10 +16,10 @@ namespace FEZRepacker.Interface.Actions
             new CommandLineArgument("destination-folder")
         };
 
-        public void Execute(string[] args)
+        public void Execute(Dictionary<string, string> args)
         {
-            var contentPath = args[0];
-            var outputDir = args[1];
+            var contentPath = args["fez-content-directory"];
+            var outputDir = args["destination-folder"];
 
             var packagePaths = new string[] { "Essentials.pak", "Music.pak", "Other.pak", "Updates.pak" }
                 .Select(path => Path.Combine(contentPath, path)).ToArray();

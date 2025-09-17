@@ -20,11 +20,11 @@ namespace FEZRepacker.Interface.Actions
 
         public CommandLineArgument[] Arguments => new[] {
             new CommandLineArgument("file-input"),
-            new CommandLineArgument("xnb-output", true)
+            new CommandLineArgument("xnb-output", ArgumentType.OptionalPositional)
         };
 
-
         public delegate void ConversionFunc(string path, string extension, Stream stream, bool converted);
+        
         public static void PerformBatchConversion(List<FileBundle> fileBundles, ConversionFunc processFileFunc)
         {
             Console.WriteLine($"Converting {fileBundles.Count()} assets...");
@@ -57,10 +57,10 @@ namespace FEZRepacker.Interface.Actions
             }
         }
 
-        public void Execute(string[] args)
+        public void Execute(Dictionary<string, string> args)
         {
-            string inputPath = args[0];
-            string outputPath = args.Length > 1 ? args[1] : inputPath;
+            var inputPath = args["xnb-input"];
+            var outputPath = args.GetValueOrDefault("file-output", inputPath);
 
             if (File.Exists(outputPath))
             {

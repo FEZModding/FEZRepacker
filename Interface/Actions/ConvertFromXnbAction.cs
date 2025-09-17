@@ -17,9 +17,8 @@ namespace FEZRepacker.Interface.Actions
 
         public CommandLineArgument[] Arguments => new[] {
             new CommandLineArgument("xnb-input"),
-            new CommandLineArgument("file-output", true)
+            new CommandLineArgument("file-output", ArgumentType.OptionalPositional)
         };
-
 
         private List<string> FindXnbFilesAtPath(string path)
         {
@@ -42,13 +41,11 @@ namespace FEZRepacker.Interface.Actions
                 throw new FileNotFoundException("Specified input path does not lead to any file or a directory");
             }
         }
-
-
-
-        public void Execute(string[] args)
+        
+        public void Execute(Dictionary<string, string> args)
         {
-            var inputPath = args[0];
-            var outputPath = args.Length > 1 ? args[1] : inputPath;
+            var inputPath = args["xnb-input"];
+            var outputPath = args.GetValueOrDefault("file-output", inputPath);
 
             if (File.Exists(outputPath))
             {
