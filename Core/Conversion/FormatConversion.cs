@@ -18,6 +18,7 @@ namespace FEZRepacker.Core.Conversion
         /// convert it and store in a <see cref="FileBundle"/>.
         /// </summary>
         /// <param name="data">A reference to object to convert</param>
+        /// <param name="configuration">A configuration dictionary to alter converter behaviour</param>
         /// <returns>
         /// A <see cref="FileBundle"/> containing file or files converted from given object.
         /// </returns>
@@ -27,7 +28,7 @@ namespace FEZRepacker.Core.Conversion
         /// <exception cref="FormatConversionException">
         /// Thrown when a type of given object is not supported by Repacker
         /// </exception>
-        public static FileBundle Convert(object? data)
+        public static FileBundle Convert(object? data, IDictionary<string, object>? configuration = null)
         {
             if(data == null)
             {
@@ -36,9 +37,17 @@ namespace FEZRepacker.Core.Conversion
 
             var converter = FormatConverters.FindForType(data.GetType());
 
-            if(converter == null)
+            if (converter == null)
             {
                 throw new FormatConversionException($"Type {data.GetType()} is not supported for conversion.");
+            }
+
+            if (configuration != null)
+            {
+                foreach (var pair in configuration)
+                {
+                    converter.Configuration.Add(pair);
+                }
             }
 
             return converter.Convert(data);
@@ -49,19 +58,28 @@ namespace FEZRepacker.Core.Conversion
         /// then attempts to deconvert it back to an object with a type assigned to this converter.
         /// </summary>
         /// <param name="bundle">A <see cref="FileBundle"/> containing files to convert.</param>
+        /// <param name="configuration">A configuration dictionary to alter converter behaviour</param>
         /// <returns>
         /// An object deconverted from files contained in given <see cref="FileBundle"/>.
         /// </returns>
         /// <exception cref="FormatConversionException">
         /// Thrown when main extension of given <see cref="FileBundle"/> is not supported by Repacker
         /// </exception>
-        public static object? Deconvert(FileBundle bundle)
+        public static object? Deconvert(FileBundle bundle, IDictionary<string, object>? configuration = null)
         {
             var converter = FormatConverters.FindForFileBundle(bundle);
 
             if (converter == null)
             {
                 throw new FormatConversionException($"File bundle type {bundle.MainExtension} is not supported for conversion.");
+            }
+            
+            if (configuration != null)
+            {
+                foreach (var pair in configuration)
+                {
+                    converter.Configuration.Add(pair);
+                }
             }
 
             return converter.Deconvert(bundle);
