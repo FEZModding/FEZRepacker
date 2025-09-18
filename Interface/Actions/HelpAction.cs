@@ -2,12 +2,14 @@
 {
     internal class HelpAction : CommandLineAction
     {
+        private const string Command = "command";
+        
         public string Name => "--help";
         public string[] Aliases => new[] { "help", "?", "-?", "-h" };
         public string Description => "Displays help for all commands or help for given command.";
         
         public CommandLineArgument[] Arguments => new[] { 
-            new CommandLineArgument("command", ArgumentType.OptionalPositional) 
+            new CommandLineArgument(Command, ArgumentType.OptionalPositional) 
         };
 
         public void Execute(Dictionary<string, string> args)
@@ -22,7 +24,7 @@
                 return;
             }
 
-            var arg = args.GetValueOrDefault("command", string.Empty);
+            var arg = args.GetValueOrDefault(Command, string.Empty);
             var command = CommandLineInterface.FindCommand(arg);
             if (command != null)
             {
@@ -49,7 +51,7 @@
                 {
                     ArgumentType.OptionalPositional => $"<{arg.Name}>",
                     ArgumentType.RequiredPositional => $"[{arg.Name}]",
-                    ArgumentType.Flag => $"({arg.Name})",
+                    ArgumentType.Flag => $"--{arg.Name}",
                     _ => throw new ArgumentOutOfRangeException($"Invalid argument type: {arg.Type}")
                 };
             });

@@ -9,6 +9,10 @@ namespace FEZRepacker.Interface.Actions
 {
     internal class ConvertToXnbAction : CommandLineAction
     {
+        private const string FileInput = "file-input";
+        
+        private const string XnbOutput = "xnb-output";
+        
         public string Name => "--convert-to-xnb";
 
         public string[] Aliases => new[] { "-X" };
@@ -19,8 +23,8 @@ namespace FEZRepacker.Interface.Actions
             "specified path recursively. If output directory is not given, outputs next to the input file(s).";
 
         public CommandLineArgument[] Arguments => new[] {
-            new CommandLineArgument("file-input"),
-            new CommandLineArgument("xnb-output", ArgumentType.OptionalPositional)
+            new CommandLineArgument(FileInput),
+            new CommandLineArgument(XnbOutput, ArgumentType.OptionalPositional)
         };
 
         public delegate void ConversionFunc(string path, string extension, Stream stream, bool converted);
@@ -59,8 +63,8 @@ namespace FEZRepacker.Interface.Actions
 
         public void Execute(Dictionary<string, string> args)
         {
-            var inputPath = args["xnb-input"];
-            var outputPath = args.GetValueOrDefault("file-output", inputPath);
+            var inputPath = args[FileInput];
+            var outputPath = args.GetValueOrDefault(XnbOutput, inputPath);
 
             if (File.Exists(outputPath))
             {

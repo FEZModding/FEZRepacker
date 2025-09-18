@@ -6,15 +6,19 @@ namespace FEZRepacker.Interface.Actions
 {
     internal class PackAction : CommandLineAction
     {
+        private const string InputDirectoryPath = "input-directory-path";
+        private const string DestinationPakPath = "destination-pak-path";
+        private const string IncludePakPath = "include-pak-path";
+        
         public string Name => "--pack";
         public string[] Aliases => new[] { "-p" };
         public string Description =>
             "Loads files from given input directory path, tries to deconvert them and pack into a destination " +
             ".PAK file with given path. If include .PAK path is provided, it'll add its content into the new .PAK package.";
         public CommandLineArgument[] Arguments => new[] {
-            new CommandLineArgument("input-directory-path"),
-            new CommandLineArgument("destination-pak-path"),
-            new CommandLineArgument("include-pak-path", ArgumentType.OptionalPositional)
+            new CommandLineArgument(InputDirectoryPath),
+            new CommandLineArgument(DestinationPakPath),
+            new CommandLineArgument(IncludePakPath, ArgumentType.OptionalPositional)
         };
 
         private class TemporaryPak : IDisposable
@@ -86,8 +90,8 @@ namespace FEZRepacker.Interface.Actions
 
         public void Execute(Dictionary<string, string> args)
         {
-            var inputPath = args["input-directory-path"];
-            var outputPackagePath = args["destination-pak-path"];
+            var inputPath = args[InputDirectoryPath];
+            var outputPackagePath = args[DestinationPakPath];
 
             var fileBundlesToAdd = FileBundle.BundleFilesAtPath(inputPath);
             SortBundlesToPreventInvalidOrdering(ref fileBundlesToAdd);
@@ -104,7 +108,7 @@ namespace FEZRepacker.Interface.Actions
             });
 
 
-            if (args.TryGetValue("include-pak-path", out var includePackagePath))
+            if (args.TryGetValue(IncludePakPath, out var includePackagePath))
             {
                 IncludePackageIntoWriter(includePackagePath, tempPak.Writer);
             }

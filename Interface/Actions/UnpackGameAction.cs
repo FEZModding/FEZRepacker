@@ -4,6 +4,9 @@ namespace FEZRepacker.Interface.Actions
 {
     internal class UnpackGameAction : CommandLineAction
     {
+        private const string FezContentDirectory = "fez-content-directory";
+        private const string DestinationFolder = "destination-folder";
+        
         public string Name => "--unpack-fez-content";
 
         public string[] Aliases => new[] { "-g" };
@@ -12,14 +15,14 @@ namespace FEZRepacker.Interface.Actions
             "Unpacks and converts all game assets into specified directory (creates one if doesn't exist).";
 
         public CommandLineArgument[] Arguments => new[] {
-            new CommandLineArgument("fez-content-directory"),
-            new CommandLineArgument("destination-folder")
+            new CommandLineArgument(FezContentDirectory),
+            new CommandLineArgument(DestinationFolder)
         };
 
         public void Execute(Dictionary<string, string> args)
         {
-            var contentPath = args["fez-content-directory"];
-            var outputDir = args["destination-folder"];
+            var contentPath = args[FezContentDirectory];
+            var outputDir = args[DestinationFolder];
 
             var packagePaths = new string[] { "Essentials.pak", "Music.pak", "Other.pak", "Updates.pak" }
                 .Select(path => Path.Combine(contentPath, path)).ToArray();

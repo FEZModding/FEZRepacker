@@ -9,6 +9,9 @@ namespace FEZRepacker.Interface.Actions
 {
     internal abstract class UnpackAction : CommandLineAction
     {
+        private const string PakPath = "pak-path";
+        private const string DestinationFolder = "destination-folder";
+        
         public enum UnpackingMode
         {
             Raw,
@@ -21,15 +24,14 @@ namespace FEZRepacker.Interface.Actions
         public abstract string[] Aliases { get; }
 
         public CommandLineArgument[] Arguments => new[] {
-            new CommandLineArgument("pak-path"),
-            new CommandLineArgument("destination-folder")
+            new CommandLineArgument(PakPath),
+            new CommandLineArgument(DestinationFolder)
         };
 
         public void Execute(Dictionary<string, string> args)
         {
-            var pakPath = args["pak-path"];
-            var outputDir = args["destination-folder"];
-
+            var pakPath = args[PakPath];
+            var outputDir = args[DestinationFolder];
             UnpackPackage(pakPath, outputDir, Mode);
         }
 
