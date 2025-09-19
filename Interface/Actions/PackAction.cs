@@ -9,8 +9,6 @@ namespace FEZRepacker.Interface.Actions
         private const string InputDirectoryPath = "input-directory-path";
         private const string DestinationPakPath = "destination-pak-path";
         private const string IncludePakPath = "include-pak-path";
-        private const string UseLegacyAo = "use-legacy-ao";
-        private const string UseLegacyTs = "use-legacy-ts";
         
         public string Name => "--pack";
         public string[] Aliases => new[] { "-p" };
@@ -20,9 +18,7 @@ namespace FEZRepacker.Interface.Actions
         public CommandLineArgument[] Arguments => new[] {
             new CommandLineArgument(InputDirectoryPath),
             new CommandLineArgument(DestinationPakPath),
-            new CommandLineArgument(IncludePakPath, ArgumentType.OptionalPositional),
-            new CommandLineArgument(UseLegacyAo, ArgumentType.Flag),
-            new CommandLineArgument(UseLegacyTs, ArgumentType.Flag)
+            new CommandLineArgument(IncludePakPath, ArgumentType.OptionalPositional)
         };
 
         private class TemporaryPak : IDisposable
@@ -101,16 +97,6 @@ namespace FEZRepacker.Interface.Actions
             SortBundlesToPreventInvalidOrdering(ref fileBundlesToAdd);
 
             using var tempPak = new TemporaryPak(outputPackagePath);
-            var settings = new FormatConverterSettings
-            {
-                UseLegacyArtObjectBundle = args.ContainsKey(UseLegacyAo),
-                UseLegacyTrileSetBundle = args.ContainsKey(UseLegacyTs)
-            };
-            
-            if (!settings.UseLegacyArtObjectBundle)
-                Console.WriteLine($"To use legacy art object bundle, specify the command with the '{UseLegacyAo}' flag");
-            if (!settings.UseLegacyTrileSetBundle)
-                Console.WriteLine($"To use legacy trile set bundle, specify the command with the '{UseLegacyTs}' flag");
 
             ConvertToXnbAction.PerformBatchConversion(fileBundlesToAdd, (path, extension, stream, converted) =>
             {
@@ -119,7 +105,7 @@ namespace FEZRepacker.Interface.Actions
                     Console.WriteLine($"  Packing raw file {path}{extension}...");
                 }
                 tempPak.Writer.WriteFile(path, stream, extension);
-            }, settings);
+            });
 
 
             if (args.TryGetValue(IncludePakPath, out var includePackagePath))

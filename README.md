@@ -34,7 +34,7 @@ Here's a list of all 13 asset types handled by FEZ and file types Repacker conve
 
 You can read about conversion formats in detail [here](https://fezmodding.github.io/wiki/content/content_conversion).
 
-> [!NOTE]
+> [!WARNING]
 > 
 > By default, the Repacker converts ArtObject and TrileSet 3D models with all-in-one binary glTF bundles
 > for proper import and export process with popular 3D viewers and editors (i.e. Blender).
@@ -64,7 +64,7 @@ Unpacks entire .PAK package into specified directory (creates one if doesn't exi
 - `[--unpack-fez-content, -g] [fez-content-directory] [destination-folder] --use-legacy-ao --use-legacy-ts`
 Unpacks and converts all game assets into specified directory (creates one if doesn't exist).
 
-- `[--pack, -p] [input-directory-path] [destination-pak-path] <include-pak-path> --use-legacy-ao --use-legacy-ts`
+- `[--pack, -p] [input-directory-path] [destination-pak-path] <include-pak-path>`
 Loads files from given input directory path, tries to deconvert them and pack into a destination .PAK file with given path. If include .PAK path is provided, it'll add its content into the new .PAK package.
 
 - `[--list, -l] [pak-path]`
@@ -73,7 +73,7 @@ Lists all files contained withing given .PAK package.
 - `[--convert-from-xnb, -x] [xnb-input] [file-output] --use-legacy-ao --use-legacy-ts`
 Attempts to convert given XNB input (this can be a path to a single asset or an entire directory) and save it at given output (if input is a directory, converts all files within it recursively and dumps all converted files in specified path).
 
-- `[--convert-to-xnb, -X] [file-input] [xnb-output] --use-legacy-ao --use-legacy-ts`
+- `[--convert-to-xnb, -X] [file-input] [xnb-output]`
 Attempts to convert given input (this can be a path to a single file or an entire directory) into XNB file(s) and save it at given output (if input is a directory, converts all files within it recursively and dumps all converted files in specified path).
 
 ## Examples

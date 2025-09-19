@@ -28,14 +28,12 @@ namespace FEZRepacker.Interface.Actions
 
         public CommandLineArgument[] Arguments => new[] {
             new CommandLineArgument(FileInput),
-            new CommandLineArgument(XnbOutput, ArgumentType.OptionalPositional),
-            new CommandLineArgument(UseLegacyAo, ArgumentType.Flag),
-            new CommandLineArgument(UseLegacyTs, ArgumentType.Flag)
+            new CommandLineArgument(XnbOutput, ArgumentType.OptionalPositional)
         };
 
         public delegate void ConversionFunc(string path, string extension, Stream stream, bool converted);
         
-        public static void PerformBatchConversion(List<FileBundle> fileBundles, ConversionFunc processFileFunc, FormatConverterSettings settings)
+        public static void PerformBatchConversion(List<FileBundle> fileBundles, ConversionFunc processFileFunc)
         {
             Console.WriteLine($"Converting {fileBundles.Count()} assets...");
             var filesDone = 0;
@@ -45,7 +43,7 @@ namespace FEZRepacker.Interface.Actions
 
                 try
                 {
-                    object convertedData = FormatConversion.Deconvert(fileBundle, settings)!;
+                    object convertedData = FormatConversion.Deconvert(fileBundle)!;
                     var data = XnbSerializer.Serialize(convertedData);
 
                     Console.WriteLine($"  Format {fileBundle.MainExtension} deconverted into {convertedData.GetType().Name}.");
@@ -81,17 +79,6 @@ namespace FEZRepacker.Interface.Actions
             var fileBundles = FileBundle.BundleFilesAtPath(inputPath);
             Console.WriteLine($"Found {fileBundles.Count()} file bundles.");
 
-            var settings = new FormatConverterSettings
-            {
-                UseLegacyArtObjectBundle = args.ContainsKey(UseLegacyAo),
-                UseLegacyTrileSetBundle = args.ContainsKey(UseLegacyTs)
-            };
-            
-            if (!settings.UseLegacyArtObjectBundle)
-                Console.WriteLine($"To use legacy art object bundle, specify the command with the '{UseLegacyAo}' flag");
-            if (!settings.UseLegacyTrileSetBundle)
-                Console.WriteLine($"To use legacy trile set bundle, specify the command with the '{UseLegacyTs}' flag");
-
             PerformBatchConversion(fileBundles, (path, extension, stream, converted) =>
             {
                 if (!converted) return;
@@ -102,7 +89,7 @@ namespace FEZRepacker.Interface.Actions
 
                 using var assetFile = File.Create(assetOutputFullPath);
                 stream.CopyTo(assetFile);
-            }, settings);
+            });
         }
     }
 }

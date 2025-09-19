@@ -39,17 +39,20 @@ namespace FEZRepacker.Core.Conversion.Formats
 
         public override TrileSet DeconvertTyped(FileBundle bundle)
         {
-            if (!Settings.UseLegacyTrileSetBundle)
+            try
             {
                 return LoadFromTransmissionFormat(bundle.RequireData(".glb"));
             }
+            catch (FileNotFoundException)
+            {
+                Console.WriteLine("  The glTF bundle was not found! Using legacy trile set bundle format...");
+                var trileSet = ConfiguredJsonSerializer.DeserializeFromFileBundle<TrileSet>(bundle);
             
-            var trileSet = ConfiguredJsonSerializer.DeserializeFromFileBundle<TrileSet>(bundle);
+                AppendGeometryStream(ref trileSet, bundle.RequireData(".obj"));
+                LoadCubemap(ref trileSet, bundle.GetData(".png"), bundle.GetData(".apng"));
             
-            AppendGeometryStream(ref trileSet, bundle.RequireData(".obj"));
-            LoadCubemap(ref trileSet, bundle.GetData(".png"), bundle.GetData(".apng"));
-            
-            return trileSet;
+                return trileSet;
+            }
         }
 
         private static Stream GetTextureStream(TrileSet data, TexturesUtil.CubemapPart part)

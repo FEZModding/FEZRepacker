@@ -37,17 +37,20 @@ namespace FEZRepacker.Core.Conversion.Formats
 
         public override ArtObject DeconvertTyped(FileBundle bundle)
         {
-            if (!Settings.UseLegacyArtObjectBundle)
+            try
             {
                 return LoadFromTransmissionFormat(bundle.RequireData(".glb"));
             }
-            
-            var artObject = ConfiguredJsonSerializer.DeserializeFromFileBundle<ArtObject>(bundle);
-            
-            AppendGeometryStream(ref artObject, bundle.RequireData(".obj"));
-            LoadCubemap(ref artObject, bundle.GetData(".png"), bundle.GetData(".apng"));
-                
-            return artObject;
+            catch (FileNotFoundException)
+            {
+                Console.WriteLine("  The glTF bundle was not found! Using legacy art object bundle format...");
+                var artObject = ConfiguredJsonSerializer.DeserializeFromFileBundle<ArtObject>(bundle);
+
+                AppendGeometryStream(ref artObject, bundle.RequireData(".obj"));
+                LoadCubemap(ref artObject, bundle.GetData(".png"), bundle.GetData(".apng"));
+
+                return artObject;
+            }
         }
 
         private static Stream GetTextureStream(ArtObject data, TexturesUtil.CubemapPart part)
