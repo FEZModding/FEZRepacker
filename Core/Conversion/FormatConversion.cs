@@ -42,11 +42,7 @@ namespace FEZRepacker.Core.Conversion
                 throw new FormatConversionException($"Type {data.GetType()} is not supported for conversion.");
             }
 
-            if (settings.HasValue)
-            {
-                converter.Settings = settings.Value;
-            }
-
+            converter.Settings = settings ?? new FormatConverterSettings();
             return converter.Convert(data);
         }
 
@@ -71,11 +67,7 @@ namespace FEZRepacker.Core.Conversion
                 throw new FormatConversionException($"File bundle type {bundle.MainExtension} is not supported for conversion.");
             }
             
-            if (settings.HasValue)
-            {
-                converter.Settings = settings.Value;
-            }
-
+            converter.Settings = settings ?? new FormatConverterSettings();
             return converter.Deconvert(bundle);
         }
     }
