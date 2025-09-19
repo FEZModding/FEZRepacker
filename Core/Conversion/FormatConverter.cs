@@ -17,7 +17,7 @@ namespace FEZRepacker.Core.Conversion
         public abstract FileBundle Convert(object? data);
         public abstract object? Deconvert(FileBundle bundle);
 
-        public IDictionary<string, object> Configuration { get; } = new Dictionary<string, object>();
+        public FormatConverterSettings Settings { get; set; }
 
         public FileBundle Convert<T>(T data)
         {

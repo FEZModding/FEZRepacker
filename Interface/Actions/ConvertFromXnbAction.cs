@@ -1,4 +1,5 @@
 ﻿
+using FEZRepacker.Core.Conversion;
 using FEZRepacker.Core.FileSystem;
 using FEZRepacker.Core.XNB;
 
@@ -9,6 +10,10 @@ namespace FEZRepacker.Interface.Actions
         private const string XnbInput = "xnb-input";
         
         private const string FileOutput = "file-output";
+        
+        private const string UseLegacyAo = "use-legacy-ao";
+        
+        private const string UseLegacyTs =  "use-legacy-ts";
         
         public string Name => "--convert-from-xnb";
 
@@ -21,7 +26,9 @@ namespace FEZRepacker.Interface.Actions
 
         public CommandLineArgument[] Arguments => new[] {
             new CommandLineArgument(XnbInput),
-            new CommandLineArgument(FileOutput, ArgumentType.OptionalPositional)
+            new CommandLineArgument(FileOutput, ArgumentType.OptionalPositional),
+            new CommandLineArgument(UseLegacyAo, ArgumentType.Flag),
+            new CommandLineArgument(UseLegacyTs, ArgumentType.Flag)
         };
 
         private List<string> FindXnbFilesAtPath(string path)
@@ -62,13 +69,24 @@ namespace FEZRepacker.Interface.Actions
             Console.WriteLine($"Converting {xnbFilesToConvert.Count()} XNB files...");
 
             var filesDone = 0;
+            var settings = new FormatConverterSettings
+            {
+                UseLegacyArtObjectBundle = args.ContainsKey(UseLegacyAo),
+                UseLegacyTrileSetBundle = args.ContainsKey(UseLegacyTs)
+            };
+
+            if (!settings.UseLegacyArtObjectBundle)
+                Console.WriteLine($"To use legacy art object bundle, specify the command with the '{UseLegacyAo}' flag");
+            if (!settings.UseLegacyTrileSetBundle)
+                Console.WriteLine($"To use legacy trile set bundle, specify the command with the '{UseLegacyTs}' flag");
+            
             foreach (var xnbPath in xnbFilesToConvert)
             {
                 Console.WriteLine($"({filesDone + 1}/{xnbFilesToConvert.Count}) {xnbPath}");
 
                 using var xnbStream = File.OpenRead(xnbPath);
 
-                using var outputBundle = UnpackAction.UnpackFile(".xnb", xnbStream, UnpackAction.UnpackingMode.Converted);
+                using var outputBundle = UnpackAction.UnpackFile(".xnb", xnbStream, UnpackAction.UnpackingMode.Converted, settings);
 
                 var relativePath = Path.GetRelativePath(inputPath, xnbPath)
                     .Replace("/", "\\")

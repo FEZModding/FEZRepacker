@@ -1,4 +1,6 @@
-﻿using static FEZRepacker.Interface.Actions.UnpackAction;
+﻿using FEZRepacker.Core.Conversion;
+
+using static FEZRepacker.Interface.Actions.UnpackAction;
 
 namespace FEZRepacker.Interface.Actions
 {
@@ -6,6 +8,8 @@ namespace FEZRepacker.Interface.Actions
     {
         private const string FezContentDirectory = "fez-content-directory";
         private const string DestinationFolder = "destination-folder";
+        private const string UseLegacyAo = "use-legacy-ao";
+        private const string UseLegacyTs = "use-legacy-ts";
         
         public string Name => "--unpack-fez-content";
 
@@ -16,7 +20,9 @@ namespace FEZRepacker.Interface.Actions
 
         public CommandLineArgument[] Arguments => new[] {
             new CommandLineArgument(FezContentDirectory),
-            new CommandLineArgument(DestinationFolder)
+            new CommandLineArgument(DestinationFolder),
+            new CommandLineArgument(UseLegacyAo, ArgumentType.Flag),
+            new CommandLineArgument(UseLegacyTs, ArgumentType.Flag)
         };
 
         public void Execute(Dictionary<string, string> args)
@@ -34,6 +40,17 @@ namespace FEZRepacker.Interface.Actions
                     throw new Exception($"Given directory is not FEZ's Content directory (missing {Path.GetFileName(packagePath)}).");
                 }
             }
+            
+            var settings = new FormatConverterSettings
+            {
+                UseLegacyArtObjectBundle = args.ContainsKey(UseLegacyAo),
+                UseLegacyTrileSetBundle = args.ContainsKey(UseLegacyTs)
+            };
+            
+            if (!settings.UseLegacyArtObjectBundle)
+                Console.WriteLine($"To use legacy art object bundle, specify the command with the '{UseLegacyAo}' flag");
+            if (!settings.UseLegacyTrileSetBundle)
+                Console.WriteLine($"To use legacy trile set bundle, specify the command with the '{UseLegacyTs}' flag");
 
             foreach (var packagePath in packagePaths)
             {
@@ -44,7 +61,7 @@ namespace FEZRepacker.Interface.Actions
                     // the same folder as other assets, put them in separate music folder.
                     actualOutputDir = Path.Combine(outputDir, "music");
                 }
-                UnpackPackage(packagePath, actualOutputDir, UnpackingMode.Converted);
+                UnpackPackage(packagePath, actualOutputDir, UnpackingMode.Converted, settings);
             }
         }
     }

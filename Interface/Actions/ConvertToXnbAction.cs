@@ -13,6 +13,10 @@ namespace FEZRepacker.Interface.Actions
         
         private const string XnbOutput = "xnb-output";
         
+        private const string UseLegacyAo = "use-legacy-ao";
+        
+        private const string UseLegacyTs =  "use-legacy-ts";
+        
         public string Name => "--convert-to-xnb";
 
         public string[] Aliases => new[] { "-X" };
@@ -74,7 +78,6 @@ namespace FEZRepacker.Interface.Actions
 
             var fileBundles = FileBundle.BundleFilesAtPath(inputPath);
             Console.WriteLine($"Found {fileBundles.Count()} file bundles.");
-
 
             PerformBatchConversion(fileBundles, (path, extension, stream, converted) =>
             {

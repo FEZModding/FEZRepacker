@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 
 using FEZRepacker.Core.FileSystem;
@@ -46,6 +47,16 @@ namespace FEZRepacker.Core.Helpers.Json
             {
                 throw new InvalidDataException($"No valid JSON structure in a file bundle: {ex.Message}");
             }
+        }
+
+        public static JsonNode SerializeToNode<T>(T data)
+        {
+            return JsonSerializer.SerializeToNode(data, GetOptions())!;
+        }
+
+        public static T DeserializeFromNode<T>(JsonNode node)
+        {
+            return node.Deserialize<T>(GetOptions())!;
         }
 
         private static JsonSerializerOptions GetOptions()

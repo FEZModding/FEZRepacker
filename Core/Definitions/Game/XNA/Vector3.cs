@@ -44,6 +44,9 @@
         public static bool operator ==(Vector3 left, Vector3 right) => left.Equals(right);
         public static bool operator !=(Vector3 left, Vector3 right) => !left.Equals(right);
 
+        public System.Numerics.Vector3 ToNumeric() => new(this.X, this.Y, this.Z);
+        public static Vector3 FromNumeric(System.Numerics.Vector3 numeric) => new(numeric.X, numeric.Y, numeric.Z);
+
         public override int GetHashCode()
         {
             return this.X.GetHashCode() ^ this.Y.GetHashCode() << 2 ^ this.Z.GetHashCode() >> 2;
