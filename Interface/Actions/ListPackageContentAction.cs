@@ -4,17 +4,18 @@ namespace FEZRepacker.Interface.Actions
 {
     internal class ListPackageContentAction : CommandLineAction
     {
+        private const string PakPath = "pak-path";
+        
         public string Name => "--list";
         public string[] Aliases => new[] { "-l" };
         public string Description => "Lists all files contained withing given .PAK package.";
         public CommandLineArgument[] Arguments => new[] {
-            new CommandLineArgument("pak-path")
+            new CommandLineArgument(PakPath)
         };
 
-        public void Execute(string[] args)
+        public void Execute(Dictionary<string, string> args)
         {
-            var pakPath = args[0];
-
+            var pakPath = args[PakPath];
             var pakPackage = PakPackage.ReadFromFile(pakPath);
 
             Console.WriteLine($"PAK package \"{pakPath}\" with {pakPackage.Entries.Count} files.");

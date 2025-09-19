@@ -6,15 +6,19 @@ namespace FEZRepacker.Interface.Actions
 {
     internal class PackAction : CommandLineAction
     {
+        private const string InputDirectoryPath = "input-directory-path";
+        private const string DestinationPakPath = "destination-pak-path";
+        private const string IncludePakPath = "include-pak-path";
+        
         public string Name => "--pack";
         public string[] Aliases => new[] { "-p" };
         public string Description =>
             "Loads files from given input directory path, tries to deconvert them and pack into a destination " +
             ".PAK file with given path. If include .PAK path is provided, it'll add its content into the new .PAK package.";
         public CommandLineArgument[] Arguments => new[] {
-            new CommandLineArgument("input-directory-path"),
-            new CommandLineArgument("destination-pak-path"),
-            new CommandLineArgument("include-pak-path", true)
+            new CommandLineArgument(InputDirectoryPath),
+            new CommandLineArgument(DestinationPakPath),
+            new CommandLineArgument(IncludePakPath, ArgumentType.OptionalPositional)
         };
 
         private class TemporaryPak : IDisposable
@@ -84,10 +88,10 @@ namespace FEZRepacker.Interface.Actions
             });
         }
 
-        public void Execute(string[] args)
+        public void Execute(Dictionary<string, string> args)
         {
-            string inputPath = args[0];
-            string outputPackagePath = args[1];
+            var inputPath = args[InputDirectoryPath];
+            var outputPackagePath = args[DestinationPakPath];
 
             var fileBundlesToAdd = FileBundle.BundleFilesAtPath(inputPath);
             SortBundlesToPreventInvalidOrdering(ref fileBundlesToAdd);
@@ -104,9 +108,9 @@ namespace FEZRepacker.Interface.Actions
             });
 
 
-            if (args.Length > 2)
+            if (args.TryGetValue(IncludePakPath, out var includePackagePath))
             {
-                IncludePackageIntoWriter(args[2], tempPak.Writer);
+                IncludePackageIntoWriter(includePackagePath, tempPak.Writer);
             }
 
             Console.WriteLine($"Packed {tempPak.Writer.FileCount} assets into {outputPackagePath}...");

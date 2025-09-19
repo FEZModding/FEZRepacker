@@ -1,4 +1,6 @@
-﻿using FEZRepacker.Core.FileSystem;
+﻿using System.Collections.ObjectModel;
+
+using FEZRepacker.Core.FileSystem;
 
 namespace FEZRepacker.Core.Conversion
 {
@@ -14,6 +16,8 @@ namespace FEZRepacker.Core.Conversion
 
         public abstract FileBundle Convert(object? data);
         public abstract object? Deconvert(FileBundle bundle);
+
+        public IDictionary<string, object> Configuration { get; } = new Dictionary<string, object>();
 
         public FileBundle Convert<T>(T data)
         {
