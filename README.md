@@ -20,8 +20,8 @@ Here's a list of all 13 asset types handled by FEZ and file types Repacker conve
 |-|-|-|
 |Texture2D|Sprites and textures|PNG images|
 |AnimatedTexture|Animated textures|GIF animation|
-|ArtObject|3D models of art objects|Custom `.fezao` file bundle|
-|TrileSet|Texture and models of level blocks (triles)|Custom `.fezts` file bundle|
+|ArtObject|3D models of art objects|`.fezao.glb` binary glTF bundle|
+|TrileSet|Texture and models of level blocks (triles)|`.fezts.glb` binary glTF bundle|
 |SpriteFont|Bitmap font|Custon `.fezfont` file bundle|
 |Dictionary[String,Dictionary[String,String]]|Language texts|`.fezdata.json` JSON file|
 |Level|Level data|`.fezlvl.json` JSON file|
@@ -34,6 +34,14 @@ Here's a list of all 13 asset types handled by FEZ and file types Repacker conve
 
 You can read about conversion formats in detail [here](https://fezmodding.github.io/wiki/content/content_conversion).
 
+> [!NOTE]
+> 
+> By default, the Repacker converts ArtObject and TrileSet 3D models with all-in-one binary glTF bundles
+> for proper import and export process with popular 3D viewers and editors (i.e. Blender).
+> 
+> However, early versions of the Repacker used the legacy bundle format with separate files.
+> If you want to use this early format, check the flags of the CLI commands to activate this.
+
 If you want to learn more about the technical process of reading PAK packages and XNB files, read [this page on the wiki.](https://fezmodding.github.io/wiki/game/content_formats).
 
 ## Usage
@@ -44,28 +52,28 @@ To make the usage of the tool easier, you can put it within `Content` directory 
 
 Here's a list of currently defined commands (differs from the newest pre-release):
 
-- `[--unpack, -u] [pak-path] [destination-folder]`
+- `[--unpack, -u] [pak-path] [destination-folder] --use-legacy-ao --use-legacy-ts`
 Unpacks entire .PAK package into specified directory (creates one if doesn't exist) and attempts to convert XNB assets into their corresponding format in the process.
 
-- `--unpack-raw [pak-path] [destination-folder]`
+- `--unpack-raw [pak-path] [destination-folder] --use-legacy-ao --use-legacy-ts`
 Unpacks entire .PAK package into specified directory (creates one if doesn't exist) leaving XNB assets in their original form.
 
-- `--unpack-decompressed [pak-path] [destination-folder]`
+- `--unpack-decompressed [pak-path] [destination-folder] --use-legacy-ao --use-legacy-ts`
 Unpacks entire .PAK package into specified directory (creates one if doesn't exist).and attempts to decompress all XNB assets, but does not convert them.
 
-- `[--unpack-fez-content, -g] [fez-content-directory] [destination-folder]`
+- `[--unpack-fez-content, -g] [fez-content-directory] [destination-folder] --use-legacy-ao --use-legacy-ts`
 Unpacks and converts all game assets into specified directory (creates one if doesn't exist).
 
-- `[--pack, -p] [input-directory-path] [destination-pak-path] <include-pak-path>`
+- `[--pack, -p] [input-directory-path] [destination-pak-path] <include-pak-path> --use-legacy-ao --use-legacy-ts`
 Loads files from given input directory path, tries to deconvert them and pack into a destination .PAK file with given path. If include .PAK path is provided, it'll add its content into the new .PAK package.
 
 - `[--list, -l] [pak-path]`
 Lists all files contained withing given .PAK package.
 
-- `[--convert-from-xnb, -x] [xnb-input] [file-output]`
+- `[--convert-from-xnb, -x] [xnb-input] [file-output] --use-legacy-ao --use-legacy-ts`
 Attempts to convert given XNB input (this can be a path to a single asset or an entire directory) and save it at given output (if input is a directory, converts all files within it recursively and dumps all converted files in specified path).
 
-- `[--convert-to-xnb, -X] [file-input] [xnb-output]`
+- `[--convert-to-xnb, -X] [file-input] [xnb-output] --use-legacy-ao --use-legacy-ts`
 Attempts to convert given input (this can be a path to a single file or an entire directory) into XNB file(s) and save it at given output (if input is a directory, converts all files within it recursively and dumps all converted files in specified path).
 
 ## Examples
