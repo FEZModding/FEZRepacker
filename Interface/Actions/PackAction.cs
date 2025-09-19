@@ -1,59 +1,73 @@
-﻿using FEZRepacker.Core.Conversion;
+﻿using System.CommandLine;
+
+using FEZRepacker.Core.Conversion;
 using FEZRepacker.Core.FileSystem;
-using FEZRepacker.Core.XNB;
 
 namespace FEZRepacker.Interface.Actions
 {
-    internal class PackAction : CommandLineAction
+    internal class PackAction : ICommandLineAction
     {
-        private const string InputDirectoryPath = "input-directory-path";
-        private const string DestinationPakPath = "destination-pak-path";
-        private const string IncludePakPath = "include-pak-path";
-        
         public string Name => "--pack";
-        public string[] Aliases => new[] { "-p" };
+        
+        public string[] Aliases => ["-p"];
+        
         public string Description =>
-            "Loads files from given input directory path, tries to deconvert them and pack into a destination " +
-            ".PAK file with given path. If include .PAK path is provided, it'll add its content into the new .PAK package.";
-        public CommandLineArgument[] Arguments => new[] {
-            new CommandLineArgument(InputDirectoryPath),
-            new CommandLineArgument(DestinationPakPath),
-            new CommandLineArgument(IncludePakPath, ArgumentType.OptionalPositional)
+            "Loads files, tries to deconvert them and pack into a destination .PAK file";
+
+        public Argument[] Arguments => [_inputDirectory, _destinationPakFile];
+
+        public Option[] Options => [_includePakFile];
+        
+        private readonly Argument<DirectoryInfo> _inputDirectory = new("input-directory")
+        {
+          Description = "Path of the input directory with files"
+        };
+
+        private readonly Argument<FileInfo> _destinationPakFile = new("destination-pak-file")
+        {
+            Description = "Path of the destination directory (creates one if doesn't exist)"
+        };
+
+        private readonly Option<FileInfo> _includePakFile = new("include-pak-file")
+        {
+            Description = "If it's provided, it'll add its content into the new .PAK package"
         };
 
         private class TemporaryPak : IDisposable
         {
-            private readonly string tempPath;
-            private readonly string resultPath;
+            private readonly string _tempPath;
+            
+            private readonly string _resultPath;
 
-            public PakWriter Writer { get; private set; }
+            public readonly PakWriter Writer;
 
-            public TemporaryPak(string finalPath)
+            public TemporaryPak(FileInfo file)
             {
-                tempPath = GetNewTempPackagePath();
-                resultPath = finalPath;
+                _tempPath = GetNewTempPackagePath();
+                _resultPath = file.FullName;
 
-                var tempPakStream = File.Open(tempPath, FileMode.Create);
+                var tempPakStream = File.Open(_tempPath, FileMode.Create);
                 Writer = new PakWriter(tempPakStream);
             }
 
             private static string GetNewTempPackagePath()
             {
-                return Path.GetTempPath() + "repacker_pak_" + Guid.NewGuid().ToString() + ".pak";
+                return Path.GetTempPath() + "repacker_pak_" + Guid.NewGuid() + ".pak";
             }
+            
             public void Dispose()
             {
                 Writer.Dispose();
-                File.Move(tempPath, resultPath, overwrite: true);
+                File.Move(_tempPath, _resultPath, overwrite: true);
             }
         }
 
-        private void IncludePackageIntoWriter(string includePackagePath, PakWriter writer)
+        private static void IncludePackageIntoWriter(FileInfo includePackage, PakWriter writer)
         {
             try
             {
-                using var includePackage = PakReader.FromFile(includePackagePath);
-                foreach (var file in includePackage.ReadFiles())
+                using var includePackageReader = PakReader.FromFile(includePackage.FullName);
+                foreach (var file in includePackageReader.ReadFiles())
                 {
                     using var fileStream = file.Open();
                     bool written = writer.WriteFile(file.Path, fileStream, filterExtension: file.FindExtension());
@@ -65,11 +79,11 @@ namespace FEZRepacker.Interface.Actions
             }
             catch (Exception e)
             {
-                Console.Error.WriteLine("Could not fully load included package: $e", e.Message);
+                Console.Error.WriteLine($"Could not fully load included package: {e.Message}");
             }
         }
 
-        private void SortBundlesToPreventInvalidOrdering(ref List<FileBundle> fileBundles)
+        private static void SortBundlesToPreventInvalidOrdering(ref List<FileBundle> fileBundles)
         {
             // Occasionally, on the process of repacking, we'll need to store multiple files with the same name.
             // This happens in the base game for effect files stored in Updates.pak. However, the game doesn't
@@ -84,19 +98,19 @@ namespace FEZRepacker.Interface.Actions
 
                 if (converterA != null && converterB == null) return 1;
                 if (converterA == null && converterB != null) return -1;
-                return a.BundlePath.CompareTo(b.BundlePath);
+                return String.Compare(a.BundlePath, b.BundlePath, StringComparison.InvariantCultureIgnoreCase);
             });
         }
 
-        public void Execute(Dictionary<string, string> args)
+        public void Execute(ParseResult result)
         {
-            var inputPath = args[InputDirectoryPath];
-            var outputPackagePath = args[DestinationPakPath];
+            var inputDirectory = result.GetRequiredValue(_inputDirectory);
+            var destinationPakFile = result.GetRequiredValue(_destinationPakFile);
 
-            var fileBundlesToAdd = FileBundle.BundleFilesAtPath(inputPath);
+            var fileBundlesToAdd = FileBundle.BundleFilesAtPath(inputDirectory.FullName);
             SortBundlesToPreventInvalidOrdering(ref fileBundlesToAdd);
 
-            using var tempPak = new TemporaryPak(outputPackagePath);
+            using var tempPak = new TemporaryPak(destinationPakFile);
 
             ConvertToXnbAction.PerformBatchConversion(fileBundlesToAdd, (path, extension, stream, converted) =>
             {
@@ -107,13 +121,13 @@ namespace FEZRepacker.Interface.Actions
                 tempPak.Writer.WriteFile(path, stream, extension);
             });
 
-
-            if (args.TryGetValue(IncludePakPath, out var includePackagePath))
+            var includePakFile = result.GetValue(_includePakFile);
+            if (includePakFile != null)
             {
-                IncludePackageIntoWriter(includePackagePath, tempPak.Writer);
+                IncludePackageIntoWriter(includePakFile, tempPak.Writer);
             }
 
-            Console.WriteLine($"Packed {tempPak.Writer.FileCount} assets into {outputPackagePath}...");
+            Console.WriteLine($"Packed {tempPak.Writer.FileCount} assets into {destinationPakFile}...");
         }
     }
 }
