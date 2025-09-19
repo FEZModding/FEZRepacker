@@ -18,12 +18,12 @@
 
         public Vector4() { }
 
-        public Vector4(float w, float x, float y, float z)
+        public Vector4(float x, float y, float z, float w)
         {
-            W = w;
             X = x;
             Y = y;
             Z = z;
+            W = w;
         }
 
         public bool Equals(Vector4 other) =>
@@ -31,12 +31,12 @@
         public static bool operator ==(Vector4 left, Vector4 right) => left.Equals(right);
         public static bool operator !=(Vector4 left, Vector4 right) => !left.Equals(right);
         
-        public System.Numerics.Vector4 ToNumeric() => new(this.X, this.Y, this.Z, this.Z);
+        public System.Numerics.Vector4 ToNumeric() => new(this.X, this.Y, this.Z, this.W);
         public static Vector4 FromNumeric(System.Numerics.Vector4 numeric) => new(numeric.X, numeric.Y, numeric.Z, numeric.W);
 
         public override int GetHashCode()
         {
-            return this.X.GetHashCode() ^ this.Y.GetHashCode() << 2 ^ this.Z.GetHashCode() >> 2 ^ this.Z.GetHashCode() << 4;
+            return this.X.GetHashCode() ^ this.Y.GetHashCode() << 2 ^ this.Z.GetHashCode() >> 2 ^ this.W.GetHashCode() << 4;
         }
 
         public override bool Equals(object obj)
