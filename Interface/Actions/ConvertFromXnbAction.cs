@@ -74,6 +74,11 @@ namespace FEZRepacker.Interface.Actions
                 UseLegacyArtObjectBundle = args.ContainsKey(UseLegacyAo),
                 UseLegacyTrileSetBundle = args.ContainsKey(UseLegacyTs)
             };
+
+            if (!settings.UseLegacyArtObjectBundle)
+                Console.WriteLine($"To use legacy art object bundle, specify the command with the '{UseLegacyAo}' flag");
+            if (!settings.UseLegacyTrileSetBundle)
+                Console.WriteLine($"To use legacy trile set bundle, specify the command with the '{UseLegacyTs}' flag");
             
             foreach (var xnbPath in xnbFilesToConvert)
             {
