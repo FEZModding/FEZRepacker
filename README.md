@@ -110,7 +110,10 @@ The solution is separated into two projects: `Core` and `Interface`.
 
 ## Credits
 
-This project uses [ImageSharp](https://github.com/SixLabors/ImageSharp) for image-based assets in the conversion step.
+This project uses:
+
+* [ImageSharp](https://github.com/SixLabors/ImageSharp) for image-based assets in the conversion step.
+* [SharpGTLF](https://github.com/vpenades/SharpGLTF) for 3D-based assets in the conversion step.
 
 ## Sources
 
