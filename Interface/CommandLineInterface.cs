@@ -1,6 +1,6 @@
 ﻿using System.CommandLine;
 
-using FEZRepacker.Core.XNB;
+using FEZRepacker.Core;
 using FEZRepacker.Interface.Actions;
 
 namespace FEZRepacker.Interface
@@ -21,10 +21,40 @@ namespace FEZRepacker.Interface
         /// <returns>True if a command was executed, false otherwise.</returns>
         public static int ParseCommandLine(string[] args)
         {
-            var version = typeof(XnbSerializer).Assembly.GetName().Version?.ToString() ?? "";
-            version = string.Join(".", version.Split('.').Take(3));
-            var rootCommand = new RootCommand($"FEZRepacker {version} by Krzyhau & FEZModding Team");
+            return InitializeInterface(Metadata.Version).Parse(args).Invoke();
+        }
 
+        /// <summary>
+        /// Runs interactive mode which repeatedly requests user input and parses it as commands.
+        /// </summary>
+        public static int RunInteractiveMode()
+        {
+            var command = InitializeInterface();
+            Console.WriteLine($"=== {Metadata.Version} ===");
+            Console.Write('\a'); //alert user
+            while (true)
+            {
+                Console.WriteLine();
+                Console.Write("> FEZRepacker.exe ");
+
+                string? line = Console.ReadLine();
+                if (line == null) break; // No lines remain to read. Exit the program.
+
+                var args = ParseArguments(line);
+                if (ParseInteractiveModeCommands(args, out var shouldTerminate))
+                {
+                    if (shouldTerminate) break;
+                    continue;
+                }
+                command.Parse(args).Invoke();
+            }
+
+            return 0;
+        }
+
+        private static RootCommand InitializeInterface(string description = "")
+        {
+            var rootCommand = new RootCommand(description);
             foreach (var action in Actions)
             {
                 var command = new Command(action.Name, action.Description);
@@ -43,34 +73,7 @@ namespace FEZRepacker.Interface
                 command.SetAction(action.Execute);
                 rootCommand.Add(command);
             }
-            
-            return rootCommand.Parse(args).Invoke();
-        }
-
-        /// <summary>
-        /// Runs interactive mode which repeatedly requests user input and parses it as commands.
-        /// </summary>
-        public static int RunInteractiveMode()
-        {
-            Console.Write('\a'); //alert user
-            while (true)
-            {
-                Console.WriteLine();
-                Console.Write("> FEZRepacker.exe ");
-
-                string? line = Console.ReadLine();
-                if (line == null) break; // No lines remain to read. Exit the program.
-
-                var args = ParseArguments(line);
-                if (ParseInteractiveModeCommands(args, out var shouldTerminate))
-                {
-                    if (shouldTerminate) break;
-                    continue;
-                }
-                ParseCommandLine(args);
-            }
-
-            return 0;
+            return rootCommand;
         }
 
         private static bool ParseInteractiveModeCommands(string[] args, out bool terminationRequested)
