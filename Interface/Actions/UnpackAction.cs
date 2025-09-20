@@ -20,10 +20,14 @@ namespace FEZRepacker.Interface.Actions
 
         public string Name => "--unpack";
 
-        public string[] Aliases => ["-u"];
+        public string[] Aliases => ["-u", UnpackDecompressedAlias, UnpackRawAlias];
 
         public string Description =>
-            "Unpacks entire .PAK package into specified directory and attempts to process XNB assets";
+            "Unpacks entire .PAK package into specified directory and attempts to process XNB assets.\n\n"
+            + $"The '{UnpackDecompressedAlias}' and '{UnpackRawAlias}' aliases are provided for backwards compatibility\n"
+            + $"and they reproduce the command behaviour with the '--mode' flags "
+            + $"'{ArgumentsOf(UnpackingMode.DecompressedXnb)}' "
+            + $"and '{ArgumentsOf(UnpackingMode.Raw)}' respectively.";
 
         public Argument[] Arguments => [_pakFile, _destinationDirectory];
 
@@ -48,11 +52,33 @@ namespace FEZRepacker.Interface.Actions
             CustomParser = CustomAliasedEnumParser<UnpackingMode>
         };
 
+        private const string UnpackDecompressedAlias = "--unpack-decompressed";
+        
+        private const string UnpackRawAlias = "--unpack-raw";
+
         public void Execute(ParseResult result)
         {
             var pakFile = result.GetRequiredValue(_pakFile);
             var destinationDirectory = result.GetRequiredValue(_destinationDirectory);
-            var unpackingMode = result.GetValue(_unpackingMode);
+            
+            UnpackingMode unpackingMode;
+            switch (result.CommandResult.IdentifierToken.Value)
+            {
+                // For backward compatibility, the value of the "--mode" option
+                // will be overwritten when using these older commands.
+                case UnpackDecompressedAlias:
+                    Console.WriteLine($"Warning! The '{_unpackingMode.Name}' option will be ignored.");
+                    unpackingMode = UnpackingMode.DecompressedXnb;
+                    break;
+                case UnpackRawAlias:
+                    Console.WriteLine($"Warning! The '{_unpackingMode.Name}' option will be ignored.");
+                    unpackingMode = UnpackingMode.Raw;
+                    break;
+                default:
+                    unpackingMode = result.GetValue(_unpackingMode);
+                    break;
+            }
+            
             var settings = new FormatConverterSettings
             {
                 UseLegacyArtObjectBundle = result.GetValue(UseArtObjectLegacyBundles),
