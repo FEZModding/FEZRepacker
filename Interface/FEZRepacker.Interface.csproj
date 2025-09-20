@@ -20,4 +20,8 @@
     <ProjectReference Include="..\Core\FEZRepacker.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="System.CommandLine" Version="2.0.0-rc.1.25451.107" />
+  </ItemGroup>
+
 </Project>

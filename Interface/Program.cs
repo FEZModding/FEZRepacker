@@ -1,21 +1,12 @@
 ﻿namespace FEZRepacker.Interface
 {
-    internal class Program
+    static class Program
     {
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
-            var version = Core.Metadata.Version;
-            // showoff
-            Console.WriteLine($"=== {version} ===\n");
-
-            if (args.Length > 0)
-            {
-                CommandLineInterface.ParseCommandLine(args);
-            }
-            else
-            {
-                CommandLineInterface.RunInteractiveMode();
-            }
+            return args.Length > 0 
+                ? CommandLineInterface.ParseCommandLine(args) 
+                : CommandLineInterface.RunInteractiveMode();
         }
         
     }
