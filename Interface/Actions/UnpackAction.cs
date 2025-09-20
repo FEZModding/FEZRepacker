@@ -5,6 +5,7 @@ using FEZRepacker.Core.FileSystem;
 using FEZRepacker.Core.XNB;
 
 using static FEZRepacker.Interface.CommandLineOptions;
+using static FEZRepacker.Interface.CommandLineUtils;
 
 namespace FEZRepacker.Interface.Actions
 {
@@ -12,9 +13,9 @@ namespace FEZRepacker.Interface.Actions
     {
         public enum UnpackingMode
         {
-            Converted, // Default value
-            DecompressedXnb,
-            Raw
+            [Aliases("c")] Converted, // Default value
+            [Aliases("d")] DecompressedXnb,
+            [Aliases("r")] Raw
         }
 
         public string Name => "--unpack";
@@ -41,9 +42,10 @@ namespace FEZRepacker.Interface.Actions
         private readonly Option<UnpackingMode> _unpackingMode = new("--mode", "-m")
         {
             Description = "Unpacking mode\n"
-                          + $"  '{nameof(UnpackingMode.Converted)}': Convert XNB assets into their corresponding format (default)\n"
-                          + $"  '{nameof(UnpackingMode.DecompressedXnb)}': Decompress XNB assets, but do not convert them\n"
-                          + $"  '{nameof(UnpackingMode.Raw)}': Leave XNB assets in their original form\n"
+                          + $"  <{ArgumentsOf(UnpackingMode.Converted)}> (default): Convert XNB assets into their corresponding format\n"
+                          + $"  <{ArgumentsOf(UnpackingMode.DecompressedXnb)}>': Decompress XNB assets, but do not convert them\n"
+                          + $"  <{ArgumentsOf(UnpackingMode.Raw)}>': Leave XNB assets in their original form\n",
+            CustomParser = CustomAliasedEnumParser<UnpackingMode>
         };
 
         public void Execute(ParseResult result)
