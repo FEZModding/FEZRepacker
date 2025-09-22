@@ -132,6 +132,11 @@ namespace FEZRepacker.Core.Helpers
 
         public static (Stream?, Stream?) ExtractCubemapStreams(ModelRoot model)
         {
+            if (model.LogicalMaterials.Count < 1)
+            {
+                return default;
+            }
+            
             var material = model.LogicalMaterials[0];
             var albedoChannel = material.FindChannel("BaseColor");
             var emissionChannel = material.FindChannel("Emissive");
