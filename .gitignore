@@ -397,6 +397,7 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 .idea/*
+*/.idea/*
 
 # FEZRepacker project launch settings. Comment it out if needed.
 */Properties/launchSettings.json
