@@ -18,7 +18,7 @@ namespace FEZRepacker.Core.Helpers.Json.CustomConverters
             TimeSpan timespan,
             JsonSerializerOptions options)
         {
-            writer.WriteRawValue($"{timespan.TotalSeconds}");
+            writer.WriteNumberValue((decimal)timespan.TotalSeconds);
         }
     }
 }
