@@ -159,7 +159,7 @@ namespace FEZRepacker.Interface.Actions
                     using var outputBundle = UnpackFile(extension, fileStream, mode, settings);
 
                     outputBundle.BundlePath = Path.Combine(outputDir.FullName, fileRecord.Path);
-                    new DirectoryInfo(outputBundle.BundlePath).Create();
+                    Directory.CreateDirectory(Path.GetDirectoryName(outputBundle.BundlePath) ?? "");
 
                     foreach (var outputFile in outputBundle.Files)
                     {
