@@ -83,9 +83,14 @@ namespace FEZRepacker.Interface.Actions
 
                 using var outputBundle = UnpackAction.UnpackFile(".xnb", xnbStream, UnpackAction.UnpackingMode.Converted, settings);
 
-                var relativePath = Path.GetRelativePath(inputPath, xnbPath)
+                var relativePathRaw = xnbPath == inputPath
+                    ? Path.GetFileName(xnbPath)
+                    : Path.GetRelativePath(inputPath, xnbPath);
+                
+                var relativePath = relativePathRaw
                     .Replace("/", "\\")
                     .Replace(".xnb", "", StringComparison.InvariantCultureIgnoreCase);
+                
                 outputBundle.BundlePath = Path.Combine(outputPath, relativePath + outputBundle.MainExtension);
                 var outputDirectory = Path.GetDirectoryName(outputBundle.BundlePath) ?? "";
                 
