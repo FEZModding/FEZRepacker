@@ -6,6 +6,8 @@
 
 ## Assets conversion description
 
+![Flowchart showing conversion process](Docs/diagram.png)
+
 FEZ stores its game assets in four `.pak` package files: `Essentials.pak`, `Music.pak`, `Other.pak` and `Updates.pak`. These packages can contain three different file types:
 
 - **Ogg** - digital multimedia container. Stores music.
@@ -34,15 +36,16 @@ Here's a list of all 13 asset types handled by FEZ and file types Repacker conve
 
 You can read about conversion formats in detail [here](https://fezmodding.github.io/wiki/content/content_conversion).
 
-> [!WARNING]
-> 
-> By default, the Repacker converts ArtObject and TrileSet 3D models with all-in-one binary glTF bundles
-> for proper import and export process with popular 3D viewers and editors (i.e. Blender).
-> 
-> However, early versions of the Repacker used the legacy bundle format with separate files.
-> If you want to use this early format, check the flags of the CLI commands to activate this.
-
 If you want to learn more about the technical process of reading PAK packages and XNB files, read [this page on the wiki.](https://fezmodding.github.io/wiki/game/content_formats).
+
+### Legacy conversion notice
+
+By default, the Repacker converts ArtObject and TrileSet assets with all-in-one binary glTF bundles
+for proper import and export process with popular 3D viewers and editors (i.e. Blender).
+
+However, early versions of the Repacker used the legacy format consisting of OBJ, PNG and JSON file bundle.
+If you want to use this early format, check the flags of the CLI commands to activate this.
+
 
 ## Usage
 
@@ -103,7 +106,7 @@ Most of the work with building is handled by MSBuild.
 
 The solution is separated into two projects: `Core` and `Interface`.
 
-`Core` contains nearly all of the logic, and is meant to be a stand-alone binary that can be used by other software (most notably, HAT mod loader).
+`Core` contains nearly all the logic, and is meant to be a stand-alone binary that can be used by other software (most notably, HAT mod loader).
 
 `Interface` contains console line interface layer and can be used as a reference for interacting with `Core` library. It is distributed as a self-contained executable using the following command:
 `dotnet publish -c Release -r win-x86 --self-contained`
@@ -120,7 +123,7 @@ This project uses:
 Sources used in a process of writing this tool and documentation:
 
 - [.pak structure reverse-engineering by Mathias Panzenböck (panzi)](http://hackworthy.blogspot.com/2017/08/reverse-engineering-simple-game-archive.html)
-- [Official XNB format documentation by Microsoft Corportation](https://docplayer.net/49383763-Microsoft-xna-game-studio-4-0-compiled-xnb-content-format.html)
+- [Official XNB format documentation by Microsoft Corporation](https://docplayer.net/49383763-Microsoft-xna-game-studio-4-0-compiled-xnb-content-format.html)
 - [XNB reader code from open source implementation of MonoGame](https://github.com/labnation/MonoGame/blob/d270be3e800a3955886e817cdd06133743a7e043/MonoGame.Framework/Content/ContentManager.cs#L405)
 - [xnb_parse repository by fesh0r](https://github.com/fesh0r/xnb_parse/)
 - My own decompilation of the latest FEZ release (as of 2022)
