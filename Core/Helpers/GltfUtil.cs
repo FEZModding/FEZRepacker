@@ -5,6 +5,7 @@ using SharpGLTF.Materials;
 
 using FEZRepacker.Core.Definitions.Game.ArtObject;
 using FEZRepacker.Core.Definitions.Game.Graphics;
+using FEZRepacker.Core.Helpers.Json;
 
 using SharpGLTF.Schema2;
 using SharpGLTF.Transforms;
@@ -29,13 +30,15 @@ namespace FEZRepacker.Core.Helpers
         private const float StepOffsetZ = -2f;
 
         private const int TempFileBufferSize = 4096;
+        
+        private const string PrimitiveTypeKey = "PrimitiveType";
 
         private static readonly Dictionary<GltfPrimitiveType, XnaPrimitiveType> PrimitiveTypeLookup = new()
         {
             { GltfPrimitiveType.LINES, XnaPrimitiveType.LineList },
             { GltfPrimitiveType.LINE_STRIP, XnaPrimitiveType.LineStrip },
             { GltfPrimitiveType.TRIANGLES, XnaPrimitiveType.TriangleList },
-            { GltfPrimitiveType.TRIANGLE_STRIP, XnaPrimitiveType.TriangleList }
+            { GltfPrimitiveType.TRIANGLE_STRIP, XnaPrimitiveType.TriangleStrip }
         };
 
         private static readonly Dictionary<XnaPrimitiveType, GltfPrimitiveType> PrimitiveTypeReverseLookup = new()
@@ -65,6 +68,7 @@ namespace FEZRepacker.Core.Helpers
                 node.LocalTransform = new AffineTransform(System.Numerics.Quaternion.Identity, translation.ToNumeric());
                 node.Mesh = CreateMesh(model, entry.Geometry, material);
                 node.Extras = entry.Extras;
+                node.Extras[PrimitiveTypeKey] = ConfiguredJsonSerializer.SerializeToNode(entry.Geometry.PrimitiveType);
 
                 steps++;
                 translation.X += StepOffsetX;
@@ -89,6 +93,7 @@ namespace FEZRepacker.Core.Helpers
             node.LocalTransform = AffineTransform.Identity;
             node.Mesh = CreateMesh(model, entry.Geometry, material);
             node.Extras = entry.Extras;
+            node.Extras[PrimitiveTypeKey] = ConfiguredJsonSerializer.SerializeToNode(entry.Geometry.PrimitiveType);
 
             return model;
         }
@@ -101,7 +106,10 @@ namespace FEZRepacker.Core.Helpers
             {
                 if (node.Mesh == null)
                 {
-                    geometryList.Add(new GltfEntry<T>(node.Name, new IndexedPrimitives<VertexInstance, T>(), node.Extras));
+                    var jsonNode = node.Extras[PrimitiveTypeKey]!;
+                    var primitiveType = ConfiguredJsonSerializer.DeserializeFromNode<XnaPrimitiveType>(jsonNode);
+                    var instance = new IndexedPrimitives<VertexInstance, T> { PrimitiveType = primitiveType };
+                    geometryList.Add(new GltfEntry<T>(node.Name, instance, node.Extras));
                     continue;
                 }
                 
