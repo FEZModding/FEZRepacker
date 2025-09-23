@@ -1,15 +1,13 @@
 ﻿using System.Text.Json.Nodes;
 
-using SharpGLTF.Geometry;
 using SharpGLTF.Geometry.VertexTypes;
 using SharpGLTF.Materials;
 
 using FEZRepacker.Core.Definitions.Game.ArtObject;
 using FEZRepacker.Core.Definitions.Game.Graphics;
-using FEZRepacker.Core.XNB;
 
-using SharpGLTF.Scenes;
 using SharpGLTF.Schema2;
+using SharpGLTF.Transforms;
 using SharpGLTF.Validation;
 
 using SixLabors.ImageSharp.Formats.Png;
@@ -17,8 +15,6 @@ using SixLabors.ImageSharp.Formats.Png;
 namespace FEZRepacker.Core.Helpers
 {
     using RgbaImage = SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32>;
-    using GltfVertex = VertexBuilder<VertexPositionNormal, VertexTexture1, VertexEmpty>;
-    using GltfMesh = MeshBuilder<VertexPositionNormal, VertexTexture1, VertexEmpty>;
     using GltfPrimitiveType = PrimitiveType;
     using XnaPrimitiveType = Definitions.Game.XNA.PrimitiveType;
     using XnaVector3 = Definitions.Game.XNA.Vector3;
@@ -42,6 +38,14 @@ namespace FEZRepacker.Core.Helpers
             { GltfPrimitiveType.TRIANGLE_STRIP, XnaPrimitiveType.TriangleList }
         };
 
+        private static readonly Dictionary<XnaPrimitiveType, GltfPrimitiveType> PrimitiveTypeReverseLookup = new()
+        {
+            { XnaPrimitiveType.LineList, GltfPrimitiveType.LINES },
+            { XnaPrimitiveType.LineStrip, GltfPrimitiveType.LINE_STRIP },
+            { XnaPrimitiveType.TriangleList, GltfPrimitiveType.TRIANGLES },
+            { XnaPrimitiveType.TriangleStrip, GltfPrimitiveType.TRIANGLE_STRIP }
+        };
+
         public static ModelRoot ToGltfModel<T>(
             string name,
             List<GltfEntry<T>> entries,
@@ -51,16 +55,16 @@ namespace FEZRepacker.Core.Helpers
             var steps = 0;
             var translation = XnaVector3.Zero;
             
-            var scene = new SceneBuilder(name);
-            var material = CreateMaterial(albedo, emission);
+            var model = ModelRoot.CreateModel();
+            var scene = model.UseScene(name);
+            var material = CreateMaterial(model, albedo, emission);
             
-            foreach (var dto in entries)
+            foreach (var entry in entries)
             {
-                var node = new NodeBuilder(dto.Name).WithLocalTranslation(translation.ToNumeric());
-                node.Extras = dto.Extras;
-                
-                var mesh = CreateMesh(dto.Geometry, material);
-                scene.AddRigidMesh(mesh, node);
+                var node = scene.CreateNode(entry.Name);
+                node.LocalTransform = new AffineTransform(System.Numerics.Quaternion.Identity, translation.ToNumeric());
+                node.Mesh = CreateMesh(model, entry.Geometry, material);
+                node.Extras = entry.Extras;
 
                 steps++;
                 translation.X += StepOffsetX;
@@ -69,23 +73,24 @@ namespace FEZRepacker.Core.Helpers
                 translation.Z += StepOffsetZ;
             }
 
-            return scene.ToGltf2();
+            return model;
         }
 
         public static ModelRoot ToGltfModel<T>(
-            GltfEntry<T> gltfEntry,
+            GltfEntry<T> entry,
             RgbaImage albedo,
             RgbaImage emission)
         {
-            var scene = new SceneBuilder(gltfEntry.Name);
-            var node = new NodeBuilder(gltfEntry.Name);
+            var model = ModelRoot.CreateModel();
+            var scene = model.UseScene(entry.Name);
+            var material = CreateMaterial(model, albedo, emission);
             
-            var material = CreateMaterial(albedo, emission);
-            var mesh = CreateMesh(gltfEntry.Geometry, material);
-            
-            node.Extras = gltfEntry.Extras;
-            scene.AddRigidMesh(mesh, node);
-            return scene.ToGltf2();
+            var node = scene.CreateNode(entry.Name);
+            node.LocalTransform = AffineTransform.Identity;
+            node.Mesh = CreateMesh(model, entry.Geometry, material);
+            node.Extras = entry.Extras;
+
+            return model;
         }
         
         public static List<GltfEntry<T>> FromGltfModel<T>(ModelRoot model)
@@ -150,18 +155,19 @@ namespace FEZRepacker.Core.Helpers
             return (albedoStream, emissionStream);
         }
 
-        private static MaterialBuilder CreateMaterial(
+        private static Material CreateMaterial(
+            ModelRoot root,
             RgbaImage albedo,
             RgbaImage emission)
         {
             ImageBuilder albedoImage = albedo.SaveAsMemoryStream(new PngEncoder()).ToArray();
             ImageBuilder emissionImage = emission.SaveAsMemoryStream(new PngEncoder()).ToArray();
 
-            var material = new MaterialBuilder()
+            var materialBuilder = new MaterialBuilder()
                 .WithDoubleSide(true)
                 .WithMetallicRoughnessShader();
             
-            material
+            materialBuilder
                 .UseChannel(KnownChannel.BaseColor)
                 .UseTexture()
                 .WithPrimaryImage(albedoImage)
@@ -171,7 +177,7 @@ namespace FEZRepacker.Core.Helpers
                     TextureMipMapFilter.NEAREST,
                     TextureInterpolationFilter.NEAREST);
             
-            material
+            materialBuilder
                 .UseChannel(KnownChannel.Emissive)
                 .UseTexture()
                 .WithPrimaryImage(emissionImage)
@@ -181,39 +187,36 @@ namespace FEZRepacker.Core.Helpers
                     TextureMipMapFilter.NEAREST,
                     TextureInterpolationFilter.NEAREST);
 
-            return material;
+            return root.CreateMaterial(materialBuilder);
         }
 
-        private static GltfMesh CreateMesh<T>(
+        private static Mesh? CreateMesh<T>(
+            ModelRoot root,
             IndexedPrimitives<VertexInstance, T> geometry,
-            MaterialBuilder material)
+            Material material)
         {
-            var mesh = GltfVertex.CreateCompatibleMesh();
-            var primitive = mesh.UsePrimitive(material);
-
-            var indices = geometry.Indices;
-            var isLine = geometry.PrimitiveType is XnaPrimitiveType.LineList or XnaPrimitiveType.LineStrip;
-            var isList = geometry.PrimitiveType is XnaPrimitiveType.TriangleList or XnaPrimitiveType.LineList;
-
-            if (isLine)
+            if (geometry.Vertices.Length == 0)
             {
-                for (int i = 0; i < indices.Length - indices.Length % 2; i += (isList ? 2 : 1))
-                {
-                    var v1 = geometry.Vertices[indices[i]];
-                    var v2 = geometry.Vertices[indices[i + 1]];
-                    primitive.AddLine(v1.ToVertex(), v2.ToVertex());
-                }
+                // glTF's nodes may not store mesh data.
+                // See: https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#geometry-overview
+                return null;
             }
-            else
-            {
-                for (int i = 0; i < indices.Length - indices.Length % 3; i += (isList ? 3 : 1))
-                {
-                    var v1 = geometry.Vertices[indices[i]];
-                    var v2 = geometry.Vertices[indices[i + 1]];
-                    var v3 = geometry.Vertices[indices[i + 2]];
-                    primitive.AddTriangle(v1.ToVertex(), v2.ToVertex(), v3.ToVertex());
-                }
-            }
+
+            var primitiveType = PrimitiveTypeReverseLookup[geometry.PrimitiveType];
+
+            var vertexAccessors = geometry.Vertices
+                .Select(instance => instance.ToVertex())
+                .ToArray();
+
+            var indices = geometry.Indices
+                .Select(i => (int)i)
+                .ToArray();
+
+            var mesh = root.CreateMesh();
+            mesh.CreatePrimitive()
+                .WithMaterial(material)
+                .WithVertexAccessors(vertexAccessors)
+                .WithIndicesAccessor(primitiveType, indices);
 
             return mesh;
         }
@@ -240,11 +243,12 @@ namespace FEZRepacker.Core.Helpers
             return memoryStream;
         }
 
-        private static GltfVertex ToVertex(this VertexInstance instance)
+        private static (VertexPositionNormal, VertexTexture1) ToVertex(this VertexInstance instance)
         {
-            return GltfVertex
-                .Create(instance.Position.ToNumeric(), instance.Normal.ToNumeric())
-                .WithMaterial(instance.TextureCoordinate.ToNumeric());
+            return (
+                new VertexPositionNormal(instance.Position.ToNumeric(), instance.Normal.ToNumeric()),
+                new VertexTexture1(instance.TextureCoordinate.ToNumeric())
+            );
         }
 
         private static VertexInstance ToVertexInstance(
@@ -260,7 +264,7 @@ namespace FEZRepacker.Core.Helpers
             };
         }
     }
-    
+
     /// <summary>
     /// Data Transfer Object (DTO) for <see cref="GltfUtil"/>.
     /// </summary>
