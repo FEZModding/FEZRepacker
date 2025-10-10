@@ -74,16 +74,22 @@ namespace FEZRepacker.Core.Helpers
             {
                 for (int i = 2; i < indices.Count() - indices.Count() % 3; i += (isList ? 3 : 1))
                 {
-                    // revert orders of indices
-                    int i3 = indices[i - 2] + iOffset;
+                    int i1 = indices[i - 2] + iOffset;
                     int i2 = indices[i - 1] + iOffset;
-                    int i1 = indices[i] + iOffset;
+                    int i3 = indices[i] + iOffset;
 
                     objBuilder.AppendLine($"f {i1}/{i1}/{i1} {i2}/{i2}/{i2} {i3}/{i3}/{i3}");
                 }
             }
 
             return objBuilder.ToString();
+        }
+        
+        public static Dictionary<string, IndexedPrimitives<VertexInstance, T>> FromWavefrontObjStream<T>(Stream objStream)
+        {
+            using var geometryReader = new BinaryReader(objStream, Encoding.UTF8, true);
+            string geometryString = new string(geometryReader.ReadChars((int)objStream.Length));
+            return FromWavefrontObj<T>(geometryString);
         }
 
         public static Dictionary<string, IndexedPrimitives<VertexInstance, T>> FromWavefrontObj<T>(string obj)
@@ -148,10 +154,9 @@ namespace FEZRepacker.Core.Helpers
 
                 else if(tokens[0] == "f" && tokens.Length >= 4)
                 {
-                    // revert orders of indices
-                    indicesGroup[indicesGroup.Count - 1].Add(tokens[3]);
-                    indicesGroup[indicesGroup.Count - 1].Add(tokens[2]);
                     indicesGroup[indicesGroup.Count - 1].Add(tokens[1]);
+                    indicesGroup[indicesGroup.Count - 1].Add(tokens[2]);
+                    indicesGroup[indicesGroup.Count - 1].Add(tokens[3]);
                 }
             }
 

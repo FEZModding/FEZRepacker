@@ -1,16 +1,12 @@
 ﻿using System.Text;
-using System.Text.Json.Nodes;
 
 using FEZRepacker.Core.Definitions.Game.ArtObject;
-using FEZRepacker.Core.Definitions.Game.Graphics;
 using FEZRepacker.Core.Definitions.Game.XNA;
 using FEZRepacker.Core.FileSystem;
 using FEZRepacker.Core.Helpers;
 using FEZRepacker.Core.Helpers.Json;
 
 using SharpGLTF.Schema2;
-using SharpGLTF.Validation;
-
 using SixLabors.ImageSharp.Formats.Png;
 
 namespace FEZRepacker.Core.Conversion.Formats
@@ -61,7 +57,8 @@ namespace FEZRepacker.Core.Conversion.Formats
 
         private static Stream GetModelStream(ArtObject data)
         {
-            return new MemoryStream(Encoding.UTF8.GetBytes(data.Geometry.ToWavefrontObj()));
+            var geometry = data.Geometry.WithReversedWindingIndices();
+            return new MemoryStream(Encoding.UTF8.GetBytes(geometry.ToWavefrontObj()));
         }
 
         private static Stream GetTransmissionFormatStream(ArtObject data)
@@ -71,7 +68,7 @@ namespace FEZRepacker.Core.Conversion.Formats
             using var emission =
                 TexturesUtil.ExtractCubemapPartFromTexture(data.Cubemap, TexturesUtil.CubemapPart.Emission);
             var extras = ConfiguredJsonSerializer.SerializeToNode(data);
-            var entry = new GltfEntry<Matrix>(data.Name, data.Geometry, extras);
+            var entry = new GltfEntry<Matrix>(data.Name, data.Geometry.WithReversedWindingIndices(), extras);
             return GltfUtil.ToGltfModel(entry, albedo, emission).SaveAsGlb();
         }
 
@@ -85,8 +82,8 @@ namespace FEZRepacker.Core.Conversion.Formats
 
             var entry = entries.First();
             var artObject = ConfiguredJsonSerializer.DeserializeFromNode<ArtObject>(entry.Extras) ?? new ArtObject();
-            artObject.Geometry = entry.Geometry;
-            TrixelArtUtil.RecalculateCubemapTexCoords(artObject.Geometry, artObject.Size);
+            artObject.Geometry = entry.Geometry.WithReversedWindingIndices();
+            FezGeometryUtil.RecalculateCubemapTexCoords(artObject.Geometry, artObject.Size);
             
             (Stream? albedo, Stream? emission) = GltfUtil.ExtractCubemapStreams(modelRoot);
             LoadCubemap(ref artObject, albedo, emission);
@@ -96,10 +93,10 @@ namespace FEZRepacker.Core.Conversion.Formats
 
         private static void AppendGeometryStream(ref ArtObject data, Stream geometryStream)
         {
-            var geometries = TrixelArtUtil.LoadGeometry<Matrix>(geometryStream);
+            var geometries = WavefrontObjUtil.FromWavefrontObjStream<Matrix>(geometryStream);
             if (geometries.Count < 1) return;
-            data.Geometry = geometries.First().Value;
-            TrixelArtUtil.RecalculateCubemapTexCoords(data.Geometry, data.Size);
+            data.Geometry = geometries.First().Value.WithReversedWindingIndices();
+            FezGeometryUtil.RecalculateCubemapTexCoords(data.Geometry, data.Size);
         }
 
         private static void LoadCubemap(ref ArtObject data, Stream? albedoStream, Stream? emissionStream)

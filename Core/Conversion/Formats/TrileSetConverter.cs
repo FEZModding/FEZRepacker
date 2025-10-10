@@ -67,7 +67,7 @@ namespace FEZRepacker.Core.Conversion.Formats
 
             foreach (var trileRecord in data.Triles)
             {
-                geometryDict[trileRecord.Key.ToString()] = trileRecord.Value.Geometry;
+                geometryDict[trileRecord.Key.ToString()] = trileRecord.Value.Geometry.WithReversedWindingIndices();
             }
 
             var objString = WavefrontObjUtil.ToWavefrontObj(geometryDict);
@@ -81,7 +81,8 @@ namespace FEZRepacker.Core.Conversion.Formats
             {
                 var extras = ConfiguredJsonSerializer.SerializeToNode(trileRecord.Value) ?? new JsonObject();
                 extras[TrileIdKey] = trileRecord.Key;
-                entries.Add(new GltfEntry<Vector4>(trileRecord.Value.Name, trileRecord.Value.Geometry, extras));
+                var geometry = trileRecord.Value.Geometry.WithReversedWindingIndices();
+                entries.Add(new GltfEntry<Vector4>(trileRecord.Value.Name, geometry, extras));
             }
 
             using var albedo =
@@ -111,7 +112,7 @@ namespace FEZRepacker.Core.Conversion.Formats
                     trileSet.Triles[id] = ConfiguredJsonSerializer.DeserializeFromNode<Trile>(entry.Extras) ?? new Trile();
                 }
 
-                trileSet.Triles[id].Geometry = entry.Geometry;
+                trileSet.Triles[id].Geometry = entry.Geometry.WithReversedWindingIndices();
             }
 
             (Stream? albedo, Stream? emission) = GltfUtil.ExtractCubemapStreams(modelRoot);
@@ -122,7 +123,7 @@ namespace FEZRepacker.Core.Conversion.Formats
 
         private static void AppendGeometryStream(ref TrileSet data, Stream geometryStream)
         {
-            var geometries = TrixelArtUtil.LoadGeometry<Vector4>(geometryStream);
+            var geometries = WavefrontObjUtil.FromWavefrontObjStream<Vector4>(geometryStream);
             foreach (var objRecord in geometries)
             {
                 var id = int.Parse(objRecord.Key);
@@ -132,7 +133,7 @@ namespace FEZRepacker.Core.Conversion.Formats
                     data.Triles[id] = new Trile();
                 }
 
-                data.Triles[id].Geometry = objRecord.Value;
+                data.Triles[id].Geometry = objRecord.Value.WithReversedWindingIndices();
             }
         }
 

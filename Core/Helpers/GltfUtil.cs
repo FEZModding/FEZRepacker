@@ -172,7 +172,6 @@ namespace FEZRepacker.Core.Helpers
             ImageBuilder emissionImage = emission.SaveAsMemoryStream(new PngEncoder()).ToArray();
 
             var materialBuilder = new MaterialBuilder()
-                .WithDoubleSide(true)
                 .WithMetallicRoughnessShader();
             
             materialBuilder
