@@ -79,7 +79,7 @@ namespace FEZRepacker.Core.Conversion.Formats
             var entries = new List<GltfEntry<Vector4>>();
             foreach (var trileRecord in data.Triles)
             {
-                var extras = ConfiguredJsonSerializer.SerializeToNode(trileRecord.Value);
+                var extras = ConfiguredJsonSerializer.SerializeToNode(trileRecord.Value) ?? new JsonObject();
                 extras[TrileIdKey] = trileRecord.Key;
                 entries.Add(new GltfEntry<Vector4>(trileRecord.Value.Name, trileRecord.Value.Geometry, extras));
             }
@@ -100,10 +100,15 @@ namespace FEZRepacker.Core.Conversion.Formats
             var entries = GltfUtil.FromGltfModel<Vector4>(modelRoot);
             foreach (var entry in entries)
             {
+                if (entry.Extras?[TrileIdKey] == null)
+                {
+                    continue;
+                }
+                
                 var id = entry.Extras[TrileIdKey]!.GetValue<int>();
                 if (!trileSet.Triles.ContainsKey(id))
                 {
-                    trileSet.Triles[id] = ConfiguredJsonSerializer.DeserializeFromNode<Trile>(entry.Extras);
+                    trileSet.Triles[id] = ConfiguredJsonSerializer.DeserializeFromNode<Trile>(entry.Extras) ?? new Trile();
                 }
 
                 trileSet.Triles[id].Geometry = entry.Geometry;

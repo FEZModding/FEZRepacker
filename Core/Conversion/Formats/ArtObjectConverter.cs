@@ -84,7 +84,7 @@ namespace FEZRepacker.Core.Conversion.Formats
                 return new ArtObject();
 
             var entry = entries.First();
-            var artObject = ConfiguredJsonSerializer.DeserializeFromNode<ArtObject>(entry.Extras);
+            var artObject = ConfiguredJsonSerializer.DeserializeFromNode<ArtObject>(entry.Extras) ?? new ArtObject();
             artObject.Geometry = entry.Geometry;
             TrixelArtUtil.RecalculateCubemapTexCoords(artObject.Geometry, artObject.Size);
             

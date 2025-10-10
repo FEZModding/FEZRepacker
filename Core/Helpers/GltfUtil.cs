@@ -67,7 +67,7 @@ namespace FEZRepacker.Core.Helpers
                 var node = scene.CreateNode(entry.Name);
                 node.LocalTransform = new AffineTransform(System.Numerics.Quaternion.Identity, translation.ToNumeric());
                 node.Mesh = CreateMesh(model, entry.Geometry, material);
-                node.Extras = entry.Extras;
+                node.Extras = entry.Extras ?? new JsonObject();
                 node.Extras[PrimitiveTypeKey] = ConfiguredJsonSerializer.SerializeToNode(entry.Geometry.PrimitiveType);
 
                 steps++;
@@ -92,7 +92,7 @@ namespace FEZRepacker.Core.Helpers
             var node = scene.CreateNode(entry.Name);
             node.LocalTransform = AffineTransform.Identity;
             node.Mesh = CreateMesh(model, entry.Geometry, material);
-            node.Extras = entry.Extras;
+            node.Extras = entry.Extras ?? new JsonObject();
             node.Extras[PrimitiveTypeKey] = ConfiguredJsonSerializer.SerializeToNode(entry.Geometry.PrimitiveType);
 
             return model;
@@ -106,7 +106,7 @@ namespace FEZRepacker.Core.Helpers
             {
                 if (node.Mesh == null)
                 {
-                    var jsonNode = node.Extras[PrimitiveTypeKey]!;
+                    var jsonNode = node.Extras[PrimitiveTypeKey];
                     var primitiveType = ConfiguredJsonSerializer.DeserializeFromNode<XnaPrimitiveType>(jsonNode);
                     var instance = new IndexedPrimitives<VertexInstance, T> { PrimitiveType = primitiveType };
                     geometryList.Add(new GltfEntry<T>(node.Name, instance, node.Extras));
@@ -279,5 +279,5 @@ namespace FEZRepacker.Core.Helpers
     public record struct GltfEntry<TInstanceType>(
         string Name,
         IndexedPrimitives<VertexInstance, TInstanceType> Geometry,
-        JsonNode Extras);
+        JsonNode? Extras);
 }

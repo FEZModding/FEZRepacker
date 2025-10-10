@@ -49,14 +49,14 @@ namespace FEZRepacker.Core.Helpers.Json
             }
         }
 
-        public static JsonNode SerializeToNode<T>(T data)
+        public static JsonNode? SerializeToNode<T>(T data)
         {
-            return JsonSerializer.SerializeToNode(data, GetOptions())!;
+            return JsonSerializer.SerializeToNode(data, GetOptions());
         }
 
-        public static T DeserializeFromNode<T>(JsonNode node)
+        public static T? DeserializeFromNode<T>(JsonNode? node)
         {
-            return node.Deserialize<T>(GetOptions())!;
+            return node.Deserialize<T>(GetOptions());
         }
 
         private static JsonSerializerOptions GetOptions()
