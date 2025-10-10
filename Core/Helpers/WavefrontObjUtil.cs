@@ -39,18 +39,21 @@ namespace FEZRepacker.Core.Helpers
 
             foreach (var vertex in vertices)
             {
-                objBuilder.AppendLine($"v {vertex.X} {vertex.Y} {vertex.Z}");
+                var vertexString = string.Format(CultureInfo.InvariantCulture, "v {0} {1} {2}", vertex.X, vertex.Y, vertex.Z);
+                objBuilder.AppendLine(vertexString);
             }
 
             foreach (var texCoord in textureCoordinates)
             {
                 // y coords are inverted
-                objBuilder.AppendLine($"vt {texCoord.X} {1.0f - texCoord.Y}");
+                var texCoordString = string.Format(CultureInfo.InvariantCulture, "vt {0} {1}", texCoord.X, 1.0f - texCoord.Y);
+                objBuilder.AppendLine(texCoordString);
             }
 
             foreach (var normal in normals)
             {
-                objBuilder.AppendLine($"vn {normal.X} {normal.Y} {normal.Z}");
+                var normalString = string.Format(CultureInfo.InvariantCulture, "vn {0} {1} {2}", normal.X, normal.Y, normal.Z);
+                objBuilder.AppendLine(normalString);
             }
 
             var indices = geometry.Indices;
