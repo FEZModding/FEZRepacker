@@ -34,9 +34,9 @@
         public static Vector3 operator *(Vector3 v, float f) => new Vector3(v.X * f, v.Y * f, v.Z * f);
         public static Vector3 operator /(Vector3 v, float f) => new Vector3(v.X / f, v.Y / f, v.Z / f);
 
-        public static Vector3 operator +(Vector3 v, Vector3 w) => new Vector3(v.X + w.X, v.Y + w.Y, v.Z + w.Y);
+        public static Vector3 operator +(Vector3 v, Vector3 w) => new Vector3(v.X + w.X, v.Y + w.Y, v.Z + w.Z);
         public static Vector3 operator -(Vector3 v, Vector3 w) => new Vector3(v.X - w.X, v.Y - w.Y, v.Z - w.Z);
-        public static Vector3 operator *(Vector3 v, Vector3 w) => new Vector3(v.X * w.X, v.Y * w.Y, v.Z * w.Y);
+        public static Vector3 operator *(Vector3 v, Vector3 w) => new Vector3(v.X * w.X, v.Y * w.Y, v.Z * w.Z);
         public static Vector3 operator /(Vector3 v, Vector3 w) => new Vector3(v.X / w.X, v.Y / w.Y, v.Z / w.Z);
 
         public bool Equals(Vector3 other) =>
