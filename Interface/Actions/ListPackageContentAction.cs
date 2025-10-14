@@ -1,24 +1,32 @@
-﻿using FEZRepacker.Core.FileSystem;
+﻿using System.CommandLine;
+
+using FEZRepacker.Core.FileSystem;
 
 namespace FEZRepacker.Interface.Actions
 {
-    internal class ListPackageContentAction : CommandLineAction
+    internal class ListPackageContentAction : ICommandLineAction
     {
-        private const string PakPath = "pak-path";
-        
         public string Name => "--list";
-        public string[] Aliases => new[] { "-l" };
-        public string Description => "Lists all files contained withing given .PAK package.";
-        public CommandLineArgument[] Arguments => new[] {
-            new CommandLineArgument(PakPath)
+        
+        public string[] Aliases => ["-l"];
+        
+        public string Description => "Lists all files contained withing given .PAK package";
+
+        public Argument[] Arguments => [_pakFile];
+        
+        public Option[] Options => [];
+
+        private readonly Argument<FileInfo> _pakFile = new("pak-file")
+        {
+            Description = "The PAK file to use for listing files."
         };
 
-        public void Execute(Dictionary<string, string> args)
+        public void Execute(ParseResult result)
         {
-            var pakPath = args[PakPath];
-            var pakPackage = PakPackage.ReadFromFile(pakPath);
+            var pakFile = result.GetRequiredValue(_pakFile);
+            var pakPackage = PakPackage.ReadFromFile(pakFile.FullName);
 
-            Console.WriteLine($"PAK package \"{pakPath}\" with {pakPackage.Entries.Count} files.");
+            Console.WriteLine($"PAK package \"{pakFile}\" with {pakPackage.Entries.Count} files.");
             Console.WriteLine();
 
             foreach (var entry in pakPackage.Entries)

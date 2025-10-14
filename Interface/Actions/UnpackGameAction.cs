@@ -1,60 +1,76 @@
-﻿using FEZRepacker.Core.Conversion;
+﻿using System.CommandLine;
+
+using FEZRepacker.Core.Conversion;
 
 using static FEZRepacker.Interface.Actions.UnpackAction;
+using static FEZRepacker.Interface.CommandLineOptions;
 
 namespace FEZRepacker.Interface.Actions
 {
-    internal class UnpackGameAction : CommandLineAction
+    internal class UnpackGameAction : ICommandLineAction
     {
-        private const string FezContentDirectory = "fez-content-directory";
-        private const string DestinationFolder = "destination-folder";
-        private const string UseLegacyAo = "use-legacy-ao";
-        private const string UseLegacyTs = "use-legacy-ts";
-        
         public string Name => "--unpack-fez-content";
 
-        public string[] Aliases => new[] { "-g" };
+        public string[] Aliases => ["-g"];
 
         public string Description => 
-            "Unpacks and converts all game assets into specified directory (creates one if doesn't exist).";
+            "Unpacks and converts all game assets into specified directory";
 
-        public CommandLineArgument[] Arguments => new[] {
-            new CommandLineArgument(FezContentDirectory),
-            new CommandLineArgument(DestinationFolder),
-            new CommandLineArgument(UseLegacyAo, ArgumentType.Flag),
-            new CommandLineArgument(UseLegacyTs, ArgumentType.Flag)
+        public Argument[] Arguments => [_fezContentDirectory, _destinationDirectory];
+
+        public Option[] Options => [UseArtObjectLegacyBundles, UseTrileSetLegacyBundles];
+
+        private readonly Argument<FileInfo> _fezContentDirectory = new("fez-content-directory")
+        {
+            Description = "Source path of the content directory (usually, it's 'Content' in the game's directory)"
         };
 
-        public void Execute(Dictionary<string, string> args)
+        private readonly Argument<DirectoryInfo> _destinationDirectory = new("destination-directory")
         {
-            var contentPath = args[FezContentDirectory];
-            var outputDir = args[DestinationFolder];
+            Description = "Target path of the destination directory (creates one if doesn't exist)"
+        };
 
-            var packagePaths = new string[] { "Essentials.pak", "Music.pak", "Other.pak", "Updates.pak" }
-                .Select(path => Path.Combine(contentPath, path)).ToArray();
+        private static readonly string[] KnownPaks =
+        [
+            "Essentials.pak",
+            "Music.pak",
+            "Other.pak",
+            "Updates.pak"
+        ];
+        
+        private const string MusicPak = "Music.pak";
+        
+        public void Execute(ParseResult result)
+        {
+            var fezContentDirectory = result.GetRequiredValue(_fezContentDirectory);
+            var destinationDirectory = result.GetRequiredValue(_destinationDirectory);
+
+            var packagePaths = KnownPaks
+                .Select(pak => new FileInfo(Path.Combine(fezContentDirectory.FullName, pak)))
+                .ToArray();
 
             foreach (var packagePath in packagePaths)
             {
-                if (!File.Exists(packagePath))
+                if (!packagePath.Exists)
                 {
-                    throw new Exception($"Given directory is not FEZ's Content directory (missing {Path.GetFileName(packagePath)}).");
+                    throw new Exception($"Given directory is not FEZ's Content directory (missing {packagePath}).");
                 }
             }
-            
+
             var settings = new FormatConverterSettings
             {
-                UseLegacyArtObjectBundle = args.ContainsKey(UseLegacyAo),
-                UseLegacyTrileSetBundle = args.ContainsKey(UseLegacyTs)
+                UseLegacyArtObjectBundle = result.GetValue(UseArtObjectLegacyBundles),
+                UseLegacyTrileSetBundle = result.GetValue(UseTrileSetLegacyBundles)
             };
 
             foreach (var packagePath in packagePaths)
             {
-                var actualOutputDir = outputDir;
-                if (packagePath.EndsWith("Music.pak"))
+                var actualOutputDir = destinationDirectory;
+                if (packagePath.FullName.EndsWith(MusicPak))
                 {
                     // Special Repacker behaviour - instead of dumping music tracks in
                     // the same folder as other assets, put them in separate music folder.
-                    actualOutputDir = Path.Combine(outputDir, "music");
+                    actualOutputDir = new DirectoryInfo(Path.Combine(destinationDirectory.FullName, "music"));
                 }
                 UnpackPackage(packagePath, actualOutputDir, UnpackingMode.Converted, settings);
             }
