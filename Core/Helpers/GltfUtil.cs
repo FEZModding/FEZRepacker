@@ -77,6 +77,7 @@ namespace FEZRepacker.Core.Helpers
                 translation.Z += StepOffsetZ;
             }
 
+            model.DefaultScene = scene;
             return model;
         }
 
@@ -95,6 +96,7 @@ namespace FEZRepacker.Core.Helpers
             node.Extras = entry.Extras ?? new JsonObject();
             node.Extras[PrimitiveTypeKey] = ConfiguredJsonSerializer.SerializeToNode(entry.Geometry.PrimitiveType);
 
+            model.DefaultScene = scene;
             return model;
         }
         
