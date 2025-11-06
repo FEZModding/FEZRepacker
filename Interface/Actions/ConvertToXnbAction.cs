@@ -1,5 +1,4 @@
-﻿
-using System.IO;
+﻿using System.CommandLine;
 
 using FEZRepacker.Core.Conversion;
 using FEZRepacker.Core.FileSystem;
@@ -7,35 +6,36 @@ using FEZRepacker.Core.XNB;
 
 namespace FEZRepacker.Interface.Actions
 {
-    internal class ConvertToXnbAction : CommandLineAction
+    internal class ConvertToXnbAction : ICommandLineAction
     {
-        private const string FileInput = "file-input";
-        
-        private const string XnbOutput = "xnb-output";
-        
-        private const string UseLegacyAo = "use-legacy-ao";
-        
-        private const string UseLegacyTs =  "use-legacy-ts";
-        
         public string Name => "--convert-to-xnb";
 
-        public string[] Aliases => new[] { "-X" };
+        public string[] Aliases => ["-X"];
 
         public string Description =>
-            "Attempts to convert given input (this can be a path to a single file or an entire directory) " +
-            "into XNB file(s) and save it at given output directory. If input is a directory, dumps all converted files in" +
-            "specified path recursively. If output directory is not given, outputs next to the input file(s).";
+            "Attempts to convert given input into XNB file(s) and save it at given output directory";
 
-        public CommandLineArgument[] Arguments => new[] {
-            new CommandLineArgument(FileInput),
-            new CommandLineArgument(XnbOutput, ArgumentType.OptionalPositional)
+        public Argument[] Arguments => [_inputSource];
+
+        public Option[] Options => [_outputDirectory];
+        
+        private readonly Argument<FileSystemInfo> _inputSource = new("input-source")
+        {
+            Description = "Given input to convert (this can be a path to a single file or an entire directory).\n"
+                + "  If input is a directory, dumps all converted files in specified path recursively."
+        };
+        
+        private readonly Option<DirectoryInfo> _outputDirectory = new("output-directory")
+        {
+            Description = "Output directory for saving deconverted XNB file(s).\n"
+                + "  If output directory is not given, outputs next to the input file(s)."
         };
 
         public delegate void ConversionFunc(string path, string extension, Stream stream, bool converted);
-        
+
         public static void PerformBatchConversion(List<FileBundle> fileBundles, ConversionFunc processFileFunc)
         {
-            Console.WriteLine($"Converting {fileBundles.Count()} assets...");
+            Console.WriteLine($"Converting {fileBundles.Count} assets...");
             var filesDone = 0;
             foreach (var fileBundle in fileBundles)
             {
@@ -65,24 +65,34 @@ namespace FEZRepacker.Interface.Actions
             }
         }
 
-        public void Execute(Dictionary<string, string> args)
+        public void Execute(ParseResult result)
         {
-            var inputPath = args[FileInput];
-            var outputPath = args.GetValueOrDefault(XnbOutput, inputPath);
+            var inputSource = result.GetRequiredValue(_inputSource);
+            var outputDirectory = result.GetValue(_outputDirectory);
 
-            if (File.Exists(outputPath))
+            var outputPath = inputSource switch
             {
-                outputPath = Path.GetDirectoryName(outputPath) ?? "";
-            }
-            Directory.CreateDirectory(outputPath);
+                FileInfo inputFile => inputFile.DirectoryName!,
+                DirectoryInfo inputDirectory => inputDirectory.FullName,
+                _ => throw new ArgumentException(nameof(inputSource))
+            };
 
-            var fileBundles = FileBundle.BundleFilesAtPath(inputPath);
-            Console.WriteLine($"Found {fileBundles.Count()} file bundles.");
+            if (outputDirectory != null)
+            {
+                if (!outputDirectory.Exists)
+                {
+                    outputDirectory.Create();
+                }
+                outputPath = outputDirectory.FullName;
+            }
+
+            var fileBundles = FileBundle.BundleFilesAtPath(inputSource.FullName);
+            Console.WriteLine($"Found {fileBundles.Count} file bundles.");
 
             PerformBatchConversion(fileBundles, (path, extension, stream, converted) =>
             {
                 if (!converted) return;
-
+                
                 var assetOutputFullPath = Path.Combine(outputPath, $"{path}{extension}");
 
                 Directory.CreateDirectory(Path.GetDirectoryName(assetOutputFullPath) ?? "");
