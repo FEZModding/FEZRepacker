@@ -10,6 +10,7 @@ namespace FEZRepacker.Interface.Actions
         private const string DestinationFolder = "destination-folder";
         private const string UseLegacyAo = "use-legacy-ao";
         private const string UseLegacyTs = "use-legacy-ts";
+        private const string SkipUpdates = "skip-updates";
         
         public string Name => "--unpack-fez-content";
 
@@ -22,7 +23,8 @@ namespace FEZRepacker.Interface.Actions
             new CommandLineArgument(FezContentDirectory),
             new CommandLineArgument(DestinationFolder),
             new CommandLineArgument(UseLegacyAo, ArgumentType.Flag),
-            new CommandLineArgument(UseLegacyTs, ArgumentType.Flag)
+            new CommandLineArgument(UseLegacyTs, ArgumentType.Flag),
+            new CommandLineArgument(SkipUpdates, ArgumentType.Flag)
         };
 
         public void Execute(Dictionary<string, string> args)
@@ -37,6 +39,13 @@ namespace FEZRepacker.Interface.Actions
             {
                 if (!File.Exists(packagePath))
                 {
+                    if (packagePath.EndsWith("Updates.pak") && args.ContainsKey(SkipUpdates))
+                    {
+                        // Older, pre-FNA releases may not have this PAK.
+                        Console.WriteLine($"Skipping the {Path.GetFileName(packagePath)} directory.");
+                        continue;
+                    }
+                    
                     throw new Exception($"Given directory is not FEZ's Content directory (missing {Path.GetFileName(packagePath)}).");
                 }
             }

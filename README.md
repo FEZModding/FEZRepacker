@@ -64,7 +64,7 @@ Unpacks entire .PAK package into specified directory (creates one if doesn't exi
 - `--unpack-decompressed [pak-path] [destination-folder] --use-legacy-ao --use-legacy-ts`
 Unpacks entire .PAK package into specified directory (creates one if doesn't exist).and attempts to decompress all XNB assets, but does not convert them.
 
-- `[--unpack-fez-content, -g] [fez-content-directory] [destination-folder] --use-legacy-ao --use-legacy-ts`
+- `[--unpack-fez-content, -g] [fez-content-directory] [destination-folder] --use-legacy-ao --use-legacy-ts --skip-updates`
 Unpacks and converts all game assets into specified directory (creates one if doesn't exist).
 
 - `[--pack, -p] [input-directory-path] [destination-pak-path] <include-pak-path>`
