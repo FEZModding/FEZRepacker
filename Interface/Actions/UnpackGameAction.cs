@@ -10,7 +10,6 @@ namespace FEZRepacker.Interface.Actions
         private const string DestinationFolder = "destination-folder";
         private const string UseLegacyAo = "use-legacy-ao";
         private const string UseLegacyTs = "use-legacy-ts";
-        private const string SkipUpdates = "skip-updates";
         
         public string Name => "--unpack-fez-content";
 
@@ -23,8 +22,7 @@ namespace FEZRepacker.Interface.Actions
             new CommandLineArgument(FezContentDirectory),
             new CommandLineArgument(DestinationFolder),
             new CommandLineArgument(UseLegacyAo, ArgumentType.Flag),
-            new CommandLineArgument(UseLegacyTs, ArgumentType.Flag),
-            new CommandLineArgument(SkipUpdates, ArgumentType.Flag)
+            new CommandLineArgument(UseLegacyTs, ArgumentType.Flag)
         };
 
         public void Execute(Dictionary<string, string> args)
@@ -32,22 +30,21 @@ namespace FEZRepacker.Interface.Actions
             var contentPath = args[FezContentDirectory];
             var outputDir = args[DestinationFolder];
 
-            var packagePaths = new string[] { "Essentials.pak", "Music.pak", "Other.pak", "Updates.pak" }
-                .Select(path => Path.Combine(contentPath, path)).ToArray();
-
-            foreach (var packagePath in packagePaths)
+            var packagePaths = Directory.GetFiles(contentPath, "*.pak").OrderBy(f => f).ToList();
+            Console.WriteLine($"Found directories: {string.Join(", ", packagePaths.Select(Path.GetFileName))}");
+            
+            var updatesPak = packagePaths.FirstOrDefault(f => f.EndsWith("Updates.pak"));
+            if (!string.IsNullOrEmpty(updatesPak))
             {
-                if (!File.Exists(packagePath))
-                {
-                    if (packagePath.EndsWith("Updates.pak") && args.ContainsKey(SkipUpdates))
-                    {
-                        // Older, pre-FNA releases may not have this PAK.
-                        Console.WriteLine($"Skipping the {Path.GetFileName(packagePath)} directory.");
-                        continue;
-                    }
-                    
-                    throw new Exception($"Given directory is not FEZ's Content directory (missing {Path.GetFileName(packagePath)}).");
-                }
+                // Files from this directory are overwritten on top of existing ones, so process them last.
+                packagePaths.Remove(updatesPak);
+                packagePaths.Add(updatesPak);
+            }
+            else
+            {
+                Console.WriteLine("\n  WARNING! Updates.pak directory was not found.");
+                Console.WriteLine("  Only older versions of the game (usually released before the current 1.12)");
+                Console.WriteLine("  may not have this directory!\n");
             }
             
             var settings = new FormatConverterSettings
