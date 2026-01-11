@@ -112,8 +112,10 @@ namespace FEZRepacker.Interface.Actions
                 {
                     using var fileStream = pakFile.Open();
                     using var outputBundle = UnpackFile(extension, fileStream, mode, settings);
+                    
+                    string pakFilePathNormalized = Path.Combine(pakFile.Path.Split('/', '\\'));
 
-                    outputBundle.BundlePath = Path.Combine(outputDir, pakFile.Path);
+                    outputBundle.BundlePath = Path.Combine(outputDir, pakFilePathNormalized);
                     Directory.CreateDirectory(Path.GetDirectoryName(outputBundle.BundlePath) ?? "");
 
                     foreach (var outputFile in outputBundle.Files)

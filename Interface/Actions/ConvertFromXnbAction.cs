@@ -88,7 +88,6 @@ namespace FEZRepacker.Interface.Actions
                     : Path.GetRelativePath(inputPath, xnbPath);
                 
                 var relativePath = relativePathRaw
-                    .Replace("/", "\\")
                     .Replace(".xnb", "", StringComparison.InvariantCultureIgnoreCase);
                 
                 outputBundle.BundlePath = Path.Combine(outputPath, relativePath + outputBundle.MainExtension);
