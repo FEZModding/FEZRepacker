@@ -6,6 +6,8 @@ namespace FEZRepacker.Interface.Actions
 {
     internal class UnpackGameAction : CommandLineAction
     {
+        private static string[] ExpectedPackagesFileNames = ["Essentials.pak", "Music.pak", "Other.pak", "Updates.pak"];
+        
         private const string FezContentDirectory = "fez-content-directory";
         private const string DestinationFolder = "destination-folder";
         private const string UseLegacyAo = "use-legacy-ao";
@@ -30,25 +32,22 @@ namespace FEZRepacker.Interface.Actions
             var contentPath = args[FezContentDirectory];
             var outputDir = args[DestinationFolder];
 
-            var packagePaths = new string[] { "Essentials.pak", "Music.pak", "Other.pak", "Updates.pak" }
-                .Select(path => Path.Combine(contentPath, path)).ToArray();
-
-            foreach (var packagePath in packagePaths)
-            {
-                if (!File.Exists(packagePath))
-                {
-                    throw new Exception($"Given directory is not FEZ's Content directory (missing {Path.GetFileName(packagePath)}).");
-                }
-            }
-            
             var settings = new FormatConverterSettings
             {
                 UseLegacyArtObjectBundle = args.ContainsKey(UseLegacyAo),
                 UseLegacyTrileSetBundle = args.ContainsKey(UseLegacyTs)
             };
 
-            foreach (var packagePath in packagePaths)
+            foreach (var packageFileName in ExpectedPackagesFileNames)
             {
+                var packagePath = Path.Combine(contentPath, packageFileName);
+
+                if (!File.Exists(packagePath))
+                {
+                    Console.WriteLine($"Warning: Expected package file {packageFileName} not found.");
+                    continue;
+                }
+                
                 var actualOutputDir = outputDir;
                 if (packagePath.EndsWith("Music.pak"))
                 {
