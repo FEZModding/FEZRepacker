@@ -84,10 +84,11 @@ namespace FEZRepacker.Interface.Actions
                 if (!converted) return;
 
                 var assetOutputFullPath = Path.Combine(outputPath, $"{path}{extension}");
+                string assetOutputFullPathNormalized = Path.Combine(assetOutputFullPath.Split('/', '\\'));
 
-                Directory.CreateDirectory(Path.GetDirectoryName(assetOutputFullPath) ?? "");
+                Directory.CreateDirectory(Path.GetDirectoryName(assetOutputFullPathNormalized) ?? "");
 
-                using var assetFile = File.Create(assetOutputFullPath);
+                using var assetFile = File.Create(assetOutputFullPathNormalized);
                 stream.CopyTo(assetFile);
             });
         }
