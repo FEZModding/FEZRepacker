@@ -30,38 +30,25 @@ namespace FEZRepacker.Core.XNB
         public static object? Deserialize(Stream xnbStream)
         {
             using Stream decompressedInput = XnbCompressor.Decompress(xnbStream);
-
-            if (!XnbHeader.TryRead(decompressedInput, out var header))
-            {
-                throw new XnbSerializationException("Unable to parse XNB header.");
-            }
-
-            using var binaryReader = new BinaryReader(decompressedInput, Encoding.UTF8, true);
-
-            int fileSize = binaryReader.ReadInt32();
-
-            var usedTypesQualifiers = ReadAssemblyQualifiersList(binaryReader);
-
-            int additionalResourcesCount = binaryReader.Read7BitEncodedInt();
-
-            // FEZ XNB files shouldn't have additional resources
-            if (additionalResourcesCount > 0)
-            {
-                throw new XnbSerializationException("Additional XNB resources in a single file detected.");
-            }
-
-            int mainResourceTypeID = binaryReader.Read7BitEncodedInt();
-            var mainResourceQualifier = usedTypesQualifiers[mainResourceTypeID - 1];
-
-            var primaryContentType = XnbPrimaryContents.FindByQualifier(mainResourceQualifier);
-
-            if (primaryContentType == null)
-            {
-                throw new XnbSerializationException($"Cannot find XNB primary format identity for type {mainResourceQualifier.Name}");
-            }
-
+            var primaryContentType = ExtractPrimaryContentIdentity(decompressedInput);
             using var xnbReader = new XnbContentReader(decompressedInput, primaryContentType, true);
             return xnbReader.ReadContent(primaryContentType.PrimaryContentType.ContentType, true);
+        }
+
+        /// <summary>
+        /// Decompresses and deserializes XNB asset only enough to determine primary content type.
+        /// Useful for efficiently determining a type of asset from XNB stream.
+        /// </summary>
+        /// <param name="xnbStream">A stream containing serialized XNB asset</param>
+        /// <returns>A type assigned as a primary content type of given XNB asset.</returns>
+        /// <exception cref="XnbSerializationException">
+        /// Thrown when the stream does not contain a valid XNB file.
+        /// </exception>
+        public static Type DeserializePrimaryContentTypeOnly(Stream xnbStream)
+        {
+            using Stream decompressedInput = XnbCompressor.Decompress(xnbStream);
+            var primaryContentType = ExtractPrimaryContentIdentity(decompressedInput);
+            return primaryContentType.PrimaryContentType.ContentType;
         }
 
         /// <summary>
@@ -105,6 +92,44 @@ namespace FEZRepacker.Core.XNB
             return outputStream;
         }
 
+        private static XnbPrimaryContentIdentity ExtractPrimaryContentIdentity(Stream xnbStream)
+        {
+            if (!XnbHeader.TryRead(xnbStream, out var header))
+            {
+                throw new XnbSerializationException("Unable to parse XNB header.");
+            }
+
+            if ((header.Flags & XnbHeader.XnbFlags.Compressed) != 0)
+            {
+                throw new XnbSerializationException("Cannot extract primary content identity from compressed XNB stream.");
+            }
+
+            using var binaryReader = new BinaryReader(xnbStream, Encoding.UTF8, true);
+
+            int fileSize = binaryReader.ReadInt32();
+
+            var usedTypesQualifiers = ReadAssemblyQualifiersList(binaryReader);
+
+            int additionalResourcesCount = binaryReader.Read7BitEncodedInt();
+
+            // FEZ XNB files shouldn't have additional resources
+            if (additionalResourcesCount > 0)
+            {
+                throw new XnbSerializationException("Additional XNB resources in a single file detected.");
+            }
+
+            int mainResourceTypeID = binaryReader.Read7BitEncodedInt();
+            var mainResourceQualifier = usedTypesQualifiers[mainResourceTypeID - 1];
+
+            var primaryContentType = XnbPrimaryContents.FindByQualifier(mainResourceQualifier);
+
+            if (primaryContentType == null)
+            {
+                throw new XnbSerializationException($"Cannot find XNB primary format identity for type {mainResourceQualifier.Name}");
+            }
+            
+            return primaryContentType;
+        }
 
         private static List<XnbAssemblyQualifier> ReadAssemblyQualifiersList(BinaryReader xnbReader)
         {
