@@ -1,4 +1,5 @@
 ﻿using FEZRepacker.Core.FileSystem;
+using FEZRepacker.Core.XNB;
 
 namespace FEZRepacker.Interface.Actions
 {
@@ -24,6 +25,24 @@ namespace FEZRepacker.Interface.Actions
             foreach (var entry in pakPackage.Entries)
             {
                 var extension = entry.FindExtension();
+                if (extension == ".xnb")
+                {
+                    using var pakFile = entry.Open();
+                    string assetTypeName;
+                    try
+                    {
+                        var assetType = XnbSerializer.DeserializePrimaryContentTypeOnly(pakFile);
+                        assetTypeName = assetType.Name;
+                    }
+                    catch
+                    {
+                        assetTypeName = "unknown";
+                    }
+                    
+                    Console.WriteLine($"{entry.Path} ({assetTypeName} XNB asset, size: {entry.Length} bytes)");
+                    continue;
+                }
+                
                 var typeText = extension.Length == 0 ? "unknown" : extension;
                 Console.WriteLine($"{entry.Path} ({typeText} file, size: {entry.Length} bytes)");
             }
