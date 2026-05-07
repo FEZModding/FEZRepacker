@@ -3,6 +3,8 @@
  * (C) 2003-2004 Stuart Caie.
  * (C) 2011 Ali Scissons.
  *
+ * Slightly modified with performance in mind for FEZRepacker
+ * 
  * The LZX method was created by Jonathan Forbes and Tomi Poutanen, adapted
  * by Microsoft Corporation.
  *
@@ -52,6 +54,8 @@ namespace Microsoft.Xna.Framework.Content
 
     class LzxDecoder
     {
+        private const int UINT_BITS = sizeof(uint) * 8;
+        
         public static uint[] position_base;
         public static byte[] extra_bits;
 
@@ -87,7 +91,7 @@ namespace Microsoft.Xna.Framework.Content
             m_state = new LzxState();
             m_state.actual_size = 0;
             m_state.window = new byte[wndsize];
-            for (int i = 0; i < wndsize; i++) m_state.window[i] = 0xDC;
+            m_state.window.AsSpan().Fill(0xDC);
             m_state.actual_size = wndsize;
             m_state.window_size = wndsize;
             m_state.window_posn = 0;
@@ -115,9 +119,9 @@ namespace Microsoft.Xna.Framework.Content
             m_state.LENGTH_len = new byte[LzxConstants.LENGTH_MAXSYMBOLS + LzxConstants.LENTABLE_SAFETY];
             m_state.ALIGNED_table = new ushort[(1 << LzxConstants.ALIGNED_TABLEBITS) + (LzxConstants.ALIGNED_MAXSYMBOLS << 1)];
             m_state.ALIGNED_len = new byte[LzxConstants.ALIGNED_MAXSYMBOLS + LzxConstants.LENTABLE_SAFETY];
-            /* initialise tables to 0 (because deltas will be applied to them) */
-            for (int i = 0; i < LzxConstants.MAINTREE_MAXSYMBOLS; i++) m_state.MAINTREE_len[i] = 0;
-            for (int i = 0; i < LzxConstants.LENGTH_MAXSYMBOLS; i++) m_state.LENGTH_len[i] = 0;
+            /* initialize tables to 0 (because deltas will be applied to them) */
+            m_state.MAINTREE_len.AsSpan().Clear();
+            m_state.LENGTH_len.AsSpan().Clear();
         }
 
         public int Decompress(Stream inData, int inLen, Stream outData, int outLen)
@@ -445,9 +449,7 @@ namespace Microsoft.Xna.Framework.Content
 
                         case LzxConstants.BLOCKTYPE.UNCOMPRESSED:
                             if ((inData.Position + this_run) > endpos) return -1; //TODO throw proper exception
-                            byte[] temp_buffer = new byte[this_run];
-                            inData.Read(temp_buffer, 0, this_run);
-                            temp_buffer.CopyTo(window, (int)window_posn);
+                            inData.Read(window, (int)window_posn, this_run);
                             window_posn += (uint)this_run;
                             break;
 
@@ -522,8 +524,7 @@ namespace Microsoft.Xna.Framework.Content
                         if ((pos += bit_mask) > table_mask) return 1; /* table overrun */
 
                         /* fill all possible lookups of this symbol with the symbol itself */
-                        fill = bit_mask;
-                        while (fill-- > 0) table[leaf++] = sym;
+                        table.AsSpan((int)leaf, (int)bit_mask).Fill(sym);
                     }
                 }
                 bit_mask >>= 1;
@@ -534,7 +535,7 @@ namespace Microsoft.Xna.Framework.Content
             if (pos != table_mask)
             {
                 /* clear the remainder of the table */
-                for (sym = (ushort)pos; sym < table_mask; sym++) table[sym] = 0;
+                table.AsSpan((int)pos, (int)(table_mask - pos)).Clear();
 
                 /* give ourselves room for codes to grow by up to 16 more bits */
                 pos <<= 16;
@@ -601,13 +602,15 @@ namespace Microsoft.Xna.Framework.Content
                                 LzxConstants.PRETREE_MAXSYMBOLS, LzxConstants.PRETREE_TABLEBITS, bitbuf);
                 if (z == 17)
                 {
-                    y = bitbuf.ReadBits(4); y += 4;
-                    while (y-- != 0) lens[x++] = 0;
+                    y = bitbuf.ReadBits(4) + 4;
+                    lens.AsSpan((int)x, (int)y).Clear();
+                    x += y;
                 }
                 else if (z == 18)
                 {
-                    y = bitbuf.ReadBits(5); y += 20;
-                    while (y-- != 0) lens[x++] = 0;
+                    y = bitbuf.ReadBits(5) + 20;
+                    lens.AsSpan((int)x, (int)y).Clear();
+                    x += y;
                 }
                 else if (z == 19)
                 {
@@ -631,7 +634,7 @@ namespace Microsoft.Xna.Framework.Content
             bitbuf.EnsureBits(16);
             if ((i = table[bitbuf.PeekBits((byte)nbits)]) >= nsyms)
             {
-                j = (uint)(1 << (int)((sizeof(uint) * 8) - nbits));
+                j = (uint)(1 << (int)(UINT_BITS - nbits));
                 do
                 {
                     j >>= 1; i <<= 1; i |= (bitbuf.GetBuffer() & j) != 0 ? (uint)1 : 0;
@@ -670,14 +673,14 @@ namespace Microsoft.Xna.Framework.Content
                     int lo = (byte)byteStream.ReadByte();
                     int hi = (byte)byteStream.ReadByte();
                     //int amount2shift = sizeof(uint)*8 - 16 - bitsleft;
-                    buffer |= (uint)(((hi << 8) | lo) << (sizeof(uint) * 8 - 16 - bitsleft));
+                    buffer |= (uint)(((hi << 8) | lo) << (UINT_BITS - 16 - bitsleft));
                     bitsleft += 16;
                 }
             }
 
             public uint PeekBits(byte bits)
             {
-                return (buffer >> ((sizeof(uint) * 8) - bits));
+                return (buffer >> (UINT_BITS - bits));
             }
 
             public void RemoveBits(byte bits)
