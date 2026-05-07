@@ -10,9 +10,9 @@ namespace FEZRepacker.Core.XNB.ContentTypes
     {
         protected override List<XnbContentSerializer> ContentTypesFactory => new()
         {
-            new GenericContentSerializer<Sky>(),
+            new SkyContentSerializer(),
             new ListContentSerializer<SkyLayer>(),
-            new GenericContentSerializer<SkyLayer>(),
+            new SkyLayerContentSerializer(),
             new ListContentSerializer<string>(),
             new StringContentSerializer()
         };

@@ -26,6 +26,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Core.SourceGen\FEZRepacker.Core.SourceGen.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="SharpGLTF.Core" Version="1.0.4" />
     <PackageReference Include="SharpGLTF.Toolkit" Version="1.0.4" />
     <PackageReference Include="System.Text.Json" Version="9.0.4" />

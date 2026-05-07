@@ -10,7 +10,7 @@ namespace FEZRepacker.Core.XNB.ContentTypes
     {
         protected override List<XnbContentSerializer> ContentTypesFactory => new()
         {
-            new GenericContentSerializer<NpcMetadata>(),
+            new NpcMetadataContentSerializer(),
             new StringContentSerializer(),
             new ListContentSerializer<NpcAction>(true),
             new EnumContentSerializer<NpcAction>(),

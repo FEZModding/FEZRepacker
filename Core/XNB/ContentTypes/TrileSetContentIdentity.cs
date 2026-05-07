@@ -13,23 +13,23 @@ namespace FEZRepacker.Core.XNB.ContentTypes
     {
         protected override List<XnbContentSerializer> ContentTypesFactory => new()
         {
-            new GenericContentSerializer<TrileSet>(),
+            new TrileSetContentSerializer(),
             new DictionaryContentSerializer<int, Trile>(),
             new Int32ContentSerializer(),
-            new GenericContentSerializer<Trile>(),
+            new TrileContentSerializer(),
             new DictionaryContentSerializer<FaceOrientation, CollisionType>(true, true),
             new EnumContentSerializer<FaceOrientation>(),
             new EnumContentSerializer<CollisionType>(),
-            new GenericContentSerializer<IndexedPrimitives<VertexInstance, Vector4>>(),
-            new GenericContentSerializer<VertexInstance>(),
-            new GenericContentSerializer<Vector4>(),
+            new IndexedPrimitivesContentSerializer<VertexInstance, Vector4>(),
+            new VertexInstanceContentSerializer(),
+            new Vector4ContentSerializer(),
             new EnumContentSerializer<PrimitiveType>(),
             new ArrayContentSerializer<VertexInstance>(),
             new ArrayContentSerializer<ushort>(),
             new UInt16ContentSerializer(),
             new EnumContentSerializer<ActorType>(),
             new EnumContentSerializer<SurfaceType>(),
-            new GenericContentSerializer<Texture2D>(),
+            new Texture2DContentSerializer(),
             new EnumContentSerializer<SurfaceFormat>(),
             new ByteArrayContentSerializer()
         };
