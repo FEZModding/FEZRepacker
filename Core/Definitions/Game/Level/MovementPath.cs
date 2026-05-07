@@ -1,7 +1,7 @@
 ﻿namespace FEZRepacker.Core.Definitions.Game.Level
 {
-    [XnbType("FezEngine.Structure.MovementPath")]
-    [XnbReaderType("FezEngine.Readers.MovementPathReader")]
+    [XnbType("FezEngine.Structure.MovementPath, FezEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")]
+    [XnbReaderType("FezEngine.Readers.MovementPathReader, FezEngine")]
     public class MovementPath
     {
         [XnbProperty(UseConverter = true)]

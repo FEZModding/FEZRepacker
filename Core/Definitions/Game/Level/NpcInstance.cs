@@ -3,8 +3,8 @@ using FEZRepacker.Core.Definitions.Game.XNA;
 
 namespace FEZRepacker.Core.Definitions.Game.Level
 {
-    [XnbType("FezEngine.Structure.NpcInstance")]
-    [XnbReaderType("FezEngine.Readers.NpcInstanceReader")]
+    [XnbType("FezEngine.Structure.NpcInstance, FezEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")]
+    [XnbReaderType("FezEngine.Readers.NpcInstanceReader, FezEngine")]
     public class NpcInstance
     {
         [XnbProperty]

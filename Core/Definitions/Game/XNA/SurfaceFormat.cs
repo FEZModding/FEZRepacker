@@ -1,6 +1,6 @@
 ﻿namespace FEZRepacker.Core.Definitions.Game.XNA
 {
-    [XnbType("Microsoft.Xna.Framework.Graphics.SurfaceFormat")]
+    [XnbType("Microsoft.Xna.Framework.Graphics.SurfaceFormat, Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553")]
     public enum SurfaceFormat
     {
         Color = 0,

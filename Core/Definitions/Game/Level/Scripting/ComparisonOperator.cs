@@ -1,6 +1,6 @@
 ﻿namespace FEZRepacker.Core.Definitions.Game.Level.Scripting
 {
-    [XnbType("FezEngine.Structure.Scripting.ComparisonOperator")]
+    [XnbType("FezEngine.Structure.Scripting.ComparisonOperator, FezEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")]
     public enum ComparisonOperator
     {
         None = -1,

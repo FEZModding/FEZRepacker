@@ -1,7 +1,7 @@
 ﻿namespace FEZRepacker.Core.Definitions.Game.Level
 {
-    [XnbType("FezEngine.Structure.AmbienceTrack")]
-    [XnbReaderType("FezEngine.Readers.AmbienceTrackReader")]
+    [XnbType("FezEngine.Structure.AmbienceTrack, FezEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")]
+    [XnbReaderType("FezEngine.Readers.AmbienceTrackReader, FezEngine")]
     public class AmbienceTrack
     {
         [XnbProperty(UseConverter = true)]

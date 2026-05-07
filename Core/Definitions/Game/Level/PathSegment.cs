@@ -2,8 +2,8 @@
 
 namespace FEZRepacker.Core.Definitions.Game.Level
 {
-    [XnbType("FezEngine.Structure.PathSegment")]
-    [XnbReaderType("FezEngine.Readers.PathSegmentReader")]
+    [XnbType("FezEngine.Structure.PathSegment, FezEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")]
+    [XnbReaderType("FezEngine.Readers.PathSegmentReader, FezEngine")]
     public class PathSegment
     {
         [XnbProperty]

@@ -26,6 +26,15 @@
         /// <param name="data">Object to write, preferably of the type defined in this content type structure.</param>
         /// <param name="writer">Binary writer to write an object to.</param>
         public abstract void Serialize(object data, XnbContentWriter writer);
+
+        /// <summary>
+        /// Marks content serializer private - its qualifier name won't appear in XNB header.
+        /// </summary>
+        public XnbContentSerializer MarkPrivate()
+        {
+            IsPrivate = true;
+            return this;
+        }
     }
 
     /// <summary>

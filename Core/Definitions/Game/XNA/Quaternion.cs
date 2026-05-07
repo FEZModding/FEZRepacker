@@ -1,6 +1,6 @@
 ﻿namespace FEZRepacker.Core.Definitions.Game.XNA
 {
-    [XnbType("Microsoft.Xna.Framework.Quaternion")]
+    [XnbType("Microsoft.Xna.Framework.Quaternion, Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553")]
     [XnbReaderType("Microsoft.Xna.Framework.Content.QuaternionReader")]
     public struct Quaternion : IEquatable<Quaternion>
     {

@@ -3,8 +3,8 @@ using FEZRepacker.Core.Definitions.Game.XNA;
 
 namespace FEZRepacker.Core.Definitions.Game.Level
 {
-    [XnbType("FezEngine.Structure.TrileGroup")]
-    [XnbReaderType("FezEngine.Readers.TrileGroupReader")]
+    [XnbType("FezEngine.Structure.TrileGroup, FezEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")]
+    [XnbReaderType("FezEngine.Readers.TrileGroupReader, FezEngine")]
     public class TrileGroup
     {
         [XnbProperty(UseConverter = true)]

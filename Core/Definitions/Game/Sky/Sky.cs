@@ -1,7 +1,7 @@
 ﻿namespace FEZRepacker.Core.Definitions.Game.Sky 
 { 
-    [XnbType("FezEngine.Structure.Sky")]
-    [XnbReaderType("FezEngine.Readers.SkyReader")]
+    [XnbType("FezEngine.Structure.Sky, FezEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")]
+    [XnbReaderType("FezEngine.Readers.SkyReader, FezEngine")]
     public class Sky
     {
         [XnbProperty]

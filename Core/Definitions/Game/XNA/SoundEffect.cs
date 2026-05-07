@@ -1,6 +1,6 @@
 ﻿namespace FEZRepacker.Core.Definitions.Game.XNA
 {
-    [XnbType("Microsoft.Xna.Framework.Audio.SoundEffect")]
+    [XnbType("Microsoft.Xna.Framework.Audio.SoundEffect, Microsoft.Xna.Framework.Audio, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553")]
     [XnbReaderType("Microsoft.Xna.Framework.Content.SoundEffectReader")]
     public class SoundEffect
     {

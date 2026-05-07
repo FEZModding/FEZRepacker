@@ -1,7 +1,7 @@
 ﻿namespace FEZRepacker.Core.Definitions.Game.XNA
 {
-    [XnbType("Microsoft.Xna.Framework.Graphics.Texture2D")]
-    [XnbReaderType("Microsoft.Xna.Framework.Content.Texture2DReader")]
+    [XnbType("Microsoft.Xna.Framework.Graphics.Texture2D, Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553")]
+    [XnbReaderType("Microsoft.Xna.Framework.Content.Texture2DReader, Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553")]
     public class Texture2D
     {
         [XnbProperty(UseConverter = true, SkipIdentifier = true)]

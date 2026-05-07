@@ -2,8 +2,8 @@
 
 namespace FEZRepacker.Core.Definitions.Game.Level
 {
-    [XnbType("FezEngine.Structure.TrileInstance")]
-    [XnbReaderType("FezEngine.Readers.TrileInstanceReader")]
+    [XnbType("FezEngine.Structure.TrileInstance, FezEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")]
+    [XnbReaderType("FezEngine.Readers.TrileInstanceReader, FezEngine")]
     public class TrileInstance
     {
         [XnbProperty]

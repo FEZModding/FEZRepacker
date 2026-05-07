@@ -2,8 +2,8 @@
 
 namespace FEZRepacker.Core.Definitions.Game.MapTree
 {
-    [XnbType("FezEngine.Structure.MapNode")]
-    [XnbReaderType("FezEngine.Readers.MapNodeReader")]
+    [XnbType("FezEngine.Structure.MapNode, FezEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")]
+    [XnbReaderType("FezEngine.Readers.MapNodeReader, FezEngine")]
     public class MapNode
     {
         [XnbProperty]

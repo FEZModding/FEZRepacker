@@ -11,7 +11,7 @@ namespace FEZRepacker.Core.XNB.ContentTypes
         {
             new Texture2DContentSerializer(),
             new EnumContentSerializer<SurfaceFormat>(),
-            new ByteArrayContentSerializer()
+            new ByteArrayContentSerializer().MarkPrivate()
         };
     }
 }

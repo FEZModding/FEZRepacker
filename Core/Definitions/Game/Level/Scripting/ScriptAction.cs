@@ -1,7 +1,7 @@
 ﻿namespace FEZRepacker.Core.Definitions.Game.Level.Scripting
 {
-    [XnbType("FezEngine.Structure.Scripting.ScriptAction")]
-    [XnbReaderType("FezEngine.Readers.ScriptActionReader")]
+    [XnbType("FezEngine.Structure.Scripting.ScriptAction, FezEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")]
+    [XnbReaderType("FezEngine.Readers.ScriptActionReader, FezEngine")]
     public class ScriptAction
     {
         [XnbProperty(UseConverter = true)]

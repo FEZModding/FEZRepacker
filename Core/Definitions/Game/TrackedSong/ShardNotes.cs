@@ -1,6 +1,6 @@
 ﻿namespace FEZRepacker.Core.Definitions.Game.TrackedSong
 {
-    [XnbType("FezEngine.Structure.ShardNotes")]
+    [XnbType("FezEngine.Structure.ShardNotes, FezEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")]
     public enum ShardNotes
     {
         C2,

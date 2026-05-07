@@ -1,7 +1,7 @@
 ﻿namespace FEZRepacker.Core.Definitions.Game.TrackedSong
 {
-    [XnbType("FezEngine.Structure.TrackedSong")]
-    [XnbReaderType("FezEngine.Readers.TrackedSongReader")]
+    [XnbType("FezEngine.Structure.TrackedSong, FezEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")]
+    [XnbReaderType("FezEngine.Readers.TrackedSongReader, FezEngine")]
     public class TrackedSong
     {
         [XnbProperty(UseConverter = true)]

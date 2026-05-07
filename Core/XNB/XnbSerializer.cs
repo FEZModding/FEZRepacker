@@ -158,7 +158,7 @@ namespace FEZRepacker.Core.XNB
             foreach (var type in writer.Identity.PublicContentTypes)
             {
                 writer.Write(type.Name.GetDisplayName(false)); // name
-                writer.Write(0); // version
+                writer.Write(0); // version (always 0 in original game assets)
             }
         }
 

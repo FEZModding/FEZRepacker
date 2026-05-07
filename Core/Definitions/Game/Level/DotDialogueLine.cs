@@ -1,7 +1,7 @@
 ﻿namespace FEZRepacker.Core.Definitions.Game.Level
 {
-    [XnbType("FezEngine.Structure.DotDialogueLine")]
-    [XnbReaderType("FezEngine.Readers.DotDialogueLineReader")]
+    [XnbType("FezEngine.Structure.DotDialogueLine, FezEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")]
+    [XnbReaderType("FezEngine.Readers.DotDialogueLineReader, FezEngine")]
     public class DotDialogueLine
     {
         [XnbProperty(UseConverter = true)]

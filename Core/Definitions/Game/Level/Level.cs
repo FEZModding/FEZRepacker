@@ -4,8 +4,8 @@ using FEZRepacker.Core.Definitions.Game.XNA;
 
 namespace FEZRepacker.Core.Definitions.Game.Level
 {
-    [XnbType("FezEngine.Structure.Level")]
-    [XnbReaderType("FezEngine.Readers.LevelReader")]
+    [XnbType("FezEngine.Structure.Level, FezEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")]
+    [XnbReaderType("FezEngine.Readers.LevelReader, FezEngine")]
     public class Level
     {
         [XnbProperty(UseConverter = true)]

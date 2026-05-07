@@ -5,8 +5,8 @@ using FEZRepacker.Core.Definitions.Game.XNA;
 
 namespace FEZRepacker.Core.Definitions.Game.TrileSet
 {
-    [XnbType("FezEngine.Structure.TrileSet")]
-    [XnbReaderType("FezEngine.Readers.TrileSetReader")]
+    [XnbType("FezEngine.Structure.TrileSet, FezEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")]
+    [XnbReaderType("FezEngine.Readers.TrileSetReader, FezEngine")]
     public class TrileSet
     {
         [XnbProperty]

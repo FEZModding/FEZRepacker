@@ -1,7 +1,7 @@
 ﻿namespace FEZRepacker.Core.Definitions.Game.Level
 {
-    [XnbType("FezEngine.Structure.SpeechLine")]
-    [XnbReaderType("FezEngine.Readers.SpeechLineReader")]
+    [XnbType("FezEngine.Structure.SpeechLine, FezEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")]
+    [XnbReaderType("FezEngine.Readers.SpeechLineReader, FezEngine")]
     public class SpeechLine
     {
         [XnbProperty(UseConverter = true)]

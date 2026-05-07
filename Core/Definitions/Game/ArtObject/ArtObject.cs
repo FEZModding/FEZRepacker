@@ -7,8 +7,8 @@ using FEZRepacker.Core.Definitions.Game.XNA;
 
 namespace FEZRepacker.Core.Definitions.Game.ArtObject
 {
-    [XnbType("FezEngine.Structure.ArtObject")]
-    [XnbReaderType("FezEngine.Readers.ArtObjectReader")]
+    [XnbType("FezEngine.Structure.ArtObject, FezEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")]
+    [XnbReaderType("FezEngine.Readers.ArtObjectReader, FezEngine")]
     public class ArtObject
     {
         [XnbProperty]

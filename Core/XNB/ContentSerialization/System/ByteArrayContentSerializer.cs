@@ -8,7 +8,6 @@
             _name = typeof(ArrayContentSerializer<byte>).FullName ?? "";
             _name.Namespace = "Microsoft.Xna.Framework.Content";
             _name.Name = "ArrayReader";
-            IsPrivate = true;
         }
 
         public override XnbAssemblyQualifier Name => _name;
