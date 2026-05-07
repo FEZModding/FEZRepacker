@@ -25,35 +25,29 @@ namespace FEZRepacker.Core.XNB
         {
             if (T.IsPrimitive) skipIdentifier = true;
 
-            int typeID = Identity.ContentTypes.FindIndex(t => t.ContentType == T);
-            if (typeID >= 0 && data != null)
+            if (data == null)
             {
-                if (!skipIdentifier && Identity.ContentTypes[typeID].IsEmpty(data))
-                {
-                    Write((byte)0x00);
-                }
-                else
-                {
-                    if (!skipIdentifier)
-                    {
-                        int publicTypeID = Identity.PublicContentTypes.FindIndex(t => t.ContentType == T);
-                        if (publicTypeID < 0)
-                        {
-                            throw new InvalidOperationException($"Attempted to write index of private content type {Identity.ContentTypes[typeID].Name}");
-                        }
-                        Write7BitEncodedInt(publicTypeID + 1);
-                    }
-                    Identity.ContentTypes[typeID].Serialize(data, this);
-                }
+                Write((byte)0x00);
+                return;
             }
-            else
+
+            int typeId = Identity.ContentTypes.FindIndex(t => t.ContentType == T);
+            if (typeId < 0)
             {
-                if (!skipIdentifier)
-                {
-                    Console.WriteLine($"WARNING! Couldn't assign type for {data} in {GetType()}");
-                    Write((byte)0x00);
-                }
+                throw new XnbSerializationException($"Couldn't assign type for {data} in {GetType()}");
             }
+            
+            if (!skipIdentifier)
+            {
+                int publicTypeId = Identity.PublicContentTypes.FindIndex(t => t.ContentType == T);
+                if (publicTypeId < 0)
+                {
+                    throw new XnbSerializationException(
+                        $"Attempted to write index of private content type {Identity.ContentTypes[typeId].Name}");
+                }
+                Write7BitEncodedInt(publicTypeId + 1);
+            }
+            Identity.ContentTypes[typeId].Serialize(data, this);
         }
     }
 }

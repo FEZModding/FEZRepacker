@@ -26,17 +26,6 @@
         /// <param name="data">Object to write, preferably of the type defined in this content type structure.</param>
         /// <param name="writer">Binary writer to write an object to.</param>
         public abstract void Serialize(object data, XnbContentWriter writer);
-
-        /// <summary>
-        /// Used to determine whether an object of this content type is empty.
-        /// Used by a converter to read/write nullable types.
-        /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        public virtual bool IsEmpty(object data)
-        {
-            return false;
-        }
     }
 
     /// <summary>

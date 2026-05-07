@@ -26,24 +26,22 @@ namespace FEZRepacker.Core.XNB
 
         public object? ReadContent(Type T, bool skipIdentifier = false)
         {
-            if (T.IsPrimitive) skipIdentifier = true;
-
-            int type = skipIdentifier ? 0 : Read7BitEncodedInt();
-
-            if (type > 0 || skipIdentifier)
+            if (!skipIdentifier && !T.IsPrimitive)
             {
-                XnbContentSerializer? typeConverter = Identity.ContentTypes.ToList().Find(t => t.ContentType == T);
-                if (typeConverter != null)
+                int type = Read7BitEncodedInt();
+                if (type == 0)
                 {
-                    return typeConverter.Deserialize(this);
-                }
-                else
-                {
-                    throw new InvalidDataException($"Cannot convert value of type {T.FullName}");
+                    return null;
                 }
             }
 
-            return null;
+            XnbContentSerializer? typeConverter = Identity.ContentTypes.Find(t => t.ContentType == T);
+            if (typeConverter == null)
+            {
+                throw new InvalidDataException($"Cannot convert value of type {T.FullName}");
+            }
+            
+            return typeConverter.Deserialize(this);
         }
     }
 }
