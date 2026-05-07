@@ -11,8 +11,7 @@
             _name.Namespace = "Microsoft.Xna.Framework.Content";
             _name.Name = "ListReader";
 
-            var genericQualifier = XnbAssemblyQualifier.GetFromXnbType(typeof(T));
-            if (genericQualifier.HasValue) _name.Templates[0] = genericQualifier.Value;
+            _name.Templates[0] = XnbAssemblyQualifier.GetForType(typeof(T));
 
             // similarly to arrays, elements can have type identifier prefix
             // but unlike arrays, this is much less common

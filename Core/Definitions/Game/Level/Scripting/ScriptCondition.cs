@@ -1,7 +1,7 @@
 ﻿namespace FEZRepacker.Core.Definitions.Game.Level.Scripting
 {
-    [XnbType("FezEngine.Structure.Scripting.ScriptCondition")]
-    [XnbReaderType("FezEngine.Readers.ScriptConditionReader")]
+    [XnbType("FezEngine.Structure.Scripting.ScriptCondition, FezEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")]
+    [XnbReaderType("FezEngine.Readers.ScriptConditionReader, FezEngine")]
     public class ScriptCondition
     {
         [XnbProperty(UseConverter = true)]

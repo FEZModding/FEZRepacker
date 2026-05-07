@@ -2,8 +2,8 @@
 
 namespace FEZRepacker.Core.Definitions.Game.Level
 {
-    [XnbType("FezEngine.Structure.ArtObjectInstance")]
-    [XnbReaderType("FezEngine.Readers.ArtObjectInstanceReader")]
+    [XnbType("FezEngine.Structure.ArtObjectInstance, FezEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")]
+    [XnbReaderType("FezEngine.Readers.ArtObjectInstanceReader, FezEngine")]
     public class ArtObjectInstance
     {
         [XnbProperty]

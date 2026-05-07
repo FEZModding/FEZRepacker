@@ -3,8 +3,8 @@ using FEZRepacker.Core.Definitions.Game.XNA;
 
 namespace FEZRepacker.Core.Definitions.Game.Level
 {
-    [XnbType("FezEngine.Structure.BackgroundPlane")]
-    [XnbReaderType("FezEngine.Readers.BackgroundPlaneReader")]
+    [XnbType("FezEngine.Structure.BackgroundPlane, FezEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")]
+    [XnbReaderType("FezEngine.Readers.BackgroundPlaneReader, FezEngine")]
     public class BackgroundPlane
     {
         [XnbProperty]

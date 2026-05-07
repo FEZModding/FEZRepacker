@@ -1,7 +1,7 @@
 ﻿namespace FEZRepacker.Core.Definitions.Game.Graphics
 {
-    [XnbType("FezEngine.Structure.AnimatedTexture")]
-    [XnbReaderType("FezEngine.Readers.AnimatedTextureReader")]
+    [XnbType("FezEngine.Structure.AnimatedTexture, FezEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")]
+    [XnbReaderType("FezEngine.Readers.AnimatedTextureReader, FezEngine")]
     public class AnimatedTexture
     {
         // Definition has been altered since the Texture property is

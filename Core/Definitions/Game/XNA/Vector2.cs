@@ -1,6 +1,6 @@
 ﻿namespace FEZRepacker.Core.Definitions.Game.XNA
 {
-    [XnbType("Microsoft.Xna.Framework.Vector2")]
+    [XnbType("Microsoft.Xna.Framework.Vector2, Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553")]
     [XnbReaderType("Microsoft.Xna.Framework.Content.Vector2Reader")]
     public struct Vector2 : IEquatable<Vector2>
     {

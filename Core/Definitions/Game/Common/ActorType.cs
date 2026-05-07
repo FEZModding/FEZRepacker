@@ -1,6 +1,6 @@
 ﻿namespace FEZRepacker.Core.Definitions.Game.Common
 {
-    [XnbType("FezEngine.Structure.ActorType")]
+    [XnbType("FezEngine.Structure.ActorType, FezEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")]
     public enum ActorType
     {
         None,

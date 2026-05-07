@@ -2,8 +2,8 @@
 
 namespace FEZRepacker.Core.Definitions.Game.ArtObject
 {
-    [XnbType("FezEngine.Structure.Geometry.VertexPositionNormalTextureInstance")]
-    [XnbReaderType("FezEngine.Readers.VertexPositionNormalTextureInstanceReader")]
+    [XnbType("FezEngine.Structure.Geometry.VertexPositionNormalTextureInstance, FezEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")]
+    [XnbReaderType("FezEngine.Readers.VertexPositionNormalTextureInstanceReader, FezEngine")]
     // Original name in FezEngine: VertexPositionNormalTextureInstance
     public class VertexInstance 
     {

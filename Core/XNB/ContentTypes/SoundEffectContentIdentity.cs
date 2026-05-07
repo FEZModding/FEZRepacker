@@ -9,7 +9,7 @@ namespace FEZRepacker.Core.XNB.ContentTypes
         protected override List<XnbContentSerializer> ContentTypesFactory => new()
         {
             new SoundEffectContentSerializer(),
-            new ByteArrayContentSerializer()
+            new ByteArrayContentSerializer().MarkPrivate()
         };
         
     }

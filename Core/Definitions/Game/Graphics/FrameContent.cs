@@ -3,8 +3,8 @@ using FEZRepacker.Core.Definitions.Game.XNA;
 
 namespace FEZRepacker.Core.Definitions.Game.Graphics
 {
-    [XnbType("FezEngine.Content.FrameContent")]
-    [XnbReaderType("FezEngine.Readers.FrameReader")]
+    [XnbType("FezEngine.Content.FrameContent, FezEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")]
+    [XnbReaderType("FezEngine.Readers.FrameReader, FezEngine")]
     public class FrameContent
     {
         [XnbProperty(UseConverter = true)]

@@ -10,7 +10,7 @@ namespace FEZRepacker.Core.XNB.ContentTypes
         protected override List<XnbContentSerializer> ContentTypesFactory => new()
         {
             new AnimatedTextureContentSerializer(),
-            new ByteArrayContentSerializer(),
+            new ByteArrayContentSerializer().MarkPrivate(),
             new ListContentSerializer<FrameContent>(),
             new FrameContentContentSerializer(),
             new TimeSpanContentSerializer(),

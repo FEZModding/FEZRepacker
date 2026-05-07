@@ -1,7 +1,6 @@
 ﻿
 using FEZRepacker.Core.Definitions.Game.ArtObject;
 using FEZRepacker.Core.Definitions.Game.Common;
-using FEZRepacker.Core.Definitions.Game.Graphics;
 using FEZRepacker.Core.Definitions.Game.XNA;
 using FEZRepacker.Core.XNB.ContentSerialization;
 using FEZRepacker.Core.XNB.ContentSerialization.System;
@@ -14,9 +13,9 @@ namespace FEZRepacker.Core.XNB.ContentTypes
         {
             new ArtObjectContentSerializer(),
             new Texture2DContentSerializer(),
-            new EnumContentSerializer<SurfaceFormat>(),
-            new ByteArrayContentSerializer(),
-            new IndexedPrimitivesContentSerializer<VertexInstance, Matrix>(),
+            new EnumContentSerializer<SurfaceFormat>().MarkPrivate(),
+            new ByteArrayContentSerializer().MarkPrivate(),
+            new ArtObjectIndexedPrimitivesContentSerializer(),
             new VertexInstanceContentSerializer(),
             new MatrixContentSerializer(),
             new EnumContentSerializer<PrimitiveType>(),

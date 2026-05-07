@@ -16,11 +16,8 @@
             _name.Namespace = "Microsoft.Xna.Framework.Content";
             _name.Name = "DictionaryReader";
 
-            var genericKeyQualifier = XnbAssemblyQualifier.GetFromXnbType(typeof(K));
-            if (genericKeyQualifier.HasValue) _name.Templates[0] = genericKeyQualifier.Value;
-
-            var genericValueQualifier = XnbAssemblyQualifier.GetFromXnbType(typeof(V));
-            if (genericValueQualifier.HasValue) _name.Templates[1] = genericValueQualifier.Value;
+            _name.Templates[0] = XnbAssemblyQualifier.GetForType(typeof(K));
+            _name.Templates[1] = XnbAssemblyQualifier.GetForType(typeof(V));
 
             this.skipKeyIdentifier = skipKeyIdentifier;
             this.skipValueIdentifier = skipValueIdentifier;

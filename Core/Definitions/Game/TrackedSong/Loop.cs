@@ -1,7 +1,7 @@
 ﻿namespace FEZRepacker.Core.Definitions.Game.TrackedSong
 {
-    [XnbType("FezEngine.Structure.Loop")]
-    [XnbReaderType("FezEngine.Readers.LoopReader")]
+    [XnbType("FezEngine.Structure.Loop, FezEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")]
+    [XnbReaderType("FezEngine.Readers.LoopReader, FezEngine")]
     public class Loop
     {
         [XnbProperty]

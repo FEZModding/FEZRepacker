@@ -11,8 +11,7 @@
             _name.Namespace = "Microsoft.Xna.Framework.Content";
             _name.Name = "EnumReader";
 
-            var enumQualifier = XnbAssemblyQualifier.GetFromXnbType(typeof(T));
-            if (enumQualifier.HasValue) _name.Templates[0] = enumQualifier.Value;
+            _name.Templates[0] = XnbAssemblyQualifier.GetForType(typeof(T));
         }
 
         public override XnbAssemblyQualifier Name => _name;

@@ -1,7 +1,7 @@
 ﻿namespace FEZRepacker.Core.Definitions.Game.MapTree
 {
-    [XnbType("FezEngine.Structure.WinConditions")]
-    [XnbReaderType("FezEngine.Readers.WinConditionsReader")]
+    [XnbType("FezEngine.Structure.WinConditions, FezEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")]
+    [XnbReaderType("FezEngine.Readers.WinConditionsReader, FezEngine")]
     public class WinConditions
     {
         [XnbProperty]

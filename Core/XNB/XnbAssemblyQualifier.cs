@@ -91,17 +91,6 @@ namespace FEZRepacker.Core
             {
                 Templates = new XnbAssemblyQualifier[0];
             }
-
-            // forcing specification to match FEZ's ones - providing namespace seems to be mandatory
-            if (Namespace.Contains("FezEngine"))
-            {
-                Specification = "FezEngine";
-            }
-            // in any other case, specification is not needed
-            else
-            {
-                Specification = "";
-            }
         }
 
         public static implicit operator XnbAssemblyQualifier(string s)
@@ -117,9 +106,7 @@ namespace FEZRepacker.Core
 
             foreach (Type genericType in type.GetGenericArguments())
             {
-                var genericQualifier = GetFromXnbType(genericType);
-                if (!genericQualifier.HasValue) continue;
-                genericQualifiers.Add(genericQualifier.Value);
+                genericQualifiers.Add(GetForType(genericType));
             }
 
             Templates = genericQualifiers.ToArray();
@@ -149,6 +136,25 @@ namespace FEZRepacker.Core
             return null;
         }
 
+        public static XnbAssemblyQualifier GetForType(Type type)
+        {
+            var fromXnbType = GetFromXnbType(type);
+            if (fromXnbType.HasValue)
+            {
+                return fromXnbType.Value;
+            }
+            
+            var fallback = new XnbAssemblyQualifier(type.AssemblyQualifiedName ?? "");
+
+            // match CoreLib specification
+            if (fallback.Specification.StartsWith("System.Private.CoreLib"))
+            {
+                fallback.Specification = "mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089";
+            }
+
+            fallback.AppendGenericTypesFromType(type);
+            return fallback;
+        }
 
         /// <summary>
         /// Creates a string representing assembly qualified name.

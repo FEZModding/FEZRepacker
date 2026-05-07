@@ -1,8 +1,8 @@
 ﻿
 namespace FEZRepacker.Core.Definitions.Game.XNA
 {
-    [XnbType("Microsoft.Xna.Framework.Graphics.SpriteFont")]
-    [XnbReaderType("Microsoft.Xna.Framework.Content.SpriteFontReader")]
+    [XnbType("Microsoft.Xna.Framework.Graphics.SpriteFont, Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553")]
+    [XnbReaderType("Microsoft.Xna.Framework.Content.SpriteFontReader, Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553")]
     public class SpriteFont
     {
         [XnbProperty(UseConverter = true)]

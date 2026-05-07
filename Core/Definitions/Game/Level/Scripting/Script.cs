@@ -1,7 +1,7 @@
 ﻿namespace FEZRepacker.Core.Definitions.Game.Level.Scripting
 {
-    [XnbType("FezEngine.Structure.Scripting.Script")]
-    [XnbReaderType("FezEngine.Readers.ScriptReader")]
+    [XnbType("FezEngine.Structure.Scripting.Script, FezEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")]
+    [XnbReaderType("FezEngine.Readers.ScriptReader, FezEngine")]
     public class Script
     {
         [XnbProperty]

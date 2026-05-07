@@ -1,7 +1,7 @@
 ﻿namespace FEZRepacker.Core.Definitions.Game.Level
 {
-    [XnbType("FezEngine.Structure.InstanceActorSettings")]
-    [XnbReaderType("FezEngine.Readers.InstanceActorSettingsReader")]
+    [XnbType("FezEngine.Structure.InstanceActorSettings, FezEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")]
+    [XnbReaderType("FezEngine.Readers.InstanceActorSettingsReader, FezEngine")]
     // Original name in FezEngine: InstanceActorSettings
     public class TrileInstanceActorSettings 
     {

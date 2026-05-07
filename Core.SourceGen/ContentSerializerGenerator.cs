@@ -18,7 +18,6 @@ public sealed class ContentSerializerGenerator : IIncrementalGenerator
         public string TypeName;
         public string TypeFullName;
         public string QualifierString;
-        public List<string> GenericParameters;
         public List<XnbPropertyInfo> Properties;
     }
 
@@ -51,6 +50,11 @@ public sealed class ContentSerializerGenerator : IIncrementalGenerator
             return null;
         }
         
+        if (typeSymbol.IsGenericType)
+        {
+            return null;
+        }
+        
         var xnbReaderTypeAttribute = typeSymbol.GetAttributes()
             .FirstOrDefault(a => a.AttributeClass?.ToDisplayString() == XnbReaderTypeAttributeName);
 
@@ -58,12 +62,20 @@ public sealed class ContentSerializerGenerator : IIncrementalGenerator
         {
             return null;
         }
+        
+        bool useBaseClass = xnbReaderTypeAttribute.NamedArguments
+            .FirstOrDefault(x => x.Key == "UseBaseClass").Value.Value is true;
+
+        var logicalTypeSymbol = typeSymbol;
+        if (useBaseClass && typeSymbol.BaseType is not null)
+        {
+            logicalTypeSymbol = typeSymbol.BaseType;
+        }
 
         var qualifierString = xnbReaderTypeAttribute.ConstructorArguments[0].Value as string ?? string.Empty;
-        var genericParameters = typeSymbol.TypeParameters.Select(tp => tp.Name).ToList();
         var properties = new List<XnbPropertyInfo>();
 
-        foreach (var member in typeSymbol.GetMembers().OfType<IPropertySymbol>())
+        foreach (var member in logicalTypeSymbol.GetMembers().OfType<IPropertySymbol>())
         {
             ct.ThrowIfCancellationRequested();
 
@@ -84,21 +96,21 @@ public sealed class ContentSerializerGenerator : IIncrementalGenerator
             bool skipIdentifier = xnbPropertyAttribute.NamedArguments
                 .FirstOrDefault(x => x.Key == "SkipIdentifier").Value.Value is true;
 
-            ITypeSymbol underlyingType = member.Type;
-            bool isNullableValueType = false;
+            ITypeSymbol underlyingPropertyType = member.Type;
+            bool propertyNullable = false;
 
             if (member.Type is INamedTypeSymbol {ConstructedFrom.SpecialType: SpecialType.System_Nullable_T} namedType)
             {
-                underlyingType = namedType.TypeArguments[0];
-                isNullableValueType = true;
+                underlyingPropertyType = namedType.TypeArguments[0];
+                propertyNullable = true;
             }
 
             properties.Add(new XnbPropertyInfo
             {
                 Name = member.Name,
-                TypeFullName = underlyingType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
-                IsNullable = isNullableValueType,
-                IsReferenceType = !isNullableValueType && member.Type.IsReferenceType,
+                TypeFullName = underlyingPropertyType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
+                IsNullable = propertyNullable,
+                IsReferenceType = !propertyNullable && member.Type.IsReferenceType,
                 Order = order,
                 UseConverter = useConverter,
                 Optional = optional,
@@ -111,10 +123,9 @@ public sealed class ContentSerializerGenerator : IIncrementalGenerator
         return new XnbTypeInfo
         {
             TypeName = typeSymbol.Name,
-            TypeFullName = typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
+            TypeFullName = logicalTypeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
             QualifierString = qualifierString,
             Properties = properties,
-            GenericParameters = genericParameters
         };
     }
 
@@ -137,7 +148,7 @@ public sealed class ContentSerializerGenerator : IIncrementalGenerator
         cb.AppendLine();
         cb.AppendLine("namespace FEZRepacker.Core.XNB.ContentSerialization;");
         cb.AppendLine();
-        cb.Append($"internal sealed class {ConstructSerializerName(xnbTypeInfo)}");
+        cb.Append($"internal sealed class {xnbTypeInfo.TypeName}ContentSerializer");
         cb.AppendLine($" : XnbContentSerializer<{xnbTypeInfo.TypeFullName}>");
         cb.BeginCodeBlock();
         {
@@ -148,17 +159,6 @@ public sealed class ContentSerializerGenerator : IIncrementalGenerator
             EmitSerialize(cb, xnbTypeInfo);
         }
         cb.EndCodeBlock();
-    }
-
-    private static string ConstructSerializerName(XnbTypeInfo xnbTypeInfo)
-    {
-        var name = $"{xnbTypeInfo.TypeName}ContentSerializer";
-        if (xnbTypeInfo.GenericParameters.Count > 0)
-        {
-            var genericParametersList = string.Join(", " , xnbTypeInfo.GenericParameters);
-            name += $"<{genericParametersList}>";
-        }
-        return name;
     }
 
     private static void EmitDeserialize(CodeStringBuilder cb, XnbTypeInfo model)

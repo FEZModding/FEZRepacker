@@ -1,6 +1,6 @@
 ﻿namespace FEZRepacker.Core.Definitions.Game.Level
 {
-    [XnbType("FezEngine.Structure.Input.CodeInput")]
+    [XnbType("FezEngine.Structure.Input.CodeInput, FezEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")]
     [Flags]
     public enum CodeInput
     {

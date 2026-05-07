@@ -20,7 +20,7 @@ namespace FEZRepacker.Core.XNB.ContentTypes
             new DictionaryContentSerializer<FaceOrientation, CollisionType>(true, true),
             new EnumContentSerializer<FaceOrientation>(),
             new EnumContentSerializer<CollisionType>(),
-            new IndexedPrimitivesContentSerializer<VertexInstance, Vector4>(),
+            new TrileSetIndexedPrimitivesContentSerializer(),
             new VertexInstanceContentSerializer(),
             new Vector4ContentSerializer(),
             new EnumContentSerializer<PrimitiveType>(),
@@ -31,7 +31,7 @@ namespace FEZRepacker.Core.XNB.ContentTypes
             new EnumContentSerializer<SurfaceType>(),
             new Texture2DContentSerializer(),
             new EnumContentSerializer<SurfaceFormat>(),
-            new ByteArrayContentSerializer()
+            new ByteArrayContentSerializer().MarkPrivate()
         };
     }
 }

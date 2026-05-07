@@ -2,8 +2,8 @@
 
 namespace FEZRepacker.Core.Definitions.Game.Level
 {
-    [XnbType("FezEngine.Structure.VolumeActorSettings")]
-    [XnbReaderType("FezEngine.Readers.VolumeActorSettingsReader")]
+    [XnbType("FezEngine.Structure.VolumeActorSettings, FezEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")]
+    [XnbReaderType("FezEngine.Readers.VolumeActorSettingsReader, FezEngine")]
     public class VolumeActorSettings
     {
         [XnbProperty]

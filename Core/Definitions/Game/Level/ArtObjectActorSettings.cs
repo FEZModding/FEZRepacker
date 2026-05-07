@@ -3,8 +3,8 @@ using FEZRepacker.Core.Definitions.Game.XNA;
 
 namespace FEZRepacker.Core.Definitions.Game.Level
 {
-    [XnbType("FezEngine.Structure.ArtObjectActorSettings")]
-    [XnbReaderType("FezEngine.Readers.ArtObjectActorSettingsReader")]
+    [XnbType("FezEngine.Structure.ArtObjectActorSettings, FezEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null")]
+    [XnbReaderType("FezEngine.Readers.ArtObjectActorSettingsReader, FezEngine")]
     public class ArtObjectActorSettings
     {
         [XnbProperty]
