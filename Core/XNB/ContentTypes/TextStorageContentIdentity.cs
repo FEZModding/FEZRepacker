@@ -8,7 +8,7 @@ namespace FEZRepacker.Core.XNB.ContentTypes
         protected override List<XnbContentSerializer> ContentTypesFactory => new()
         {
             new DictionaryContentSerializer<string, Dictionary<string, string>>(),
-            new StringContentSerializer(false),
+            new StringContentSerializer(),
             new DictionaryContentSerializer<string, string>()
         };
     }

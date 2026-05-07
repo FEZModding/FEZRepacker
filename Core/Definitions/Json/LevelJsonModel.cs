@@ -151,6 +151,12 @@ namespace FEZRepacker.Core.Definitions.Json
                 var pos = trileRecord.Key;
                 var instance = trileRecord.Value;
                 Triles.Add(new TrileInstanceJsonModel(pos, instance));
+
+                if (instance.OverlappedTriles == null)
+                {
+                    continue;
+                }
+                
                 foreach (var overlapping in instance.OverlappedTriles)
                 {
                     Triles.Add(new TrileInstanceJsonModel(pos, overlapping));

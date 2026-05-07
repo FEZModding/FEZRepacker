@@ -44,10 +44,5 @@
                 writer.WriteContent<T>(value, _skipElementType);
             }
         }
-
-        public override bool IsEmpty(object data)
-        {
-            return ((List<T>)data).Count == 0;
-        }
     }
 }
