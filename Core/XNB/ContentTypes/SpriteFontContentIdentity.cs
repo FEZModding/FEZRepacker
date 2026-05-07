@@ -9,16 +9,16 @@ namespace FEZRepacker.Core.XNB.ContentTypes
     {
         protected override List<XnbContentSerializer> ContentTypesFactory => new()
         {
-            new GenericContentSerializer<SpriteFont>(),
-            new GenericContentSerializer<Texture2D>(),
+            new SpriteFontContentSerializer(),
+            new Texture2DContentSerializer(),
             new EnumContentSerializer<SurfaceFormat>(),
             new ByteArrayContentSerializer(),
             new ListContentSerializer<Rectangle>(true),
-            new GenericContentSerializer<Rectangle>(),
+            new RectangleContentSerializer(),
             new ListContentSerializer<char>(),
             new CharContentSerializer(),
             new ListContentSerializer<Vector3>(true),
-            new GenericContentSerializer<Vector3>(),
+            new Vector3ContentSerializer(),
         };
     }
 }

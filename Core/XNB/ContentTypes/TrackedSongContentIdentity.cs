@@ -9,9 +9,9 @@ namespace FEZRepacker.Core.XNB.ContentTypes
     {
         protected override List<XnbContentSerializer> ContentTypesFactory => new()
         {
-            new GenericContentSerializer<TrackedSong>(),
+            new TrackedSongContentSerializer(),
             new ListContentSerializer<Loop>(),
-            new GenericContentSerializer<Loop>(),
+            new LoopContentSerializer(),
             new ArrayContentSerializer<ShardNotes>(),
             new EnumContentSerializer<ShardNotes>(),
             new Int32ContentSerializer(),

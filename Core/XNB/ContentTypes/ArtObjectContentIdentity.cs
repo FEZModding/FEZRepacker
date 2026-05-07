@@ -12,13 +12,13 @@ namespace FEZRepacker.Core.XNB.ContentTypes
     {
         protected override List<XnbContentSerializer> ContentTypesFactory => new()
         {
-            new GenericContentSerializer<ArtObject>(),
-            new GenericContentSerializer<Texture2D>(),
+            new ArtObjectContentSerializer(),
+            new Texture2DContentSerializer(),
             new EnumContentSerializer<SurfaceFormat>(),
             new ByteArrayContentSerializer(),
-            new GenericContentSerializer<IndexedPrimitives<VertexInstance, Matrix>>(),
-            new GenericContentSerializer<VertexInstance>(),
-            new GenericContentSerializer<Matrix>(),
+            new IndexedPrimitivesContentSerializer<VertexInstance, Matrix>(),
+            new VertexInstanceContentSerializer(),
+            new MatrixContentSerializer(),
             new EnumContentSerializer<PrimitiveType>(),
             new Int32ContentSerializer(),
             new ArrayContentSerializer<VertexInstance>(),

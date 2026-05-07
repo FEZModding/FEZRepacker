@@ -9,14 +9,14 @@ namespace FEZRepacker.Core.XNB.ContentTypes
     {
         protected override List<XnbContentSerializer> ContentTypesFactory => new()
         {
-            new GenericContentSerializer<MapTree>(),
-            new GenericContentSerializer<MapNode>(),
+            new MapTreeContentSerializer(),
+            new MapNodeContentSerializer(),
             new ListContentSerializer<MapNodeConnection>(),
-            new GenericContentSerializer<MapNodeConnection>(),
+            new MapNodeConnectionContentSerializer(),
             new EnumContentSerializer<FaceOrientation>(),
             new Int32ContentSerializer(),
             new EnumContentSerializer<LevelNodeType>(),
-            new GenericContentSerializer<WinConditions>(),
+            new WinConditionsContentSerializer(),
             new ListContentSerializer<int>()
         };
     }
