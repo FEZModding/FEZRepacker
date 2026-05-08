@@ -10,7 +10,7 @@ namespace FEZRepacker.Core.XNB.ContentTypes
         protected override List<XnbContentSerializer> ContentTypesFactory => new()
         {
             new Texture2DContentSerializer(),
-            new EnumContentSerializer<SurfaceFormat>(),
+            new EnumContentSerializer<SurfaceFormat>().MarkPrivate(),
             new ByteArrayContentSerializer().MarkPrivate()
         };
     }
