@@ -7,7 +7,7 @@ namespace FEZRepacker.Core.XNB.ContentTypes
 {
     internal class TrackedSongContentIdentity : XnbPrimaryContentIdentity
     {
-        protected override List<XnbContentSerializer> ContentTypesFactory => new()
+        protected override List<XnbContentSerializer> ContentSerializersFactory => new()
         {
             new TrackedSongContentSerializer(),
             new ListContentSerializer<Loop>(),

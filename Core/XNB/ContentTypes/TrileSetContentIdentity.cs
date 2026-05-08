@@ -11,7 +11,7 @@ namespace FEZRepacker.Core.XNB.ContentTypes
 {
     internal class TrileSetContentIdentity : XnbPrimaryContentIdentity
     {
-        protected override List<XnbContentSerializer> ContentTypesFactory => new()
+        protected override List<XnbContentSerializer> ContentSerializersFactory => new()
         {
             new TrileSetContentSerializer(),
             new DictionaryContentSerializer<int, Trile>(),

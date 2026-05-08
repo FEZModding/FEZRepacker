@@ -258,9 +258,7 @@ public sealed class ContentSerializerGenerator : IIncrementalGenerator
             }
 
             cb.BeginCodeBlock();
-            cb.AppendLine($"int typeId = writer.Identity.ContentTypes.FindIndex(t => t.ContentType == {propertyType}) + 1;");
-            cb.AppendLine("if (typeId > 0) writer.Write7BitEncodedInt(typeId);");
-            cb.AppendLine("else writer.Write(true);");
+            cb.AppendLine("writer.Write(true);");
         }
 
         if (prop.UseConverter)

@@ -27,12 +27,12 @@ namespace FEZRepacker.Core.XNB
 
         public static XnbPrimaryContentIdentity? FindByQualifier(XnbAssemblyQualifier qualifier)
         {
-            return List.Where(i => i.PrimaryContentType.Name.Equals(qualifier)).FirstOrDefault();
+            return List.Where(i => i.PrimaryContentSerializer.Name.Equals(qualifier)).FirstOrDefault();
         }
 
         public static XnbPrimaryContentIdentity? FindByType(Type type)
         {
-            return List.Where(i => i.PrimaryContentType.ContentType == type).FirstOrDefault();
+            return List.Where(i => i.PrimaryContentSerializer.ContentType == type).FirstOrDefault();
         }
     }
 }

@@ -4,7 +4,7 @@ namespace FEZRepacker.Core.XNB
 {
     /// <summary>
     /// Structure storing a description of a primary content type that
-    /// can be found in an XNB file. <see cref="ContentTypesFactory"/> is expected
+    /// can be found in an XNB file. <see cref="ContentSerializersFactory"/> is expected
     /// to be overloaded to return a list of <see cref="XnbContentSerializer"/>s
     /// representing this content type (with the first one in the list being 
     /// the primary type).
@@ -18,17 +18,19 @@ namespace FEZRepacker.Core.XNB
     /// </remarks>
     internal abstract class XnbPrimaryContentIdentity
     {
-        protected abstract List<XnbContentSerializer> ContentTypesFactory { get; }
+        protected abstract List<XnbContentSerializer> ContentSerializersFactory { get; }
 
-        public readonly List<XnbContentSerializer> ContentTypes;
-        public readonly List<XnbContentSerializer> PublicContentTypes;
-        public XnbContentSerializer PrimaryContentType => PublicContentTypes[0];
-        public string FormatName => PrimaryContentType.Name.Name.Replace("Reader", "");
+        public readonly List<XnbContentSerializer> ContentSerializers;
+        public XnbContentSerializer PrimaryContentSerializer => ContentSerializers[0];
+        public string FormatName => PrimaryContentSerializer.Name.Name.Replace("Reader", "");
 
         public XnbPrimaryContentIdentity()
         {
-            ContentTypes = ContentTypesFactory;
-            PublicContentTypes = ContentTypes.Where(t => !t.IsPrivate).ToList();
+            ContentSerializers = ContentSerializersFactory;
+            if (PrimaryContentSerializer.IsPrivate)
+            {
+                throw new XnbSerializationException($"{this.GetType().Name} has a private primary content type!");
+            }
         }
 
     }

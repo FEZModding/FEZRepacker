@@ -7,7 +7,7 @@ namespace FEZRepacker.Core.XNB.ContentTypes
 {
     internal class TextureContentIdentity : XnbPrimaryContentIdentity
     {
-        protected override List<XnbContentSerializer> ContentTypesFactory => new()
+        protected override List<XnbContentSerializer> ContentSerializersFactory => new()
         {
             new Texture2DContentSerializer(),
             new EnumContentSerializer<SurfaceFormat>().MarkPrivate(),

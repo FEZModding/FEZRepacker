@@ -33,15 +33,18 @@ namespace FEZRepacker.Core.XNB
                 {
                     return null;
                 }
+                // note: we should technically reference assembly qualifiers array using this index
+                // to determine what serializer to use, but since we know what type is expected of us
+                // and there's only one reader per type, this is redundant.
             }
 
-            XnbContentSerializer? typeConverter = Identity.ContentTypes.Find(t => t.ContentType == T);
-            if (typeConverter == null)
+            XnbContentSerializer? serializer = Identity.ContentSerializers.Find(t => t.ContentType == T);
+            if (serializer == null)
             {
                 throw new InvalidDataException($"Cannot convert value of type {T.FullName}");
             }
             
-            return typeConverter.Deserialize(this);
+            return serializer.Deserialize(this);
         }
     }
 }

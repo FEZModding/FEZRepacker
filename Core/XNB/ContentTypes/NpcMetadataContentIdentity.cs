@@ -8,7 +8,7 @@ namespace FEZRepacker.Core.XNB.ContentTypes
 {
     internal class NpcMetadataContentIdentity : XnbPrimaryContentIdentity
     {
-        protected override List<XnbContentSerializer> ContentTypesFactory => new()
+        protected override List<XnbContentSerializer> ContentSerializersFactory => new()
         {
             new NpcMetadataContentSerializer(),
             new StringContentSerializer(),

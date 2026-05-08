@@ -32,7 +32,7 @@ namespace FEZRepacker.Core.XNB
             using Stream decompressedInput = XnbCompressor.Decompress(xnbStream);
             var primaryContentType = ExtractPrimaryContentIdentity(decompressedInput);
             using var xnbReader = new XnbContentReader(decompressedInput, primaryContentType, true);
-            return xnbReader.ReadContent(primaryContentType.PrimaryContentType.ContentType, true);
+            return xnbReader.ReadContent(primaryContentType.PrimaryContentSerializer.ContentType, true);
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace FEZRepacker.Core.XNB
         {
             using Stream decompressedInput = XnbCompressor.Decompress(xnbStream);
             var primaryContentType = ExtractPrimaryContentIdentity(decompressedInput);
-            return primaryContentType.PrimaryContentType.ContentType;
+            return primaryContentType.PrimaryContentSerializer.ContentType;
         }
 
         /// <summary>
@@ -70,21 +70,21 @@ namespace FEZRepacker.Core.XNB
                 throw new XnbSerializationException($"Cannot find XNB primary format identity for type {obj.GetType().Name}");
             }
 
-            var outputStream = new MemoryStream();
-
-            XnbHeader.Default.Write(outputStream);
-
             using var xnbContentWriter = new XnbContentWriter(new MemoryStream(), contentIdentity, true);
-
-            WriteAssemblyQualifiersList(xnbContentWriter);
-
             xnbContentWriter.Write7BitEncodedInt(0); // number of shared resources (0 for FEZ assets)
             xnbContentWriter.Write7BitEncodedInt(1); // main resource id (first one is always the primary one)
+            xnbContentWriter.WriteContent(contentIdentity.PrimaryContentSerializer.ContentType, obj, true);
 
-            xnbContentWriter.WriteContent(contentIdentity.PrimaryContentType.ContentType, obj, true);
-
-            // copy length of the file (including header block size) and data into output stream
-            new BinaryWriter(outputStream).Write((int)xnbContentWriter.BaseStream.Length + XnbHeader.Size);
+            var assemblyQualifiers = xnbContentWriter.ProduceAssemblyQualifiersListData();
+            
+            var fileLength = XnbHeader.Size + assemblyQualifiers.Length + (int)xnbContentWriter.BaseStream.Length;
+            
+            var outputStream = new MemoryStream();
+            using var outputWriter = new BinaryWriter(outputStream, Encoding.UTF8, true);
+            
+            XnbHeader.Default.Write(outputStream);
+            outputWriter.Write(fileLength);
+            outputWriter.Write(assemblyQualifiers);
             xnbContentWriter.BaseStream.Position = 0;
             xnbContentWriter.BaseStream.CopyTo(outputStream);
 
@@ -151,16 +151,5 @@ namespace FEZRepacker.Core.XNB
 
             return usedTypes;
         }
-
-        private static void WriteAssemblyQualifiersList(XnbContentWriter writer)
-        {
-            writer.Write7BitEncodedInt(writer.Identity.PublicContentTypes.Count);
-            foreach (var type in writer.Identity.PublicContentTypes)
-            {
-                writer.Write(type.Name.GetDisplayName(false)); // name
-                writer.Write(0); // version (always 0 in original game assets)
-            }
-        }
-
     }
 }
