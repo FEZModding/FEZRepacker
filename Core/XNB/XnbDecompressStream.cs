@@ -8,11 +8,10 @@ namespace FEZRepacker.Core.XNB
     {
         private readonly Stream _source;
         private readonly bool _copyOriginalSource;
+        private readonly MemoryStream _decompressionBuffer;
         private readonly LzxDecoder? _decoder;
         private readonly long _sourceEndPosition;
         private readonly int _decompressedSize;
-        private readonly byte[] _decompressedHeaderBytes;
-        private readonly MemoryStream? _decompressionBuffer;
         private long _readPosition;
         private long _sourcePosition;
         private bool _finished;
@@ -20,7 +19,7 @@ namespace FEZRepacker.Core.XNB
         public override bool CanRead => true;
         public override bool CanSeek => false;
         public override bool CanWrite => false;
-        public override long Length => _copyOriginalSource ? _source.Length : _decompressedHeaderBytes.Length + _decompressedSize;
+        public override long Length => _copyOriginalSource ? _source.Length : _decompressedSize;
         public override long Position
         {
             get => _copyOriginalSource ? _source.Position : _readPosition;
@@ -30,8 +29,9 @@ namespace FEZRepacker.Core.XNB
         public XnbDecompressStream(Stream source)
         {
             _source = source;
+            _decompressionBuffer = new MemoryStream();
 
-            if (!TryProcessHeader(out _decompressedHeaderBytes, out var compressedSize, out var decompressedSize))
+            if (!TryProcessHeader(out var compressedSize, out var decompressedSize))
             {
                 _copyOriginalSource = true;
                 return;
@@ -41,15 +41,13 @@ namespace FEZRepacker.Core.XNB
             _sourcePosition = source.Position;
             _sourceEndPosition = _sourcePosition + compressedSize;
             _decompressedSize = decompressedSize;
-            _decompressionBuffer = new MemoryStream();
         }
 
-        private bool TryProcessHeader(out byte[] decompressedHeaderBytes, out int compressedSize, out int decompressedSize)
+        private bool TryProcessHeader(out int compressedSize, out int decompressedSize)
         {
             var sourcePositionPreHeaderRead = _source.Position;
             if (!XnbHeader.TryRead(_source, out var header) || (header.Flags & XnbHeader.XnbFlags.Compressed) == 0)
             {
-                decompressedHeaderBytes = Array.Empty<byte>();
                 compressedSize = 0;
                 decompressedSize = 0;
                 _source.Position = sourcePositionPreHeaderRead;
@@ -58,13 +56,11 @@ namespace FEZRepacker.Core.XNB
             
             using var reader = new BinaryReader(_source, Encoding.UTF8, true);
             compressedSize = reader.ReadInt32();
-            decompressedSize = reader.ReadInt32();
+            decompressedSize = reader.ReadInt32() + XnbHeader.Size;
             
             header.Flags &= ~XnbHeader.XnbFlags.Compressed;
-            using var headerBufferStream = new MemoryStream();
-            header.Write(headerBufferStream);
-            new BinaryWriter(headerBufferStream).Write(decompressedSize + XnbHeader.Size);
-            decompressedHeaderBytes = headerBufferStream.ToArray();
+            header.Write(_decompressionBuffer);
+            new BinaryWriter(_decompressionBuffer).Write(decompressedSize);
 
             return true;
         }
@@ -78,27 +74,15 @@ namespace FEZRepacker.Core.XNB
 
             int bytesRead = 0;
 
-            if (_readPosition < _decompressedHeaderBytes.Length)
-            {
-                var headerBytesToReadCount = (int)Math.Min(_decompressedHeaderBytes.Length - _readPosition, count);
-                Array.Copy(_decompressedHeaderBytes, (int)_readPosition, buffer, offset, headerBytesToReadCount);
-                _readPosition += headerBytesToReadCount;
-                offset += headerBytesToReadCount;
-                count -= headerBytesToReadCount;
-                bytesRead += headerBytesToReadCount;
-            }
-            
-            long decompressionReadPosition = _readPosition - _decompressedHeaderBytes.Length;
-
-            while (_decompressionBuffer!.Length - decompressionReadPosition < count && !_finished)
+            while (_decompressionBuffer.Length - _readPosition < count && !_finished)
             {
                 DecompressNextBlock();
             }
 
-            int decompressedBytesToReadCount = (int)Math.Min(count, _decompressionBuffer.Length - decompressionReadPosition);
+            int decompressedBytesToReadCount = (int)Math.Min(count, _decompressionBuffer.Length - _readPosition);
             if (decompressedBytesToReadCount > 0)
             {
-                _decompressionBuffer.Position = decompressionReadPosition;
+                _decompressionBuffer.Position = _readPosition;
                 int read = _decompressionBuffer.Read(buffer, offset, decompressedBytesToReadCount);
                 _readPosition += read;
                 bytesRead += read;
@@ -139,7 +123,7 @@ namespace FEZRepacker.Core.XNB
                 return;
             }
 
-            _decompressionBuffer!.Position = _decompressionBuffer.Length;
+            _decompressionBuffer.Position = _decompressionBuffer.Length;
             _decoder!.Decompress(_source, blockSize, _decompressionBuffer, frameSize);
             _sourcePosition += blockSize;
         }
@@ -147,7 +131,7 @@ namespace FEZRepacker.Core.XNB
         private void MarkFinished()
         {
             _finished = true;
-            var finalSize = _decompressionBuffer!.Length;
+            var finalSize = _decompressionBuffer.Length;
             if (finalSize != _decompressedSize)
             {
                 throw new XnbSerializationException(
@@ -160,7 +144,7 @@ namespace FEZRepacker.Core.XNB
         {
             if (disposing)
             {
-                _decompressionBuffer?.Dispose();
+                _decompressionBuffer.Dispose();
             }
             
             base.Dispose(disposing);
