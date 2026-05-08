@@ -83,8 +83,8 @@ namespace FEZRepacker.Core.XNB
 
             xnbContentWriter.WriteContent(contentIdentity.PrimaryContentType.ContentType, obj, true);
 
-            // copy length of the file (including header block of 10 bytes) and data into output stream
-            new BinaryWriter(outputStream).Write((int)xnbContentWriter.BaseStream.Length + 10);
+            // copy length of the file (including header block size) and data into output stream
+            new BinaryWriter(outputStream).Write((int)xnbContentWriter.BaseStream.Length + XnbHeader.Size);
             xnbContentWriter.BaseStream.Position = 0;
             xnbContentWriter.BaseStream.CopyTo(outputStream);
 

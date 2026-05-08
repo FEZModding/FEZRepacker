@@ -63,7 +63,7 @@ namespace FEZRepacker.Core.XNB
             header.Flags &= ~XnbHeader.XnbFlags.Compressed;
             using var headerBufferStream = new MemoryStream();
             header.Write(headerBufferStream);
-            new BinaryWriter(headerBufferStream).Write(decompressedSize);
+            new BinaryWriter(headerBufferStream).Write(decompressedSize + XnbHeader.Size);
             decompressedHeaderBytes = headerBufferStream.ToArray();
 
             return true;

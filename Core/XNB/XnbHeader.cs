@@ -7,6 +7,8 @@ namespace FEZRepacker.Core.XNB
     /// </summary>
     public struct XnbHeader
     {
+        public const int Size = 10;
+        
         [Flags]
         public enum XnbFlags
         {
