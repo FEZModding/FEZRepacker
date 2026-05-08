@@ -9,7 +9,7 @@ namespace FEZRepacker.Core.XNB.ContentTypes
 {
     internal class LevelContentIdentity : XnbPrimaryContentIdentity
     {
-        protected override List<XnbContentSerializer> ContentTypesFactory => new()
+        protected override List<XnbContentSerializer> ContentSerializersFactory => new()
         {
             new LevelContentSerializer(),
             new StringContentSerializer(),

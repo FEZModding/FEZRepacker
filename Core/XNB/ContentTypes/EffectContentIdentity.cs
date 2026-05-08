@@ -6,7 +6,7 @@ namespace FEZRepacker.Core.XNB.ContentTypes
 {
     internal class EffectContentIdentity : XnbPrimaryContentIdentity
     {
-        protected override List<XnbContentSerializer> ContentTypesFactory => new()
+        protected override List<XnbContentSerializer> ContentSerializersFactory => new()
         {
             new EffectContentSerializer(),
             new ByteArrayContentSerializer().MarkPrivate()

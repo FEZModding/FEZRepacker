@@ -8,7 +8,7 @@ namespace FEZRepacker.Core.XNB.ContentTypes
 {
     internal class SkyContentIdentity : XnbPrimaryContentIdentity
     {
-        protected override List<XnbContentSerializer> ContentTypesFactory => new()
+        protected override List<XnbContentSerializer> ContentSerializersFactory => new()
         {
             new SkyContentSerializer(),
             new ListContentSerializer<SkyLayer>(),

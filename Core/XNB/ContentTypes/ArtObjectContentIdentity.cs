@@ -9,7 +9,7 @@ namespace FEZRepacker.Core.XNB.ContentTypes
 {
     internal class ArtObjectContentIdentity : XnbPrimaryContentIdentity
     {
-        protected override List<XnbContentSerializer> ContentTypesFactory => new()
+        protected override List<XnbContentSerializer> ContentSerializersFactory => new()
         {
             new ArtObjectContentSerializer(),
             new Texture2DContentSerializer(),

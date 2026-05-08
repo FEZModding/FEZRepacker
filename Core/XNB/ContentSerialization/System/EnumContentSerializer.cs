@@ -24,6 +24,15 @@
         public override void Serialize(object data, XnbContentWriter writer)
         {
             int value = (int)data;
+            
+            if (!IsPrivate)
+            {
+                // to ensure underlying type serializer claim, we're writing integer value as content
+                // but only when private to prevent internal helper serializers from being claimed.
+                writer.WriteContent(value, true);
+                return;
+            }
+            
             writer.Write(value);
         }
     }

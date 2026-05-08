@@ -7,7 +7,7 @@ namespace FEZRepacker.Core.XNB.ContentTypes
 {
     internal class AnimatedTextureContentIdentity : XnbPrimaryContentIdentity
     {
-        protected override List<XnbContentSerializer> ContentTypesFactory => new()
+        protected override List<XnbContentSerializer> ContentSerializersFactory => new()
         {
             new AnimatedTextureContentSerializer(),
             new ByteArrayContentSerializer().MarkPrivate(),

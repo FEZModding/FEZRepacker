@@ -6,7 +6,7 @@ namespace FEZRepacker.Core.XNB.ContentTypes
 {
     internal class SoundEffectContentIdentity : XnbPrimaryContentIdentity
     {
-        protected override List<XnbContentSerializer> ContentTypesFactory => new()
+        protected override List<XnbContentSerializer> ContentSerializersFactory => new()
         {
             new SoundEffectContentSerializer(),
             new ByteArrayContentSerializer().MarkPrivate()
