@@ -11,8 +11,7 @@ namespace FEZRepacker.Core.Definitions.Game
     internal sealed class XnbReaderTypeAttribute : Attribute
     {
         public XnbAssemblyQualifier Qualifier { get; set; }
-        
-        public bool UseBaseClass { get; set; }
+        public bool IsPrivate { get; set; }
 
         public XnbReaderTypeAttribute(string _qualifier)
         {

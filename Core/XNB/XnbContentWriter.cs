@@ -54,7 +54,7 @@ namespace FEZRepacker.Core.XNB
             matchingSerializer.Serialize(data, this);
         }
 
-        private int TryClaimContentType(Type type)
+        public int TryClaimContentType(Type type)
         {
             var matchingSerializer = Identity.FindByContentType(type);
             if (matchingSerializer == null)
@@ -80,24 +80,13 @@ namespace FEZRepacker.Core.XNB
             
             var claimedIndex = _claimedContentTypes.Count;
             _claimedContentTypes.Add(serializer);
-            ClaimGenericContentTypes(serializer.ContentType);
+            
+            foreach (var type in serializer.UnderlyingContentTypes)
+            {
+                TryClaimContentType(type);
+            }
+            
             return claimedIndex;
-        }
-
-        private void ClaimGenericContentTypes(Type type)
-        {
-            if (type.IsGenericType)
-            {
-                foreach (Type genericType in type.GetGenericArguments())
-                {
-                    TryClaimContentType(genericType);
-                }
-            }
-
-            if (type.HasElementType)
-            {
-                TryClaimContentType(type.GetElementType()!);
-            }
         }
 
         public byte[] ProduceAssemblyQualifiersListData()

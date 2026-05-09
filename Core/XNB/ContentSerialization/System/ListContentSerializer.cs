@@ -4,6 +4,10 @@
     {
         private XnbAssemblyQualifier _name;
         private bool _skipElementType;
+        
+        public override XnbAssemblyQualifier Name => _name;
+        public override Type[] UnderlyingContentTypes => [typeof(T)];
+        
         public ListContentSerializer(bool skipElementType = false) : base()
         {
             // creating type assembly qualifier name
@@ -19,8 +23,6 @@
             _skipElementType = skipElementType;
         }
 
-        public override XnbAssemblyQualifier Name => _name;
-
         public override object Deserialize(XnbContentReader reader)
         {
             List<T> data = new List<T>();
@@ -35,6 +37,7 @@
 
         public override void Serialize(object data, XnbContentWriter writer)
         {
+            writer.TryClaimContentType(typeof(T));
             List<T> list = (List<T>)data;
 
             writer.Write(list.Count);

@@ -3,7 +3,10 @@
     internal class EnumContentSerializer<T> : XnbContentSerializer<T> where T : Enum
     {
         private XnbAssemblyQualifier _name;
-
+        
+        public override XnbAssemblyQualifier Name => _name;
+        public override Type[] UnderlyingContentTypes => [typeof(int)];
+        
         public EnumContentSerializer() : base()
         {
             // creating type assembly qualifier name
@@ -13,8 +16,7 @@
 
             _name.Templates[0] = XnbAssemblyQualifier.GetForType(typeof(T));
         }
-
-        public override XnbAssemblyQualifier Name => _name;
+        
 
         public override object Deserialize(XnbContentReader reader)
         {

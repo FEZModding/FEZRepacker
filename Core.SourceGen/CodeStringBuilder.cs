@@ -36,16 +36,16 @@ namespace FEZRepacker.Core.SourceGen
             AppendLine();
         }
 
-        public void BeginCodeBlock()
+        public void BeginCodeBlock(string openCharacter = "{")
         {
-            AppendLine("{");
+            AppendLine(openCharacter);
             _currentIndent++;
         }
 
-        public void EndCodeBlock()
+        public void EndCodeBlock(string closeCharacter = "}")
         {
             if(_currentIndent > 0) _currentIndent--;
-            AppendLine("}");
+            AppendLine(closeCharacter);
         }
         
         public override string ToString() => _stringBuilder.ToString();

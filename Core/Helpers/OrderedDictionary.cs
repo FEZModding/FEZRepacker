@@ -5,7 +5,7 @@ using FEZRepacker.Core.Definitions.Game;
 namespace FEZRepacker.Core.Helpers
 {
     [XnbType("System.Collections.Generic.Dictionary, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089")]
-    [XnbReaderType("Microsoft.Xna.Framework.Content.DictionaryReader")]
+    [XnbReaderType("Microsoft.Xna.Framework.Content.DictionaryReader", IsPrivate = true)]
     internal class OrderedDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     {
         private readonly Dictionary<TKey, TValue> _dictionary;

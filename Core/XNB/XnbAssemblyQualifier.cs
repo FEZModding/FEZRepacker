@@ -112,7 +112,7 @@ namespace FEZRepacker.Core
             Templates = genericQualifiers.ToArray();
         }
 
-        public static XnbAssemblyQualifier? GetFromXnbType(Type type)
+        public static XnbAssemblyQualifier? TryGetFromXnbType(Type type)
         {
             var attributes = type.GetCustomAttributes(typeof(XnbTypeAttribute), false);
             if (attributes.Length > 0)
@@ -124,7 +124,7 @@ namespace FEZRepacker.Core
             return null;
         }
 
-        public static XnbAssemblyQualifier? GetFromXnbReaderType(Type type)
+        public static XnbAssemblyQualifier? TryGetFromXnbReaderType(Type type)
         {
             var attributes = type.GetCustomAttributes(typeof(XnbReaderTypeAttribute), false);
             if (attributes.Length > 0)
@@ -138,7 +138,7 @@ namespace FEZRepacker.Core
 
         public static XnbAssemblyQualifier GetForType(Type type)
         {
-            var fromXnbType = GetFromXnbType(type);
+            var fromXnbType = TryGetFromXnbType(type);
             if (fromXnbType.HasValue)
             {
                 return fromXnbType.Value;
@@ -163,29 +163,12 @@ namespace FEZRepacker.Core
         /// <returns>A string representing an assembly qualified name stored in this structure.</returns>
         public string GetDisplayName(bool simplified = false)
         {
-            string displayedName = (simplified ? "" : (Namespace + ".")) + Name;
-            if (Templates.Length > 0)
-            {
-                displayedName += (simplified) ? "[" : $"`{Templates.Length}[";
-                for (var i = 0; i < Templates.Length; i++)
-                {
-                    if (i > 0) displayedName += ",";
-                    var templateName = Templates[i].GetDisplayName(simplified);
-                    displayedName += (simplified) ? templateName : $"[{templateName}]";
-                }
-                displayedName += "]";
-            }
-            if (!simplified && Specification.Length > 0)
-            {
-                displayedName += ", " + Specification;
-            }
-
-            return displayedName;
+            return GetDisplayNameInternal(simplified);
         }
 
         public override string ToString()
         {
-            return GetDisplayName(false);
+            return GetDisplayNameInternal(false);
         }
 
         public override bool Equals(object? obj)
@@ -204,6 +187,47 @@ namespace FEZRepacker.Core
         public override int GetHashCode()
         {
             return base.GetHashCode();
+        }
+
+        private string GetDisplayNameInternal(bool simplified = false, string? mainSpecificationAssembly = null)
+        {
+            bool isMainSpecificationAssemblyOwner = false;
+            if (mainSpecificationAssembly == null)
+            {
+                isMainSpecificationAssemblyOwner = true;
+                mainSpecificationAssembly = Specification.Split(',').First();
+            }
+            
+            string displayedName = (simplified ? "" : (Namespace + ".")) + Name;
+            if (Templates.Length > 0)
+            {
+                displayedName += (simplified) ? "[" : $"`{Templates.Length}[";
+                for (var i = 0; i < Templates.Length; i++)
+                {
+                    if (i > 0) displayedName += ",";
+                    var templateName = Templates[i].GetDisplayNameInternal(simplified, mainSpecificationAssembly);
+                    displayedName += (simplified) ? templateName : $"[{templateName}]";
+                }
+                displayedName += "]";
+            }
+            if (!simplified)
+            {
+                var shouldUseMainSpecificationAssembly = 
+                    !isMainSpecificationAssemblyOwner && 
+                    !string.IsNullOrEmpty(mainSpecificationAssembly) && 
+                    Specification.StartsWith(mainSpecificationAssembly);
+
+                var specification = shouldUseMainSpecificationAssembly
+                    ? mainSpecificationAssembly
+                    : Specification;
+
+                if (specification.Length > 0)
+                {
+                    displayedName += ", " + specification;
+                }
+            }
+
+            return displayedName;
         }
     }
 }

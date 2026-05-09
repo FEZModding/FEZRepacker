@@ -40,7 +40,7 @@ namespace FEZRepacker.Core.XNB
 
         public XnbContentSerializer? FindByContentType(Type t)
         {
-            var readerQualifiedName = XnbAssemblyQualifier.GetFromXnbReaderType(t);
+            var readerQualifiedName = XnbAssemblyQualifier.TryGetFromXnbReaderType(t);
             return readerQualifiedName != null
                 ? FindByReaderQualifier(readerQualifiedName.Value)
                 : ContentSerializers.FirstOrDefault(serializer => serializer.ContentType == t);
