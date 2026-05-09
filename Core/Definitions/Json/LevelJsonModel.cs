@@ -92,31 +92,8 @@ namespace FEZRepacker.Core.Definitions.Json
                 ArtObjects = ArtObjects,
             };
 
-            level.Triles = new OrderedDictionary<TrileEmplacement, TrileInstance>();
-            
-            foreach (var trileModel in Triles)
-            {
-                var trile = trileModel.Deserialize();
-                
-                if (level.Triles.TryGetValue(trileModel.Emplacement, out var existingTrile))
-                {
-                    if (existingTrile.OverlappedTriles == null)
-                    {
-                        existingTrile.OverlappedTriles = new List<TrileInstance>();
-                    }
-                    
-                    level.Triles[trileModel.Emplacement].OverlappedTriles.Add(trile);
-                    continue;
-                }
-                
-                level.Triles[trileModel.Emplacement] = trile;
-            }
-
-            level.Groups = new Dictionary<int, TrileGroup>();
-            foreach (var groupModel in Groups)
-            {
-                level.Groups[groupModel.Key] = groupModel.Value.Deserialize();
-            }
+            ArrangeTrilesIntoLevel(level);
+            RecreateGroupsInLevel(level);
 
             return level;
         }
@@ -156,7 +133,18 @@ namespace FEZRepacker.Core.Definitions.Json
             Volumes = level.Volumes;
             ArtObjects = level.ArtObjects;
 
-            // sort tiles into modified structures
+            ExtractTrileListFromLevel(level);
+            ExtractCleanedGroupsFromLevel(level);
+        }
+
+        private void ExtractTrileListFromLevel(Level level)
+        {
+            // OverlappedTriles list in original Level's Trile Instance structure exists as a way to store
+            // multiple triles under the same TrileEmplacement key in Triles dictionary.
+            // This is wasteful for JSON format. To avoid this, custom model for TrileInstance containing Emplacement
+            // is made, so overlapping triles can exist next to one another.
+            // We're merging them back into OverlappedTriles array in ArrangeTrilesIntoLevel during deconversion.
+            
             Triles = new();
             foreach (var trileRecord in level.Triles)
             {
@@ -174,12 +162,53 @@ namespace FEZRepacker.Core.Definitions.Json
                     Triles.Add(new TrileInstanceJsonModel(pos, overlapping));
                 }
             }
+        }
 
-            // create groups of modified paths
+        private void ArrangeTrilesIntoLevel(Level level)
+        {
+            level.Triles = new OrderedDictionary<TrileEmplacement, TrileInstance>();
+            foreach (var trileModel in Triles)
+            {
+                var trile = trileModel.Deserialize();
+                
+                if (level.Triles.TryGetValue(trileModel.Emplacement, out var existingTrile))
+                {
+                    if (existingTrile.OverlappedTriles == null)
+                    {
+                        existingTrile.OverlappedTriles = new List<TrileInstance>();
+                    }
+                    
+                    level.Triles[trileModel.Emplacement].OverlappedTriles.Add(trile);
+                    continue;
+                }
+                
+                level.Triles[trileModel.Emplacement] = trile;
+            }
+        }
+
+        private void ExtractCleanedGroupsFromLevel(Level level)
+        {
+            // Groups store exact copies of contained TrileInstances. This is very wasteful, and even the game
+            // dumps them and looks them up again using TrileEmplacement calculated from trile's position
+            // (see FezEngine.Structure.Level.OnDeserialization())
+            // We're dumping all trile data using custom model for TrileGroup,
+            // and then rebuilding it in RecreateGroupsInLevel.
+            
             Groups = new Dictionary<int, TrileGroupJsonModel>();
             foreach (var pair in level.Groups)
             {
                 Groups[pair.Key] = new TrileGroupJsonModel(pair.Value);
+            }
+        }
+
+        private void RecreateGroupsInLevel(Level level)
+        {
+            level.Groups = new Dictionary<int, TrileGroup>();
+            foreach (var groupModel in Groups)
+            {
+                var group = groupModel.Value.Deserialize();
+                groupModel.Value.ReconstructTrilesInGroup(group, level);
+                level.Groups[groupModel.Key] = group;
             }
         }
     }

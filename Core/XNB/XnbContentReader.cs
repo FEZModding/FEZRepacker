@@ -26,7 +26,7 @@ namespace FEZRepacker.Core.XNB
 
         public object? ReadContent(Type T, bool skipIdentifier = false)
         {
-            if (!skipIdentifier && !T.IsPrimitive)
+            if (!skipIdentifier)
             {
                 int type = Read7BitEncodedInt();
                 if (type == 0)
@@ -38,7 +38,7 @@ namespace FEZRepacker.Core.XNB
                 // and there's only one reader per type, this is redundant.
             }
 
-            XnbContentSerializer? serializer = Identity.ContentSerializers.Find(t => t.ContentType == T);
+            XnbContentSerializer? serializer = Identity.FindByContentType(T);
             if (serializer == null)
             {
                 throw new InvalidDataException($"Cannot convert value of type {T.FullName}");

@@ -7,7 +7,7 @@
         [XnbProperty]
         public string Name { get; set; } = "Untitled";
 
-        [XnbProperty(Optional = true)]
+        [XnbProperty(UseConverter = true)]
         public TimeSpan? Timeout { get; set; }
 
         [XnbProperty(UseConverter = true)]

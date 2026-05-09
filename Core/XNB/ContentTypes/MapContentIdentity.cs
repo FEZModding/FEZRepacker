@@ -17,7 +17,7 @@ namespace FEZRepacker.Core.XNB.ContentTypes
             new Int32ContentSerializer(),
             new EnumContentSerializer<LevelNodeType>(),
             new WinConditionsContentSerializer(),
-            new ListContentSerializer<int>()
+            new ListContentSerializer<int>(true)
         };
     }
 }

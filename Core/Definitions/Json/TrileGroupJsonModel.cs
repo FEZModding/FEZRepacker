@@ -58,11 +58,28 @@ namespace FEZRepacker.Core.Definitions.Json
                 AssociatedSound = AssociatedSound,
             };
 
-            trileGroup.Triles = Triles
-                .Select(x => new TrileInstance() { Position = new(x.X, x.Y, x.Z) })
-                .ToList();
-
             return trileGroup;
+        }
+
+        public void ReconstructTrilesInGroup(TrileGroup trileGroup, Level level)
+        {
+            trileGroup.Triles = new List<TrileInstance>();
+            foreach (var emplacement in Triles)
+            {
+                if (!level.Triles.TryGetValue(emplacement, out var existingTrile))
+                {
+                    // If we couldn't find linked trile instance in level, then something went 
+                    // terribly wrong with the level file. This fallback is here to make sure
+                    // the game tries to find it as well and fail miserably so user knows about it
+                    trileGroup.Triles.Add(new TrileInstance()
+                    {
+                        Position = new (emplacement.X, emplacement.Y, emplacement.Z)
+                    });
+                    continue;
+                }
+                
+                trileGroup.Triles.Add(existingTrile);
+            }
         }
 
         private void CopyBasicPropertiesOverFrom(TrileGroup trileGroup)
@@ -88,6 +105,8 @@ namespace FEZRepacker.Core.Definitions.Json
         {
             CopyBasicPropertiesOverFrom(trileGroup);
 
+            // leaving only emplacements, as triles are most likely exact copies of triles from level
+            // see LevelJsonModel.ExtractCleanedGroupsFromLevel for details
             Triles = trileGroup.Triles.Select(x => new TrileEmplacement(x.Position)).ToList();
         }
     }

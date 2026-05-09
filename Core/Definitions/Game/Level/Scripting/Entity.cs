@@ -7,7 +7,7 @@
         [XnbProperty]
         public string Type { get; set; } = "";
 
-        [XnbProperty(Optional = true)]
+        [XnbProperty(UseConverter = true)]
         public int? Identifier { get; set; }
     }
 }
