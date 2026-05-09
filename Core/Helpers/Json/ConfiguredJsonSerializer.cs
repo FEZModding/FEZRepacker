@@ -78,6 +78,7 @@ namespace FEZRepacker.Core.Helpers.Json
                     new ScriptTriggerJsonConverter(),
                     new ScriptConditionJsonConverter(),
                     new ScriptActionJsonConverter(),
+                    new OrderedDictionaryConverterFactory(),
                 }
             };
 

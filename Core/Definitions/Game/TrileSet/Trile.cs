@@ -36,11 +36,11 @@ namespace FEZRepacker.Core.Definitions.Game.TrileSet
         public bool ForceHugging { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public Dictionary<FaceOrientation, CollisionType> Faces { get; set; } = new();
+        public IDictionary<FaceOrientation, CollisionType> Faces { get; set; } = null!;
 
         [JsonIgnore]
         [XnbProperty(UseConverter = true)]
-        public IndexedPrimitives<VertexInstance, Vector4> Geometry { get; set; } = new();
+        public IndexedPrimitives<VertexInstance, Vector4> Geometry { get; set; } = null!;
 
         [XnbProperty(UseConverter = true)]
         public ActorType Type { get; set; }

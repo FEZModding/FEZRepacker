@@ -3,6 +3,7 @@ using FEZRepacker.Core.Definitions.Game.Common;
 using FEZRepacker.Core.Definitions.Game.Level;
 using FEZRepacker.Core.Definitions.Game.Level.Scripting;
 using FEZRepacker.Core.Definitions.Game.XNA;
+using FEZRepacker.Core.Helpers;
 
 namespace FEZRepacker.Core.Definitions.Json
 {
@@ -35,13 +36,13 @@ namespace FEZRepacker.Core.Definitions.Json
         public int FAPFadeOutLength { get; set; }
         public string TrileSetName { get; set; } = "";
         public List<TrileInstanceJsonModel> Triles { get; set; } = new();
-        public Dictionary<int, TrileGroupJsonModel> Groups { get; set; } = new();
-        public Dictionary<int, Volume> Volumes { get; set; } = new();
-        public Dictionary<int, Script> Scripts { get; set; } = new();
-        public Dictionary<int, ArtObjectInstance> ArtObjects { get; set; } = new();
-        public Dictionary<int, BackgroundPlane> BackgroundPlanes { get; set; } = new();
-        public Dictionary<int, MovementPath> Paths { get; set; } = new();
-        public Dictionary<int, NpcInstance> NonPlayerCharacters { get; set; } = new();
+        public IDictionary<int, TrileGroupJsonModel> Groups { get; set; } = new OrderedDictionary<int, TrileGroupJsonModel>();
+        public IDictionary<int, Volume> Volumes { get; set; } = new OrderedDictionary<int, Volume>();
+        public IDictionary<int, Script> Scripts { get; set; } = new OrderedDictionary<int, Script>();
+        public IDictionary<int, ArtObjectInstance> ArtObjects { get; set; } = new OrderedDictionary<int, ArtObjectInstance>();
+        public IDictionary<int, BackgroundPlane> BackgroundPlanes { get; set; } = new OrderedDictionary<int, BackgroundPlane>();
+        public IDictionary<int, MovementPath> Paths { get; set; } = new OrderedDictionary<int, MovementPath>();
+        public IDictionary<int, NpcInstance> NonPlayerCharacters { get; set; } = new OrderedDictionary<int, NpcInstance>();
 
         public LevelJsonModel()
         {
@@ -91,20 +92,31 @@ namespace FEZRepacker.Core.Definitions.Json
                 ArtObjects = ArtObjects,
             };
 
+            level.Triles = new OrderedDictionary<TrileEmplacement, TrileInstance>();
+            
             foreach (var trileModel in Triles)
             {
                 var trile = trileModel.Deserialize();
-                if (!level.Triles.ContainsKey(trileModel.Emplacement))
+                
+                if (level.Triles.TryGetValue(trileModel.Emplacement, out var existingTrile))
                 {
-                    level.Triles[trileModel.Emplacement] = trile;
-                }
-                else
-                {
+                    if (existingTrile.OverlappedTriles == null)
+                    {
+                        existingTrile.OverlappedTriles = new List<TrileInstance>();
+                    }
+                    
                     level.Triles[trileModel.Emplacement].OverlappedTriles.Add(trile);
+                    continue;
                 }
+                
+                level.Triles[trileModel.Emplacement] = trile;
             }
 
-            level.Groups = Groups.ToDictionary(pair => pair.Key, pair => pair.Value.Deserialize());
+            level.Groups = new Dictionary<int, TrileGroup>();
+            foreach (var groupModel in Groups)
+            {
+                level.Groups[groupModel.Key] = groupModel.Value.Deserialize();
+            }
 
             return level;
         }
@@ -164,7 +176,11 @@ namespace FEZRepacker.Core.Definitions.Json
             }
 
             // create groups of modified paths
-            Groups = level.Groups.ToDictionary(pair => pair.Key, pair => new TrileGroupJsonModel(pair.Value));
+            Groups = new Dictionary<int, TrileGroupJsonModel>();
+            foreach (var pair in level.Groups)
+            {
+                Groups[pair.Key] = new TrileGroupJsonModel(pair.Value);
+            }
         }
     }
 }

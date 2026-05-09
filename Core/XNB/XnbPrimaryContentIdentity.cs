@@ -33,5 +33,17 @@ namespace FEZRepacker.Core.XNB
             }
         }
 
+        public XnbContentSerializer? FindByReaderQualifier(XnbAssemblyQualifier qualifier)
+        {
+            return ContentSerializers.FirstOrDefault(serializer => serializer.Name.Equals(qualifier));
+        }
+
+        public XnbContentSerializer? FindByContentType(Type t)
+        {
+            var readerQualifiedName = XnbAssemblyQualifier.GetFromXnbReaderType(t);
+            return readerQualifiedName != null
+                ? FindByReaderQualifier(readerQualifiedName.Value)
+                : ContentSerializers.FirstOrDefault(serializer => serializer.ContentType == t);
+        }
     }
 }

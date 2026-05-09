@@ -36,7 +36,7 @@ namespace FEZRepacker.Core.XNB
                 return;
             }
 
-            var matchingSerializer = Identity.ContentSerializers.Find(t => t.ContentType == T);
+            var matchingSerializer = Identity.FindByContentType(T);
             if (matchingSerializer == null)
             {
                 throw new XnbSerializationException($"Couldn't assign type for {data} in {GetType()}");
@@ -58,7 +58,7 @@ namespace FEZRepacker.Core.XNB
 
         private int TryClaimContentType(Type type)
         {
-            var matchingSerializer = Identity.ContentSerializers.Find(t => t.ContentType == type);
+            var matchingSerializer = Identity.FindByContentType(type);
             if (matchingSerializer == null)
             {
                 return -1;

@@ -1,6 +1,7 @@
 ﻿using FEZRepacker.Core.Definitions.Game.Common;
 using FEZRepacker.Core.Definitions.Game.Level.Scripting;
 using FEZRepacker.Core.Definitions.Game.XNA;
+using FEZRepacker.Core.Helpers;
 
 namespace FEZRepacker.Core.Definitions.Game.Level
 {
@@ -57,10 +58,10 @@ namespace FEZRepacker.Core.Definitions.Game.Level
         public string TrileSetName { get; set; } = "";
 
         [XnbProperty(UseConverter = true)]
-        public Dictionary<int, Volume> Volumes { get; set; } = new();
+        public IDictionary<int, Volume> Volumes { get; set; } = new OrderedDictionary<int, Volume>();
 
         [XnbProperty(UseConverter = true)]
-        public Dictionary<int, Script> Scripts { get; set; } = new();
+        public IDictionary<int, Script> Scripts { get; set; } = new OrderedDictionary<int, Script>();
 
         [XnbProperty(UseConverter = true)]
         public string SongName { get; set; } = "";
@@ -72,22 +73,22 @@ namespace FEZRepacker.Core.Definitions.Game.Level
         public int FAPFadeOutLength { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public Dictionary<TrileEmplacement, TrileInstance> Triles { get; set; } = new();
+        public IDictionary<TrileEmplacement, TrileInstance> Triles { get; set; } = new OrderedDictionary<TrileEmplacement, TrileInstance>();
 
         [XnbProperty(UseConverter = true)]
-        public Dictionary<int, ArtObjectInstance> ArtObjects { get; set; } = new();
+        public IDictionary<int, ArtObjectInstance> ArtObjects { get; set; } = new OrderedDictionary<int, ArtObjectInstance>();
 
         [XnbProperty(UseConverter = true)]
-        public Dictionary<int, BackgroundPlane> BackgroundPlanes { get; set; } = new();
+        public IDictionary<int, BackgroundPlane> BackgroundPlanes { get; set; } = new OrderedDictionary<int, BackgroundPlane>();
 
         [XnbProperty(UseConverter = true)]
-        public Dictionary<int, TrileGroup> Groups { get; set; } = new();
+        public IDictionary<int, TrileGroup> Groups { get; set; } = new OrderedDictionary<int, TrileGroup>();
 
         [XnbProperty(UseConverter = true)]
-        public Dictionary<int, NpcInstance> NonPlayerCharacters { get; set; } = new();
+        public IDictionary<int, NpcInstance> NonPlayerCharacters { get; set; } = new OrderedDictionary<int, NpcInstance>();
 
         [XnbProperty(UseConverter = true)]
-        public Dictionary<int, MovementPath> Paths { get; set; } = new();
+        public IDictionary<int, MovementPath> Paths { get; set; } = new OrderedDictionary<int, MovementPath>();
 
         [XnbProperty]
         public bool Descending { get; set; }
