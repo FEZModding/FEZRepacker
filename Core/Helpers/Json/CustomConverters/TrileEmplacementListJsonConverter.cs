@@ -51,10 +51,12 @@ namespace FEZRepacker.Core.Helpers.Json.CustomConverters
 
             foreach (var pos in triles)
             {
-                if (options.WriteIndented)
-                {
-                    writer.WriteRawValue("\n" + new string(' ', writer.CurrentDepth * 2) + $"[{pos.X}, {pos.Y}, {pos.Z}]");
-                }
+                var rawValue = $"[{pos.X}, {pos.Y}, {pos.Z}]";
+
+                writer.WriteRawValue(options.WriteIndented
+                    ? $"\n{new string(' ', writer.CurrentDepth * 2)}{rawValue}"
+                    : rawValue
+                );
             }
 
             writer.WriteEndArray();
