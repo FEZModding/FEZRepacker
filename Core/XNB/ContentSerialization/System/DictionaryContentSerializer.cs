@@ -10,6 +10,7 @@ namespace FEZRepacker.Core.XNB.ContentSerialization.System
 
         public override Type ContentType => typeof(IDictionary<K, V>);
         public override XnbAssemblyQualifier Name => _name;
+        public override Type[] UnderlyingContentTypes => [typeof(K), typeof(V)];
         
         public DictionaryContentSerializer(
             bool skipKeyIdentifier = false,
@@ -43,6 +44,9 @@ namespace FEZRepacker.Core.XNB.ContentSerialization.System
 
         public override void Serialize(object data, XnbContentWriter writer)
         {
+            writer.TryClaimContentType(typeof(K));
+            writer.TryClaimContentType(typeof(V));
+            
             var dict = (IDictionary<K, V>)data;
 
             writer.Write(dict.Count);

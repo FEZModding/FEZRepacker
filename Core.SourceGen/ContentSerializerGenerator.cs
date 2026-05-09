@@ -18,6 +18,7 @@ public sealed class ContentSerializerGenerator : IIncrementalGenerator
         public string TypeName;
         public string TypeFullName;
         public string QualifierString;
+        public List<string> GenericParameters;
         public List<XnbPropertyInfo> Properties;
     }
 
@@ -50,11 +51,6 @@ public sealed class ContentSerializerGenerator : IIncrementalGenerator
             return null;
         }
         
-        if (typeSymbol.IsGenericType)
-        {
-            return null;
-        }
-        
         var xnbReaderTypeAttribute = typeSymbol.GetAttributes()
             .FirstOrDefault(a => a.AttributeClass?.ToDisplayString() == XnbReaderTypeAttributeName);
 
@@ -63,19 +59,19 @@ public sealed class ContentSerializerGenerator : IIncrementalGenerator
             return null;
         }
         
-        bool useBaseClass = xnbReaderTypeAttribute.NamedArguments
-            .FirstOrDefault(x => x.Key == "UseBaseClass").Value.Value is true;
+        bool isPrivate = xnbReaderTypeAttribute.NamedArguments
+            .FirstOrDefault(x => x.Key == "IsPrivate").Value.Value is true;
 
-        var logicalTypeSymbol = typeSymbol;
-        if (useBaseClass && typeSymbol.BaseType is not null)
+        if (isPrivate)
         {
-            logicalTypeSymbol = typeSymbol.BaseType;
+            return null;
         }
 
         var qualifierString = xnbReaderTypeAttribute.ConstructorArguments[0].Value as string ?? string.Empty;
+        var genericParameters = typeSymbol.TypeParameters.Select(tp => tp.Name).ToList();
         var properties = new List<XnbPropertyInfo>();
 
-        foreach (var member in logicalTypeSymbol.GetMembers().OfType<IPropertySymbol>())
+        foreach (var member in typeSymbol.GetMembers().OfType<IPropertySymbol>())
         {
             ct.ThrowIfCancellationRequested();
 
@@ -123,9 +119,10 @@ public sealed class ContentSerializerGenerator : IIncrementalGenerator
         return new XnbTypeInfo
         {
             TypeName = typeSymbol.Name,
-            TypeFullName = logicalTypeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
+            TypeFullName = typeSymbol.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
             QualifierString = qualifierString,
             Properties = properties,
+            GenericParameters = genericParameters
         };
     }
 
@@ -148,15 +145,50 @@ public sealed class ContentSerializerGenerator : IIncrementalGenerator
         cb.AppendLine();
         cb.AppendLine("namespace FEZRepacker.Core.XNB.ContentSerialization;");
         cb.AppendLine();
-        cb.Append($"internal sealed class {xnbTypeInfo.TypeName}ContentSerializer");
+        cb.Append($"internal sealed class {ConstructSerializerName(xnbTypeInfo)}");
         cb.AppendLine($" : XnbContentSerializer<{xnbTypeInfo.TypeFullName}>");
         cb.BeginCodeBlock();
         {
-            cb.AppendLine($"public override XnbAssemblyQualifier Name => \"{xnbTypeInfo.QualifierString}\";");
+            EmitConstructor(cb, xnbTypeInfo);
             cb.AppendLine();
             EmitDeserialize(cb, xnbTypeInfo);
             cb.AppendLine();
             EmitSerialize(cb, xnbTypeInfo);
+        }
+        cb.EndCodeBlock();
+    }
+    
+    private static string ConstructSerializerName(XnbTypeInfo xnbTypeInfo)
+    {
+        var name = $"{xnbTypeInfo.TypeName}ContentSerializer";
+        if (xnbTypeInfo.GenericParameters.Count > 0)
+        {
+            var genericParametersList = string.Join(", " , xnbTypeInfo.GenericParameters);
+            name += $"<{genericParametersList}>";
+        }
+        return name;
+    }
+
+    private static void EmitConstructor(CodeStringBuilder cb, XnbTypeInfo xnbTypeInfo)
+    {
+        if (xnbTypeInfo.GenericParameters.Count == 0)
+        {
+            cb.AppendLine($"public override XnbAssemblyQualifier Name => \"{xnbTypeInfo.QualifierString}\";");
+            return;
+        }
+        
+        cb.AppendLine( "private readonly XnbAssemblyQualifier _name;");
+        cb.AppendLine();
+        cb.AppendLine("public override XnbAssemblyQualifier Name => _name;");
+        cb.Append("public override Type[] UnderlyingContentTypes => [");
+        cb.Append(string.Join(", ", xnbTypeInfo.GenericParameters.Select(type => $"typeof({type})")));
+        cb.AppendLine("];");
+        cb.AppendLine();
+        cb.AppendLine($"public {xnbTypeInfo.TypeName}ContentSerializer() : base ()");
+        cb.BeginCodeBlock();
+        {
+            cb.AppendLine($"var name = XnbAssemblyQualifier.TryGetFromXnbReaderType(typeof({xnbTypeInfo.TypeFullName}));");
+            cb.AppendLine("if (name.HasValue) _name = name.Value;");
         }
         cb.EndCodeBlock();
     }

@@ -20,7 +20,7 @@ namespace FEZRepacker.Core.XNB.ContentTypes
             new DictionaryContentSerializer<FaceOrientation, CollisionType>(true, true),
             new EnumContentSerializer<FaceOrientation>(),
             new EnumContentSerializer<CollisionType>(),
-            new TrileSetIndexedPrimitivesContentSerializer(),
+            new IndexedPrimitivesContentSerializer<VertexInstance, Vector4>(),
             new VertexInstanceContentSerializer(),
             new Vector4ContentSerializer(),
             new EnumContentSerializer<PrimitiveType>(),

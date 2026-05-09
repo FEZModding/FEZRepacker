@@ -15,7 +15,7 @@ namespace FEZRepacker.Core.XNB.ContentTypes
             new Texture2DContentSerializer(),
             new EnumContentSerializer<SurfaceFormat>().MarkPrivate(),
             new ByteArrayContentSerializer().MarkPrivate(),
-            new ArtObjectIndexedPrimitivesContentSerializer(),
+            new IndexedPrimitivesContentSerializer<VertexInstance, Matrix>(),
             new VertexInstanceContentSerializer(),
             new MatrixContentSerializer(),
             new EnumContentSerializer<PrimitiveType>(),

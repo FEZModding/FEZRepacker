@@ -7,6 +7,7 @@
     {
         public abstract XnbAssemblyQualifier Name { get; }
         public abstract Type ContentType { get; }
+        public virtual Type[] UnderlyingContentTypes => [];
         public bool IsPrivate { get; protected set; }
 
         public XnbContentSerializer()

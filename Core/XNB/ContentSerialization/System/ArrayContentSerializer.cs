@@ -5,6 +5,10 @@ namespace FEZRepacker.Core.XNB.ContentSerialization.System
     {
         private XnbAssemblyQualifier _name;
         private readonly bool _skipElementType;
+        
+        public override XnbAssemblyQualifier Name => _name;
+        public override Type[] UnderlyingContentTypes => [typeof(T)];
+
         public ArrayContentSerializer(bool skipElementType = true) : base()
         {
             // creating type assembly qualifier name
@@ -18,8 +22,6 @@ namespace FEZRepacker.Core.XNB.ContentSerialization.System
             // i have no idea what's the rule here, im just making it a variable
             _skipElementType = skipElementType;
         }
-
-        public override XnbAssemblyQualifier Name => _name;
 
         public override object Deserialize(XnbContentReader reader)
         {
@@ -35,6 +37,7 @@ namespace FEZRepacker.Core.XNB.ContentSerialization.System
 
         public override void Serialize(object data, XnbContentWriter writer)
         {
+            writer.TryClaimContentType(typeof(T));
             T[] array = (T[])data;
 
             writer.Write(array.Length);

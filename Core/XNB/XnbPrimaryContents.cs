@@ -32,7 +32,7 @@ namespace FEZRepacker.Core.XNB
 
         public static XnbPrimaryContentIdentity? FindByType(Type type)
         {
-            var readerQualifier = XnbAssemblyQualifier.GetFromXnbReaderType(type);
+            var readerQualifier = XnbAssemblyQualifier.TryGetFromXnbReaderType(type);
             if (readerQualifier == null)
             {
                 return null;
