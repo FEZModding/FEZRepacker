@@ -56,6 +56,14 @@ namespace FEZRepacker.Core.Helpers
             writer.Write(color.A);
         }
 
+        public static void WriteInts(this BinaryWriter writer, params int[] values)
+        {
+            foreach (var value in values)
+            {
+                writer.Write(value);
+            }
+        }
+
         // Source: hhttps://source.dot.net/#Microsoft.Build.Framework/BinaryReaderExtensions.cs,20
         public static int Read7BitEncodedInt(this BinaryReader reader)
         {

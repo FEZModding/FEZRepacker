@@ -2,6 +2,7 @@
 
 using FEZRepacker.Core.Definitions.Game.XNA;
 using FEZRepacker.Core.FileSystem;
+using FEZRepacker.Core.Helpers;
 
 namespace FEZRepacker.Core.Conversion.Formats
 {
@@ -15,7 +16,8 @@ namespace FEZRepacker.Core.Conversion.Formats
             using var outWriter = new BinaryWriter(outStream, Encoding.UTF8, true);
 
             outWriter.Write("RIFF".ToCharArray());
-            var fileSize = 4 + 8 + 18 + 8 + data.DataChunk.Length;
+            const int headerSize = 104; // RIFF + WAVE + fmt chunk + smpl chunk + data chunk header
+            var fileSize = headerSize + data.DataChunk.Length;
             outWriter.Write(fileSize);
             outWriter.Write("WAVE".ToCharArray());
             outWriter.Write("fmt ".ToCharArray());
@@ -26,6 +28,12 @@ namespace FEZRepacker.Core.Conversion.Formats
             outWriter.Write(data.BytesPerSecond);
             outWriter.Write(data.BlockAlignment);
             outWriter.Write(data.BitsPerSample);
+            outWriter.Write("smpl".ToCharArray());
+            outWriter.WriteInts(52, 0, 0, 222675, 60, 0, 0, 0, 1, 0);
+            outWriter.WriteInts(0, 0);
+            outWriter.Write(data.LoopStart);
+            outWriter.Write(data.LoopStart + data.LoopLength - 1);
+            outWriter.WriteInts(0, 0);
             outWriter.Write("data".ToCharArray());
             outWriter.Write(data.DataChunk.Length);
             outWriter.Write(data.DataChunk);
@@ -64,6 +72,26 @@ namespace FEZRepacker.Core.Conversion.Formats
                     soundEffect.ExtraParameter = 0;
                     inReader.ReadBytes(chunkLength - 16);
                 }
+                else if (chunkHeader == "smpl")
+                {
+                    inReader.ReadBytes(28);
+                    var sampleLoops = inReader.ReadInt32();
+                    var extraBytesCount = inReader.ReadInt32();
+                    for (int i = 0; i < sampleLoops; i++)
+                    {
+                        inReader.ReadBytes(8);
+                        var loopStart = inReader.ReadInt32();
+                        var loopEnd = inReader.ReadInt32();
+                        inReader.ReadBytes(8);
+
+                        if (i == 0)
+                        {
+                            soundEffect.LoopStart = loopStart;
+                            soundEffect.LoopLength = loopEnd - loopStart + 1;
+                        }
+                    }
+                    inReader.ReadBytes(extraBytesCount);
+                }
                 else
                 {
                     var chunkData = inReader.ReadBytes(chunkLength);
@@ -82,10 +110,8 @@ namespace FEZRepacker.Core.Conversion.Formats
             {
                 throw new InvalidDataException($"PCM WAV file bit resolution must be divisible by 16 ({soundEffect.BitsPerSample}-bit samples detected)");
             }
-
-            // not sure if loops are even used, but just to be safe, setting it to be the entire file
-            soundEffect.LoopStart = 0;
-            soundEffect.LoopLength = soundEffect.DataChunk.Length / Math.Max(1, (int)soundEffect.ChannelCount);
+            
+            soundEffect.DurationMs = (int)(((long)soundEffect.DataChunk.Length * 1000) / soundEffect.BytesPerSecond);
 
             return soundEffect;
         }
