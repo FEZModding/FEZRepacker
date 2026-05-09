@@ -43,6 +43,6 @@
         public int LoopLength { get; set; }
 
         [XnbProperty]
-        public int UnknownValue { get; set; }
+        public int DurationMs { get; set; }
     }
 }
