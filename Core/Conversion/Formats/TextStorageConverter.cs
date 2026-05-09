@@ -1,9 +1,10 @@
 ﻿using FEZRepacker.Core.FileSystem;
+using FEZRepacker.Core.Helpers;
 using FEZRepacker.Core.Helpers.Json;
 
 namespace FEZRepacker.Core.Conversion.Formats
 {
-    using TextStorage = Dictionary<string, Dictionary<string, string>>;
+    using TextStorage = OrderedDictionary<string, OrderedDictionary<string, string>>;
     internal class TextStorageConverter : FormatConverter<TextStorage>
     {
         public override string FileFormat => ".feztxt";

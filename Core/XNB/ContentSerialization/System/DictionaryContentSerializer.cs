@@ -1,11 +1,16 @@
-﻿namespace FEZRepacker.Core.XNB.ContentSerialization.System
+﻿using FEZRepacker.Core.Helpers;
+
+namespace FEZRepacker.Core.XNB.ContentSerialization.System
 {
-    internal class DictionaryContentSerializer<K, V> : XnbContentSerializer<Dictionary<K, V>> where K : notnull
+    internal class DictionaryContentSerializer<K, V> : XnbContentSerializer<OrderedDictionary<K, V>> where K : notnull
     {
         private XnbAssemblyQualifier _name;
         private bool skipKeyIdentifier;
         private bool skipValueIdentifier;
 
+        public override Type ContentType => typeof(IDictionary<K, V>);
+        public override XnbAssemblyQualifier Name => _name;
+        
         public DictionaryContentSerializer(
             bool skipKeyIdentifier = false,
             bool skipValueIdentifier = false
@@ -23,11 +28,9 @@
             this.skipValueIdentifier = skipValueIdentifier;
         }
 
-        public override XnbAssemblyQualifier Name => _name;
-
         public override object Deserialize(XnbContentReader reader)
         {
-            Dictionary<K, V> data = new Dictionary<K, V>();
+            var data = new OrderedDictionary<K, V>();
             int dataCount = reader.ReadInt32();
             for (int i = 0; i < dataCount; i++)
             {
@@ -40,13 +43,13 @@
 
         public override void Serialize(object data, XnbContentWriter writer)
         {
-            Dictionary<K, V> dict = (Dictionary<K, V>)data;
+            var dict = (IDictionary<K, V>)data;
 
             writer.Write(dict.Count);
             foreach (var record in dict)
             {
-                writer.WriteContent<K>(record.Key, skipKeyIdentifier);
-                writer.WriteContent<V>(record.Value, skipValueIdentifier);
+                writer.WriteContent(record.Key, skipKeyIdentifier);
+                writer.WriteContent(record.Value, skipValueIdentifier);
             }
         }
     }

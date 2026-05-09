@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 
 using FEZRepacker.Core.Definitions.Game.XNA;
-
+using FEZRepacker.Core.Helpers;
 
 namespace FEZRepacker.Core.Definitions.Game.TrileSet
 {
@@ -13,7 +13,7 @@ namespace FEZRepacker.Core.Definitions.Game.TrileSet
         public string Name { get; set; } = "";
 
         [XnbProperty(UseConverter = true)]
-        public Dictionary<int, Trile> Triles { get; set; } = new();
+        public IDictionary<int, Trile> Triles { get; set; } = new OrderedDictionary<int, Trile>();
 
         [JsonIgnore]
         [XnbProperty(UseConverter = true)]
