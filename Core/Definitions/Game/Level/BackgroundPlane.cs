@@ -40,7 +40,7 @@ namespace FEZRepacker.Core.Definitions.Game.Level
         [XnbProperty]
         public float Opacity { get; set; } = 1.0f;
 
-        [XnbProperty(Optional = true)]
+        [XnbProperty(UseConverter = true)]
         public int? AttachedGroup { get; set; }
 
         [XnbProperty]
@@ -78,7 +78,7 @@ namespace FEZRepacker.Core.Definitions.Game.Level
         [XnbProperty(UseConverter = true)]
         public ActorType ActorType { get; set; }
 
-        [XnbProperty(Optional = true)]
+        [XnbProperty(UseConverter = true)]
         public int? AttachedPlane { get; set; }
 
         [XnbProperty]

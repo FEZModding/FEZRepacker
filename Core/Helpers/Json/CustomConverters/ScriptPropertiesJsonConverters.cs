@@ -151,7 +151,8 @@ namespace FEZRepacker.Core.Helpers.Json.CustomConverters
                 action.Arguments = beforeFuncSplit[1].Split(',');
                 for (int i = 0; i < action.Arguments.Length; i++)
                 {
-                    action.Arguments[i] = action.Arguments[i].Trim();
+                    var arg = action.Arguments[i].Trim();
+                    action.Arguments[i] = arg == "null" ? "" : arg;
                 }
             }
 
@@ -170,7 +171,8 @@ namespace FEZRepacker.Core.Helpers.Json.CustomConverters
             for (int i = 0; i < value.Arguments.Count(); i++)
             {
                 if (i > 0) output += ", ";
-                output += value.Arguments[i];
+                var arg = value.Arguments[i];
+                output += string.IsNullOrEmpty(arg) ? "null" : arg;
             }
             output += ")";
             if (value.Blocking) output = "#" + output;

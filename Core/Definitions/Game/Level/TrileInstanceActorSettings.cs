@@ -5,7 +5,7 @@
     // Original name in FezEngine: InstanceActorSettings
     public class TrileInstanceActorSettings 
     {
-        [XnbProperty(Optional = true)]
+        [XnbProperty(UseConverter = true)]
         public int? ContainedTrile { get; set; }
 
         [XnbProperty(UseConverter = true)]
@@ -20,7 +20,7 @@
         [XnbProperty(UseConverter = true)]
         public string SequenceAlternateSampleName { get; set; } = "";
 
-        [XnbProperty(Optional = true)]
+        [XnbProperty(UseConverter = true)]
         public int? HostVolume { get; set; }
     }
 }

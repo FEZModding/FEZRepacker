@@ -13,7 +13,7 @@ namespace FEZRepacker.Core.Definitions.Game.Level
         [XnbProperty(UseConverter = true)]
         public ActorType ContainedTrile { get; set; }
 
-        [XnbProperty(Optional = true)]
+        [XnbProperty(UseConverter = true)]
         public int? AttachedGroup { get; set; }
 
         [XnbProperty(UseConverter = true)]
@@ -40,7 +40,7 @@ namespace FEZRepacker.Core.Definitions.Game.Level
         [XnbProperty(UseConverter = true)]
         public PathSegment Segment { get; set; } = new();
 
-        [XnbProperty(Optional = true)]
+        [XnbProperty(UseConverter = true)]
         public int? NextNode { get; set; }
 
         [XnbProperty(UseConverter = true)]

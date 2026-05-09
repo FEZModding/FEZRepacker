@@ -190,8 +190,9 @@ public sealed class ContentSerializerGenerator : IIncrementalGenerator
 
         if (prop.UseConverter)
         {
-            cb.Append($"({prop.TypeFullName})reader.ReadContent(typeof({prop.TypeFullName}), ");
-            cb.Append($"{(prop.SkipIdentifier ? "true" : "false")})!");
+            var castType = $"{prop.TypeFullName}{(prop.IsNullable ? "?" : "")}";
+            cb.Append($"({castType})reader.ReadContent(typeof({prop.TypeFullName}), ");
+            cb.Append($"{(prop.SkipIdentifier ? "true" : "false")}){(prop.IsNullable ? "" : "!")}");
         }
         else
         {

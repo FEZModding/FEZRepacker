@@ -14,7 +14,7 @@ namespace FEZRepacker.Core.XNB.ContentTypes
         protected override List<XnbContentSerializer> ContentSerializersFactory => new()
         {
             new TrileSetContentSerializer(),
-            new DictionaryContentSerializer<int, Trile>(),
+            new DictionaryContentSerializer<int, Trile>(true, false),
             new Int32ContentSerializer(),
             new TrileContentSerializer(),
             new DictionaryContentSerializer<FaceOrientation, CollisionType>(true, true),

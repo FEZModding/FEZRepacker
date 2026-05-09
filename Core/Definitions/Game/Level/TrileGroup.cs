@@ -10,7 +10,7 @@ namespace FEZRepacker.Core.Definitions.Game.Level
         [XnbProperty(UseConverter = true)]
         public List<TrileInstance> Triles { get; set; } = new();
 
-        [XnbProperty(UseConverter = true, Optional = true, SkipIdentifier = true)]
+        [XnbProperty(UseConverter = true)]
         public MovementPath? Path { get; set; } = null;
 
         [XnbProperty]

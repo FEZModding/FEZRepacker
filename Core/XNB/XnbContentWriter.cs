@@ -28,8 +28,6 @@ namespace FEZRepacker.Core.XNB
 
         public void WriteContent(Type T, object? data, bool skipIdentifier = false)
         {
-            if (T.IsPrimitive) skipIdentifier = true;
-
             if (data == null)
             {
                 Write((byte)0x00);
