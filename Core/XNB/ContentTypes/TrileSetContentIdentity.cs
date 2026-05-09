@@ -30,7 +30,7 @@ namespace FEZRepacker.Core.XNB.ContentTypes
             new EnumContentSerializer<ActorType>(),
             new EnumContentSerializer<SurfaceType>(),
             new Texture2DContentSerializer(),
-            new EnumContentSerializer<SurfaceFormat>(),
+            new EnumContentSerializer<SurfaceFormat>().MarkPrivate(),
             new ByteArrayContentSerializer().MarkPrivate()
         };
     }

@@ -67,6 +67,7 @@ namespace FEZRepacker.Core.Helpers.Json
                 WriteIndented = true,
                 Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
                 Converters = {
+                    new RoundTripFloatConverter(),
                     new JsonStringEnumConverter(),
                     new Vector2JsonConverter(),
                     new Vector3JsonConverter(),

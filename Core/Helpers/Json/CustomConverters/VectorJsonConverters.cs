@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Globalization;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 using FEZRepacker.Core.Definitions.Game.XNA;
@@ -33,12 +34,11 @@ namespace FEZRepacker.Core.Helpers.Json.CustomConverters
             Vector3 vector,
             JsonSerializerOptions options)
         {
-            // Preserve decimal places in JSON number by converting float value to decimal
-            writer.WriteStartArray();
-            writer.WriteNumberValue((decimal)vector.X);
-            writer.WriteNumberValue((decimal)vector.Y);
-            writer.WriteNumberValue((decimal)vector.Z);
-            writer.WriteEndArray();
+            var x = vector.X.ToString("R", CultureInfo.InvariantCulture);
+            var y = vector.Y.ToString("R", CultureInfo.InvariantCulture);
+            var z = vector.Z.ToString("R", CultureInfo.InvariantCulture);
+
+            writer.WriteRawValue(options.WriteIndented ? $"[{x}, {y}, {z}]" : $"[{x},{y},{z}]");
         }
     }
 
@@ -68,11 +68,10 @@ namespace FEZRepacker.Core.Helpers.Json.CustomConverters
             Vector2 vector,
             JsonSerializerOptions options)
         {
-            // Preserve decimal places in JSON number by converting float value to decimal
-            writer.WriteStartArray();
-            writer.WriteNumberValue((decimal)vector.X);
-            writer.WriteNumberValue((decimal)vector.Y);
-            writer.WriteEndArray();
+            var x = vector.X.ToString("R", CultureInfo.InvariantCulture);
+            var y = vector.Y.ToString("R", CultureInfo.InvariantCulture);
+            
+            writer.WriteRawValue(options.WriteIndented ? $"[{x}, {y}]" : $"[{x},{y}]");
         }
     }
 }
