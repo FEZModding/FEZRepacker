@@ -83,45 +83,33 @@ namespace FEZRepacker.Core.Conversion.Formats
 
         private static AnimatedTexture AnimationImageToAnimatedTexture(Image<Rgba32> animation)
         {
-            (var atlasWidth, var atlasHeight) = FindMinimumPowerOfTwoAtlasSize(animation);
-            var frames = ExtractFrameDataFromGif(animation, atlasWidth);
-
-            using var atlasImage = new Image<Rgba32>(atlasWidth, atlasHeight, Color.Transparent);
-            PopulateAtlasImageFromGif(atlasImage, animation, frames);
-            var atlas = TexturesUtil.ImageToTexture2D(atlasImage);
-
-            return new AnimatedTexture()
+            var frames = ExtractFrameDataFromGif(animation);
+            var animatedTexture = new AnimatedTexture()
             {
-                AtlasWidth = atlasWidth,
-                AtlasHeight = atlasHeight,
                 FrameWidth = animation.Width,
                 FrameHeight = animation.Height,
-
                 Frames = frames,
-                TextureData = atlas.TextureData,
             };
+            animatedTexture.PackFrames(1);
+
+            using var atlasImage = new Image<Rgba32>(animatedTexture.AtlasWidth, animatedTexture.AtlasHeight, Color.Transparent);
+            PopulateAtlasImageFromGif(atlasImage, animation, frames);
+            animatedTexture.TextureData = TexturesUtil.ImageToTexture2D(atlasImage).TextureData;
+
+            return animatedTexture;
         }
 
-        private static List<FrameContent> ExtractFrameDataFromGif(Image<Rgba32> animation, int atlasWidth)
+        private static List<FrameContent> ExtractFrameDataFromGif(Image<Rgba32> animation)
         {
             var frames = new List<FrameContent>();
 
-            int framePosX = 0;
-            int framePosY = 0;
             foreach (ImageFrame<Rgba32> frameImg in animation.Frames)
             {
                 frames.Add(new()
                 {
                     Duration = TimeSpan.FromMilliseconds(frameImg.Metadata.GetGifMetadata().FrameDelay * 10),
-                    Rectangle = new(framePosX, framePosY, frameImg.Width, frameImg.Height)
+                    Rectangle = new(0, 0, frameImg.Width, frameImg.Height)
                 });
-
-                framePosX += animation.Width + FramePadding;
-                if (framePosX > atlasWidth - animation.Width)
-                {
-                    framePosX = 0;
-                    framePosY += animation.Height + FramePadding;
-                }
             }
 
             return frames;
@@ -141,40 +129,6 @@ namespace FEZRepacker.Core.Conversion.Formats
                     }
                 });
             }
-        }
-
-
-        // Calculating the minimum size of the atlas for the animation
-        // with both width and height being powers of two
-        private static (int Width, int Height) FindMinimumPowerOfTwoAtlasSize(Image animatedImage)
-        {
-            int atlasWidth = 0;
-            int atlasHeight = 0;
-            int atlasArea = int.MaxValue;
-
-            for (int i = 1; i <= animatedImage.Frames.Count; i++)
-            {
-                var framesInRow = i;
-                var framesInColumn = (int)Math.Ceiling(animatedImage.Frames.Count / (float)i);
-
-                int newAtlasWidth = (animatedImage.Width + FramePadding) * framesInRow;
-                int newAtlasHeight = (animatedImage.Height + FramePadding) * framesInColumn;
-
-                newAtlasWidth = (int)Math.Pow(2, Math.Ceiling(Math.Log(newAtlasWidth, 2)));
-                newAtlasHeight = (int)Math.Pow(2, Math.Ceiling(Math.Log(newAtlasHeight, 2)));
-
-                if (newAtlasWidth > newAtlasHeight && atlasWidth > 0 && atlasHeight > 0) break;
-
-                int newArea = newAtlasWidth * newAtlasHeight;
-                if (newArea <= atlasArea)
-                {
-                    atlasArea = newArea;
-                    atlasWidth = newAtlasWidth;
-                    atlasHeight = newAtlasHeight;
-                }
-            }
-
-            return (atlasWidth, atlasHeight);
         }
     }
 }
