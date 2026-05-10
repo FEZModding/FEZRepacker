@@ -11,11 +11,11 @@ namespace FEZRepacker.Core.XNB.ContentTypes
         {
             new SpriteFontContentSerializer(),
             new Texture2DContentSerializer(),
-            new EnumContentSerializer<SurfaceFormat>(),
+            new EnumContentSerializer<SurfaceFormat>().MarkPrivate(),
             new ByteArrayContentSerializer().MarkPrivate(),
             new ListContentSerializer<Rectangle>(true),
             new RectangleContentSerializer(),
-            new ListContentSerializer<char>(),
+            new ListContentSerializer<char>(true),
             new CharContentSerializer(),
             new ListContentSerializer<Vector3>(true),
             new Vector3ContentSerializer(),
