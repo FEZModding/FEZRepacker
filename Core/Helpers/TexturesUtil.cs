@@ -1,6 +1,6 @@
-﻿using FEZRepacker.Core.Definitions.Game.XNA;
+﻿using DirectX;
 
-using Microsoft.Xna.Framework.Graphics;
+using FEZRepacker.Core.Definitions.Game.XNA;
 
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -22,7 +22,7 @@ namespace FEZRepacker.Core.Helpers
             return Image.LoadPixelData<Rgba32>(textureData, txt.Width, txt.Height);
         }
 
-        public static Texture2D ImageToTexture2D(Image<Rgba32> img)
+        public static Texture2D ImageToTexture2D(Image<Rgba32> img, SurfaceFormat format = SurfaceFormat.Color)
         {
             Texture2D texture = new Texture2D()
             {
@@ -34,6 +34,20 @@ namespace FEZRepacker.Core.Helpers
 
             texture.TextureData = new byte[img.Width * img.Height * 4];
             img.CopyPixelDataTo(texture.TextureData);
+
+            var compressedData = format switch
+            {
+                SurfaceFormat.Dxt1 => DirectXTexCompress.CompressDxt1(texture.TextureData, img.Width, img.Height),
+                SurfaceFormat.Dxt3 => DirectXTexCompress.CompressDxt3(texture.TextureData, img.Width, img.Height),
+                SurfaceFormat.Dxt5 => DirectXTexCompress.CompressDxt5(texture.TextureData, img.Width, img.Height),
+                _ => null
+            };
+
+            if (compressedData != null)
+            {
+                texture.Format = format;
+                texture.TextureData = compressedData;
+            }
 
             return texture;
         }
@@ -96,9 +110,9 @@ namespace FEZRepacker.Core.Helpers
             var convertedData = txt.Format switch
             {
                 SurfaceFormat.Color => txt.TextureData,
-                SurfaceFormat.Dxt1 => DxtUtil.DecompressDxt1(txt.TextureData, txt.Width, txt.Height),
-                SurfaceFormat.Dxt3 => DxtUtil.DecompressDxt3(txt.TextureData, txt.Width, txt.Height),
-                SurfaceFormat.Dxt5 => DxtUtil.DecompressDxt5(txt.TextureData, txt.Width, txt.Height),
+                SurfaceFormat.Dxt1 => DirectXTexCompress.DecompressDxt1(txt.TextureData, txt.Width, txt.Height),
+                SurfaceFormat.Dxt3 => DirectXTexCompress.DecompressDxt3(txt.TextureData, txt.Width, txt.Height),
+                SurfaceFormat.Dxt5 => DirectXTexCompress.DecompressDxt5(txt.TextureData, txt.Width, txt.Height),
                 _ => null
             };
 

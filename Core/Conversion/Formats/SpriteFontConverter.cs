@@ -32,7 +32,7 @@ namespace FEZRepacker.Core.Conversion.Formats
             var spriteFont = spriteFontModel.Deserialize();
 
             using var importedImage = Image.Load<Rgba32>(bundle.RequireData(".png"));
-            spriteFont.Texture = TexturesUtil.ImageToTexture2D(importedImage);
+            spriteFont.Texture = TexturesUtil.ImageToTexture2D(importedImage, SurfaceFormat.Dxt3);
 
             return spriteFont;
         }
