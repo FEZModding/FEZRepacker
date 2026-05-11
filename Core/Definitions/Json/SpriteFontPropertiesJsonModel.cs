@@ -16,7 +16,7 @@ namespace FEZRepacker.Core.Definitions.Json
 
         public int LineSpacing { get; set; }
         public float Spacing { get; set; }
-        public char DefaultCharacter { get; set; }
+        public char? DefaultCharacter { get; set; }
         public List<CharacterData> Characters { get; set; }
 
         public SpriteFontPropertiesJsonModel()
