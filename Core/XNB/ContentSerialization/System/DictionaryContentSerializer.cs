@@ -31,8 +31,8 @@ namespace FEZRepacker.Core.XNB.ContentSerialization.System
 
         public override object Deserialize(XnbContentReader reader)
         {
-            var data = new OrderedDictionary<K, V>();
             int dataCount = reader.ReadInt32();
+            var data = new OrderedDictionary<K, V>(dataCount);
             for (int i = 0; i < dataCount; i++)
             {
                 K? key = reader.ReadContent<K>(skipKeyIdentifier);

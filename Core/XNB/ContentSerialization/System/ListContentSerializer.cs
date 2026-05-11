@@ -25,8 +25,8 @@
 
         public override object Deserialize(XnbContentReader reader)
         {
-            List<T> data = new List<T>();
             int dataCount = reader.ReadInt32();
+            List<T> data = new List<T>(dataCount);
             for (int i = 0; i < dataCount; i++)
             {
                 T? value = reader.ReadContent<T>(_skipElementType);

@@ -145,7 +145,7 @@ namespace FEZRepacker.Core.Definitions.Json
             // is made, so overlapping triles can exist next to one another.
             // We're merging them back into OverlappedTriles array in ArrangeTrilesIntoLevel during deconversion.
             
-            Triles = new();
+            Triles = new(level.Triles.Count);
             foreach (var trileRecord in level.Triles)
             {
                 var pos = trileRecord.Key;

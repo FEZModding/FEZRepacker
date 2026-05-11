@@ -18,6 +18,8 @@ namespace FEZRepacker.Core.XNB
     /// </remarks>
     internal abstract class XnbPrimaryContentIdentity
     {
+        private readonly Dictionary<Type, XnbContentSerializer?> _serializerLookupCache = new();
+        
         protected abstract List<XnbContentSerializer> ContentSerializersFactory { get; }
 
         public readonly List<XnbContentSerializer> ContentSerializers;
@@ -40,10 +42,15 @@ namespace FEZRepacker.Core.XNB
 
         public XnbContentSerializer? FindByContentType(Type t)
         {
-            var readerQualifiedName = XnbAssemblyQualifier.TryGetFromXnbReaderType(t);
-            return readerQualifiedName != null
-                ? FindByReaderQualifier(readerQualifiedName.Value)
-                : ContentSerializers.FirstOrDefault(serializer => serializer.ContentType == t);
+            if (!_serializerLookupCache.TryGetValue(t, out var serializer))
+            {
+                var readerQualifiedName = XnbAssemblyQualifier.TryGetFromXnbReaderType(t);
+                serializer = readerQualifiedName != null
+                    ? FindByReaderQualifier(readerQualifiedName.Value)
+                    : ContentSerializers.FirstOrDefault(checkedSerializer => checkedSerializer.ContentType == t);
+                _serializerLookupCache.Add(t, serializer);
+            }
+            return serializer;
         }
     }
 }
