@@ -8,6 +8,9 @@ namespace FEZRepacker.Core
     /// </summary>
     public struct XnbAssemblyQualifier
     {
+        private static Dictionary<Type, XnbAssemblyQualifier> _xnbTypeCache = new();
+        private static Dictionary<Type, XnbAssemblyQualifier> _xnbReaderTypeCache = new();
+        
         public string Namespace;
         public string Name;
         public XnbAssemblyQualifier[] Templates;
@@ -114,11 +117,17 @@ namespace FEZRepacker.Core
 
         public static XnbAssemblyQualifier? TryGetFromXnbType(Type type)
         {
+            if (_xnbTypeCache.TryGetValue(type, out var cachedQualifier))
+            {
+                return cachedQualifier;
+            }
+            
             var attributes = type.GetCustomAttributes(typeof(XnbTypeAttribute), false);
             if (attributes.Length > 0)
             {
                 var qualifier = (attributes.First() as XnbTypeAttribute)!.Qualifier;
                 qualifier.AppendGenericTypesFromType(type);
+                _xnbTypeCache[type] = qualifier;
                 return qualifier;
             }
             return null;
@@ -126,11 +135,17 @@ namespace FEZRepacker.Core
 
         public static XnbAssemblyQualifier? TryGetFromXnbReaderType(Type type)
         {
+            if (_xnbReaderTypeCache.TryGetValue(type, out var cachedQualifier))
+            {
+                return cachedQualifier;
+            }
+            
             var attributes = type.GetCustomAttributes(typeof(XnbReaderTypeAttribute), false);
             if (attributes.Length > 0)
             {
                 var qualifier = (attributes.First() as XnbReaderTypeAttribute)!.Qualifier;
                 qualifier.AppendGenericTypesFromType(type);
+                _xnbReaderTypeCache[type] = qualifier;
                 return qualifier;
             }
             return null;
@@ -153,6 +168,7 @@ namespace FEZRepacker.Core
             }
 
             fallback.AppendGenericTypesFromType(type);
+            _xnbTypeCache[type] = fallback;
             return fallback;
         }
 
