@@ -18,13 +18,26 @@ namespace FEZRepacker.Core.Helpers
 
         public static Image<Rgba32> ImageFromTexture2D(Texture2D txt)
         {
-            var textureData = GetConvertedTextureData(txt);
-            return Image.LoadPixelData<Rgba32>(textureData, txt.Width, txt.Height);
+            var convertedData = txt.Format switch
+            {
+                SurfaceFormat.Color => txt.TextureData,
+                SurfaceFormat.Dxt1 => DirectXTexCompress.DecompressDxt1(txt.TextureData, txt.Width, txt.Height),
+                SurfaceFormat.Dxt3 => DirectXTexCompress.DecompressDxt3(txt.TextureData, txt.Width, txt.Height),
+                SurfaceFormat.Dxt5 => DirectXTexCompress.DecompressDxt5(txt.TextureData, txt.Width, txt.Height),
+                _ => null
+            };
+
+            if (convertedData == null)
+            {
+                throw new InvalidDataException($"Texture2D has unsupported format ({txt.Format})");
+            }
+            
+            return Image.LoadPixelData<Rgba32>(convertedData, txt.Width, txt.Height);
         }
 
         public static Texture2D ImageToTexture2D(Image<Rgba32> img, SurfaceFormat format = SurfaceFormat.Color)
         {
-            Texture2D texture = new Texture2D()
+            var texture = new Texture2D()
             {
                 Format = SurfaceFormat.Color,
                 MipmapLevels = 1,
@@ -99,29 +112,6 @@ namespace FEZRepacker.Core.Helpers
             });
 
             return albedoImage;
-        }
-
-
-        private static byte[] GetConvertedTextureData(Texture2D txt)
-        {
-            // Most of FEZ textures are saved in raw format (SurfaceFormat.Color)
-            // but some of them are not - try to convert them.
-
-            var convertedData = txt.Format switch
-            {
-                SurfaceFormat.Color => txt.TextureData,
-                SurfaceFormat.Dxt1 => DirectXTexCompress.DecompressDxt1(txt.TextureData, txt.Width, txt.Height),
-                SurfaceFormat.Dxt3 => DirectXTexCompress.DecompressDxt3(txt.TextureData, txt.Width, txt.Height),
-                SurfaceFormat.Dxt5 => DirectXTexCompress.DecompressDxt5(txt.TextureData, txt.Width, txt.Height),
-                _ => null
-            };
-
-            if (convertedData == null)
-            {
-                throw new InvalidDataException($"Texture2D has unsupported format ({txt.Format})");
-            }
-
-            return convertedData;
         }
     }
 }
