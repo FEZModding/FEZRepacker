@@ -6,11 +6,12 @@ namespace FEZRepacker.Core.Conversion.Formats
 {
     internal class NpcMetadataConverter : FormatConverter<NpcMetadata>
     {
-        public override string FileFormat => ".feznpc";
+        private const string BundleFileFormat = ".feznpc";
+        public override string[] FileFormats => [BundleFileFormat];
 
         public override FileBundle ConvertTyped(NpcMetadata data)
         {
-            return ConfiguredJsonSerializer.SerializeToFileBundle(FileFormat, data);
+            return ConfiguredJsonSerializer.SerializeToFileBundle(BundleFileFormat, data);
         }
 
         public override NpcMetadata DeconvertTyped(FileBundle bundle)

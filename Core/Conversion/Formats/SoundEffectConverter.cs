@@ -8,7 +8,9 @@ namespace FEZRepacker.Core.Conversion.Formats
 {
     internal class SoundEffectConverter : FormatConverter<SoundEffect>
     {
-        public override string FileFormat => ".wav";
+        private const string FileFormat = ".wav";
+        
+        public override string[] FileFormats => [FileFormat];
 
         public override FileBundle ConvertTyped(SoundEffect data)
         {

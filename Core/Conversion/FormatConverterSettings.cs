@@ -15,5 +15,12 @@ namespace FEZRepacker.Core.Conversion
         /// If the flag is true, the converter will use a legacy bundle with separate files.
         /// </summary>
         public bool UseTrixelArtBundle = false;
+
+        /// <summary>
+        /// By default, <see cref="AnimatedTexture"/> is converted into GIF animation file. This is a lossy conversion,
+        /// dropping original atlas texture arrangement and leading to minor precision loss to color and frame duration.
+        /// If the flag is true, the converter will export animations into a bundle of atlas texture and JSON data.
+        /// </summary>
+        public bool UseAnimationSheet = false;
     }
 }

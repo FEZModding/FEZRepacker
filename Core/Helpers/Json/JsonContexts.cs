@@ -15,6 +15,7 @@ namespace FEZRepacker.Core.Helpers.Json
     {
         public static List<JsonSerializerContext> List =>
         [
+            AnimatedTextureJsonSerializerContext.Default,
             ArtObjectJsonSerializerContext.Default,
             LevelJsonSerializerContext.Default,
             MapTreeJsonSerializerContext.Default,
@@ -26,6 +27,9 @@ namespace FEZRepacker.Core.Helpers.Json
             TrileSetJsonSerializerContext.Default
         ];
     }
+    
+    [JsonSerializable(typeof(AnimatedTexture))]
+    internal partial class AnimatedTextureJsonSerializerContext : JsonSerializerContext {}
     
     [JsonSerializable(typeof(ArtObject))]
     [JsonSerializable(typeof(IndexedPrimitives<VertexInstance, Matrix>))]

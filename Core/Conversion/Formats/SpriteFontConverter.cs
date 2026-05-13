@@ -12,13 +12,15 @@ namespace FEZRepacker.Core.Conversion.Formats
 {
     internal class SpriteFontConverter : FormatConverter<SpriteFont>
     {
-        public override string FileFormat => ".fezfont";
+        private const string BundleFileFormat = ".fezfont";
+        
+        public override string[] FileFormats => [BundleFileFormat];
 
         public override FileBundle ConvertTyped(SpriteFont data)
         {
             var spriteFontModel = new SpriteFontPropertiesJsonModel();
             spriteFontModel.SerializeFrom(data);
-            var bundle = ConfiguredJsonSerializer.SerializeToFileBundle(FileFormat, spriteFontModel);
+            var bundle = ConfiguredJsonSerializer.SerializeToFileBundle(BundleFileFormat, spriteFontModel);
 
             using var fontAtlas = TexturesUtil.ImageFromTexture2D(data.Texture);
             bundle.AddFile(fontAtlas.SaveAsMemoryStream(new PngEncoder()), ".png");

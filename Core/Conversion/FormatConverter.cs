@@ -11,7 +11,7 @@ namespace FEZRepacker.Core.Conversion
     /// </summary>
     public abstract class FormatConverter
     {
-        public abstract string FileFormat { get; }
+        public abstract string[] FileFormats { get; }
         public abstract Type FormatType { get; }
 
         public abstract FileBundle Convert(object? data);

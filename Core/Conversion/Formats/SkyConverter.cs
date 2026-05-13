@@ -6,11 +6,12 @@ namespace FEZRepacker.Core.Conversion.Formats
 {
     internal class SkyConverter : FormatConverter<Sky>
     {
-        public override string FileFormat => ".fezsky";
+        private const string BundleFileFormat = ".fezsky";
+        public override string[] FileFormats => [BundleFileFormat];
 
         public override FileBundle ConvertTyped(Sky data)
         {
-            return ConfiguredJsonSerializer.SerializeToFileBundle(FileFormat, data);
+            return ConfiguredJsonSerializer.SerializeToFileBundle(BundleFileFormat, data);
         }
 
         public override Sky DeconvertTyped(FileBundle bundle)

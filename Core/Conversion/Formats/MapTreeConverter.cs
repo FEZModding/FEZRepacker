@@ -7,13 +7,14 @@ namespace FEZRepacker.Core.Conversion.Formats
 {
     internal class MapTreeConverter : FormatConverter<MapTree>
     {
-        public override string FileFormat => ".fezmap";
+        private const string BundleFileFormat = ".fezmap";
+        public override string[] FileFormats => [BundleFileFormat];
 
         public override FileBundle ConvertTyped(MapTree data)
         {
             var mapModel = new MapTreeJsonModel();
             mapModel.SerializeFrom(data);
-            return ConfiguredJsonSerializer.SerializeToFileBundle(FileFormat, mapModel);
+            return ConfiguredJsonSerializer.SerializeToFileBundle(BundleFileFormat, mapModel);
         }
 
         public override MapTree DeconvertTyped(FileBundle bundle)

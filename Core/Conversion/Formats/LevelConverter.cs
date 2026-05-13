@@ -7,12 +7,13 @@ namespace FEZRepacker.Core.Conversion.Formats
 {
     internal class LevelConverter : FormatConverter<Level>
     {
-        public override string FileFormat => ".fezlvl";
+        private const string BundleFileFormat = ".fezlvl";
+        public override string[] FileFormats => [BundleFileFormat];
 
         public override FileBundle ConvertTyped(Level data)
         {
             var levelModel = new LevelJsonModel(data);
-            return ConfiguredJsonSerializer.SerializeToFileBundle(FileFormat, levelModel);
+            return ConfiguredJsonSerializer.SerializeToFileBundle(BundleFileFormat, levelModel);
         }
 
         public override Level DeconvertTyped(FileBundle bundle)

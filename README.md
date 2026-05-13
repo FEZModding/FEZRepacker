@@ -73,6 +73,7 @@ Attempts to convert given input (this can be a path to a single file or an entir
 Commands that convert XNB assets can take optional conversion flags:
 
 - `--use-trixel-art-bundle` - converts trixel art based assets (ArtObjects and TrileSets) into a bundle of JSON, OBJ and PNG files instead of encoding it into binary glTF file.
+- `--use-animation-sheets` - converts AnimatedTextures into a `.fezanim.*` bundle of JSON and PNG atlas texture instead of encoding it in GIF, ensuring round-trip conversion of that asset.
 
 ## Examples
 

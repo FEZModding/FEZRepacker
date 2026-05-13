@@ -28,7 +28,7 @@ namespace FEZRepacker.Core.Conversion
 
         public static FormatConverter? FindByExtension(string extension)
         {
-            return List.FirstOrDefault(x => x.FileFormat == extension);
+            return List.FirstOrDefault(x => x.FileFormats.Contains(extension));
         }
 
         public static FormatConverter? FindForFileBundle(FileBundle bundle)
