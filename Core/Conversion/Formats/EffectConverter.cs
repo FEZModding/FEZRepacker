@@ -5,7 +5,8 @@ namespace FEZRepacker.Core.Conversion.Formats
 {
     internal class EffectConverter : FormatConverter<Effect>
     {
-        public override string FileFormat => ".fxb";
+        private const string FileFormat = ".fxb";
+        public override string[] FileFormats => [FileFormat];
 
         public override FileBundle ConvertTyped(Effect data)
         {

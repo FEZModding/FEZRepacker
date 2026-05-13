@@ -6,11 +6,13 @@ namespace FEZRepacker.Core.Conversion.Formats
 {
     internal class TrackedSongConverter : FormatConverter<TrackedSong>
     {
-        public override string FileFormat => ".fezsong";
+        private const string BundleFileFormat = ".fezsong";
+        
+        public override string[] FileFormats => [BundleFileFormat];
 
         public override FileBundle ConvertTyped(TrackedSong data)
         {
-            return ConfiguredJsonSerializer.SerializeToFileBundle(FileFormat, data);
+            return ConfiguredJsonSerializer.SerializeToFileBundle(BundleFileFormat, data);
         }
 
         public override TrackedSong DeconvertTyped(FileBundle bundle)

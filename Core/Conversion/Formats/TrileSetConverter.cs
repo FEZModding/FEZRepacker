@@ -17,18 +17,20 @@ namespace FEZRepacker.Core.Conversion.Formats
 {
     internal class TrileSetConverter : FormatConverter<TrileSet>
     {
-        public override string FileFormat => ".fezts";
-
+        private const string BundleFileFormat = ".fezts";
         private const string TrileIdKey = "TrileId";
+        
+        public override string[] FileFormats => [BundleFileFormat];
+
 
         public override FileBundle ConvertTyped(TrileSet data)
         {
             if (!Settings.UseTrixelArtBundle)
             {
-                return FileBundle.Single(GetTransmissionFormatStream(data), FileFormat, ".glb");
+                return FileBundle.Single(GetTransmissionFormatStream(data), BundleFileFormat, ".glb");
             }
             
-            var bundle = ConfiguredJsonSerializer.SerializeToFileBundle(FileFormat, data);
+            var bundle = ConfiguredJsonSerializer.SerializeToFileBundle(BundleFileFormat, data);
 
             bundle.AddFile(GetTextureStream(data, TexturesUtil.CubemapPart.Albedo), ".png");
             bundle.AddFile(GetTextureStream(data, TexturesUtil.CubemapPart.Emission), ".apng");

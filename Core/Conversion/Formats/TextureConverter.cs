@@ -10,9 +10,10 @@ namespace FEZRepacker.Core.Conversion.Formats
 {
     internal class TextureConverter : FormatConverter<Texture2D>
     {
+        private const string FileFormat = ".png";
         private const string SurfaceTypeMetadataKey = "XNASurfaceType";
         
-        public override string FileFormat => ".png";
+        public override string[] FileFormats => [FileFormat];
 
         public override FileBundle ConvertTyped(Texture2D texture)
         {

@@ -2,9 +2,11 @@
 using FEZRepacker.Core.Definitions.Game.XNA;
 using FEZRepacker.Core.FileSystem;
 using FEZRepacker.Core.Helpers;
+using FEZRepacker.Core.Helpers.Json;
 
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Gif;
+using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 
@@ -14,23 +16,53 @@ namespace FEZRepacker.Core.Conversion.Formats
 {
     internal class AnimatedTextureConverter : FormatConverter<AnimatedTexture>
     {
-        const int FramePadding = 1;
+        private const string GifFileFormat = ".gif";
+        private const string BundleFileFormat = ".fezanim";
 
-        public override string FileFormat => ".gif";
+        public override string[] FileFormats => [GifFileFormat, BundleFileFormat];
 
         public override FileBundle ConvertTyped(AnimatedTexture txt)
         {
+            if (Settings.UseAnimationSheet)
+            {
+                var bundle = ConfiguredJsonSerializer.SerializeToFileBundle(BundleFileFormat, txt);
+                var atlasTexture = new Texture2D()
+                {
+                    Format = SurfaceFormat.Color,
+                    Width = txt.AtlasWidth,
+                    Height = txt.AtlasHeight,
+                    TextureData = txt.TextureData
+                };
+                using var animationAtlas = TexturesUtil.ImageFromTexture2D(atlasTexture);
+                bundle.AddFile(animationAtlas.SaveAsMemoryStream(new PngEncoder()), ".png");
+
+                return bundle;
+            }
+            
             using var animation = AnimatedTextureToGif(txt);
 
             var outStream = animation.SaveAsMemoryStream(
                 new GifEncoder { ColorTableMode = GifColorTableMode.Local }
             );
 
-            return FileBundle.Single(outStream, FileFormat);
+            return FileBundle.Single(outStream, GifFileFormat);
         }
 
         public override AnimatedTexture DeconvertTyped(FileBundle bundle)
         {
+            if (bundle.MainExtension == BundleFileFormat)
+            {
+                var animatedTexture = ConfiguredJsonSerializer.DeserializeFromFileBundle<AnimatedTexture>(bundle);
+
+                using var atlasImage = Image.Load<Rgba32>(bundle.RequireData(".png"));
+                var atlasTexture = TexturesUtil.ImageToTexture2D(atlasImage);
+
+                animatedTexture.AtlasWidth = atlasTexture.Width;
+                animatedTexture.AtlasHeight = atlasTexture.Height;
+                animatedTexture.TextureData = atlasTexture.TextureData;
+                return animatedTexture;
+            }
+            
             using var animation = Image.Load<Rgba32>(bundle.RequireData(""));
             return AnimationImageToAnimatedTexture(animation);
         }

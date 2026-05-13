@@ -10,7 +10,7 @@ namespace FEZRepacker.Core.Helpers.Json.CustomConverters
             Type typeToConvert,
             JsonSerializerOptions options)
         {
-            return TimeSpan.FromSeconds(reader.GetDouble());
+            return TimeSpan.FromTicks((long)Math.Round(reader.GetDecimal() * TimeSpan.TicksPerSecond));
         }
 
         public override void Write(
@@ -18,7 +18,7 @@ namespace FEZRepacker.Core.Helpers.Json.CustomConverters
             TimeSpan timespan,
             JsonSerializerOptions options)
         {
-            writer.WriteNumberValue((decimal)timespan.TotalSeconds);
+            writer.WriteNumberValue((decimal)timespan.Ticks / TimeSpan.TicksPerSecond);
         }
     }
 }

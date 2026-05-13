@@ -13,16 +13,18 @@ namespace FEZRepacker.Core.Conversion.Formats
 {
     internal class ArtObjectConverter : FormatConverter<ArtObject>
     {
-        public override string FileFormat => ".fezao";
+        private const string BundleFileFormat = ".fezao";
+        
+        public override string[] FileFormats => [BundleFileFormat];
 
         public override FileBundle ConvertTyped(ArtObject data)
         {
             if (!Settings.UseTrixelArtBundle)
             {
-                return FileBundle.Single(GetTransmissionFormatStream(data), FileFormat, ".glb");
+                return FileBundle.Single(GetTransmissionFormatStream(data), BundleFileFormat, ".glb");
             }
             
-            var bundle = ConfiguredJsonSerializer.SerializeToFileBundle(FileFormat, data);
+            var bundle = ConfiguredJsonSerializer.SerializeToFileBundle(BundleFileFormat, data);
 
             bundle.AddFile(GetTextureStream(data, TexturesUtil.CubemapPart.Albedo), ".png");
             bundle.AddFile(GetTextureStream(data, TexturesUtil.CubemapPart.Emission), ".apng");
