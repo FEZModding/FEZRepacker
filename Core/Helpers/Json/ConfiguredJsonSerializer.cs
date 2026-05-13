@@ -61,27 +61,35 @@ namespace FEZRepacker.Core.Helpers.Json
 
         private static JsonSerializerOptions GetOptions()
         {
-            if (_serializerOptions == null) _serializerOptions = new()
+            if (_serializerOptions == null)
             {
-                IncludeFields = true,
-                WriteIndented = true,
-                Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-                Converters = {
-                    new RoundTripFloatConverter(),
-                    new JsonStringEnumConverter(),
-                    new Vector2JsonConverter(),
-                    new Vector3JsonConverter(),
-                    new QuaternionJsonConverter(),
-                    new ColorJsonConverter(),
-                    new TimeSpanJsonConverter(),
-                    new TrileEmplacementJsonConverter(),
-                    new TrileEmplacementListJsonConverter(),
-                    new ScriptTriggerJsonConverter(),
-                    new ScriptConditionJsonConverter(),
-                    new ScriptActionJsonConverter(),
-                    new OrderedDictionaryConverterFactory(),
+                _serializerOptions = new()
+                {
+                    IncludeFields = true,
+                    WriteIndented = true,
+                    Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                    Converters = {
+                        new RoundTripFloatConverter(),
+                        new JsonStringEnumConverter(),
+                        new Vector2JsonConverter(),
+                        new Vector3JsonConverter(),
+                        new QuaternionJsonConverter(),
+                        new ColorJsonConverter(),
+                        new TimeSpanJsonConverter(),
+                        new TrileEmplacementJsonConverter(),
+                        new TrileEmplacementListJsonConverter(),
+                        new ScriptTriggerJsonConverter(),
+                        new ScriptConditionJsonConverter(),
+                        new ScriptActionJsonConverter(),
+                        new OrderedDictionaryConverterFactory(),
+                    }
+                };
+
+                foreach (var context in JsonContexts.List)
+                {
+                    _serializerOptions.TypeInfoResolverChain.Add(context);
                 }
-            };
+            }
 
             return _serializerOptions;
         }
