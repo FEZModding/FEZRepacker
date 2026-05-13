@@ -15,11 +15,11 @@ namespace FEZRepacker.Interface.Actions
         public string Description =>
             "Loads files from given input directory path, tries to deconvert them and pack into a destination " +
             ".PAK file with given path. If include .PAK path is provided, it'll add its content into the new .PAK package.";
-        public CommandLineArgument[] Arguments => new[] {
-            new CommandLineArgument(InputDirectoryPath),
-            new CommandLineArgument(DestinationPakPath),
-            new CommandLineArgument(IncludePakPath, ArgumentType.OptionalPositional)
-        };
+        public IEnumerable<CommandLineArgument> Arguments => [
+            new(InputDirectoryPath),
+            new(DestinationPakPath),
+            new(IncludePakPath, ArgumentType.OptionalPositional)
+        ];
 
         private class TemporaryPak : IDisposable
         {

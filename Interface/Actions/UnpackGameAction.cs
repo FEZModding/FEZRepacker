@@ -10,8 +10,6 @@ namespace FEZRepacker.Interface.Actions
         
         private const string FezContentDirectory = "fez-content-directory";
         private const string DestinationFolder = "destination-folder";
-        private const string UseLegacyAo = "use-legacy-ao";
-        private const string UseLegacyTs = "use-legacy-ts";
         
         public string Name => "--unpack-fez-content";
 
@@ -20,23 +18,17 @@ namespace FEZRepacker.Interface.Actions
         public string Description => 
             "Unpacks and converts all game assets into specified directory (creates one if doesn't exist).";
 
-        public CommandLineArgument[] Arguments => new[] {
+        public IEnumerable<CommandLineArgument> Arguments => new[] {
             new CommandLineArgument(FezContentDirectory),
-            new CommandLineArgument(DestinationFolder),
-            new CommandLineArgument(UseLegacyAo, ArgumentType.Flag),
-            new CommandLineArgument(UseLegacyTs, ArgumentType.Flag)
-        };
+            new CommandLineArgument(DestinationFolder)
+        }.Concat(FormatConverterSettingsFlags.Arguments);
 
         public void Execute(Dictionary<string, string> args)
         {
             var contentPath = args[FezContentDirectory];
             var outputDir = args[DestinationFolder];
 
-            var settings = new FormatConverterSettings
-            {
-                UseLegacyArtObjectBundle = args.ContainsKey(UseLegacyAo),
-                UseLegacyTrileSetBundle = args.ContainsKey(UseLegacyTs)
-            };
+            var settings = FormatConverterSettingsFlags.ReadFromArguments(args);
 
             foreach (var packageFileName in ExpectedPackagesFileNames)
             {

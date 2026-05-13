@@ -13,10 +13,6 @@ namespace FEZRepacker.Interface.Actions
         
         private const string XnbOutput = "xnb-output";
         
-        private const string UseLegacyAo = "use-legacy-ao";
-        
-        private const string UseLegacyTs =  "use-legacy-ts";
-        
         public string Name => "--convert-to-xnb";
 
         public string[] Aliases => new[] { "-X" };
@@ -26,10 +22,10 @@ namespace FEZRepacker.Interface.Actions
             "into XNB file(s) and save it at given output directory. If input is a directory, dumps all converted files in" +
             "specified path recursively. If output directory is not given, outputs next to the input file(s).";
 
-        public CommandLineArgument[] Arguments => new[] {
-            new CommandLineArgument(FileInput),
-            new CommandLineArgument(XnbOutput, ArgumentType.OptionalPositional)
-        };
+        public IEnumerable<CommandLineArgument> Arguments => [
+            new(FileInput),
+            new(XnbOutput, ArgumentType.OptionalPositional)
+        ];
 
         public delegate void ConversionFunc(string path, string extension, Stream stream, bool converted);
         

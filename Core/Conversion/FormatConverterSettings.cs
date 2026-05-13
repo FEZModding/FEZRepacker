@@ -1,4 +1,5 @@
 ﻿using FEZRepacker.Core.Definitions.Game.ArtObject;
+using FEZRepacker.Core.Definitions.Game.Graphics;
 using FEZRepacker.Core.Definitions.Game.TrileSet;
 
 namespace FEZRepacker.Core.Conversion
@@ -9,17 +10,10 @@ namespace FEZRepacker.Core.Conversion
     public struct FormatConverterSettings()
     {
         /// <summary>
-        /// By default, the <see href="https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html">glTF</see>
-        /// all-in-one format is used for transmitting and editing <see cref="ArtObject"/> properties.
+        /// By default, the <see href="https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html">glTF</see> all-in-one
+        /// format is used for transmitting and editing <see cref="ArtObject"/> and <see cref="TrileSet"/> properties.
         /// If the flag is true, the converter will use a legacy bundle with separate files.
         /// </summary>
-        public bool UseLegacyArtObjectBundle = false;
-
-        /// <summary>
-        /// By default, the <see href="https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html">glTF</see>
-        /// all-in-one format is used for transmitting and editing <see cref="TrileSet"/> properties.
-        /// If the flag is true, the converter will use a legacy bundle with separate files.
-        /// </summary>
-        public bool UseLegacyTrileSetBundle = false;
+        public bool UseTrixelArtBundle = false;
     }
 }

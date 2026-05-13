@@ -23,7 +23,7 @@ namespace FEZRepacker.Core.Conversion.Formats
 
         public override FileBundle ConvertTyped(TrileSet data)
         {
-            if (!Settings.UseLegacyTrileSetBundle)
+            if (!Settings.UseTrixelArtBundle)
             {
                 return FileBundle.Single(GetTransmissionFormatStream(data), FileFormat, ".glb");
             }
