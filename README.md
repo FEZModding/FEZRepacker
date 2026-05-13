@@ -38,33 +38,24 @@ You can read about conversion formats in detail [here](https://fezmodding.github
 
 If you want to learn more about the technical process of reading PAK packages and XNB files, read [this page on the wiki.](https://fezmodding.github.io/wiki/game/content_formats).
 
-### Legacy conversion notice
-
-By default, the Repacker converts ArtObject and TrileSet assets with all-in-one binary glTF bundles
-for proper import and export process with popular 3D viewers and editors (i.e. Blender).
-
-However, early versions of the Repacker used the legacy format consisting of OBJ, PNG and JSON file bundle.
-If you want to use this early format, check the flags of the CLI commands to activate this.
-
-
 ## Usage
 
 As of right now, FEZ Repacker is a command line tool. In order to see a list of available commands, use `FEZRepacker.exe --help`. Launching executable with no parameters will start an interactive mode.
 
 To make the usage of the tool easier, you can put it within `Content` directory of your FEZ installation.
 
-Here's a list of currently defined commands (differs from the newest pre-release):
+Here's a list of currently defined commands:
 
-- `[--unpack, -u] [pak-path] [destination-folder] --use-legacy-ao --use-legacy-ts`
+- `[--unpack, -u] [pak-path] [destination-folder]`
 Unpacks entire .PAK package into specified directory (creates one if doesn't exist) and attempts to convert XNB assets into their corresponding format in the process.
 
-- `--unpack-raw [pak-path] [destination-folder] --use-legacy-ao --use-legacy-ts`
+- `--unpack-raw [pak-path] [destination-folder]`
 Unpacks entire .PAK package into specified directory (creates one if doesn't exist) leaving XNB assets in their original form.
 
-- `--unpack-decompressed [pak-path] [destination-folder] --use-legacy-ao --use-legacy-ts`
+- `--unpack-decompressed [pak-path] [destination-folder]`
 Unpacks entire .PAK package into specified directory (creates one if doesn't exist).and attempts to decompress all XNB assets, but does not convert them.
 
-- `[--unpack-fez-content, -g] [fez-content-directory] [destination-folder] --use-legacy-ao --use-legacy-ts`
+- `[--unpack-fez-content, -g] [fez-content-directory] [destination-folder]`
 Unpacks and converts all game assets into specified directory (creates one if doesn't exist).
 
 - `[--pack, -p] [input-directory-path] [destination-pak-path] <include-pak-path>`
@@ -73,11 +64,15 @@ Loads files from given input directory path, tries to deconvert them and pack in
 - `[--list, -l] [pak-path]`
 Lists all files contained withing given .PAK package.
 
-- `[--convert-from-xnb, -x] [xnb-input] [file-output] --use-legacy-ao --use-legacy-ts`
+- `[--convert-from-xnb, -x] [xnb-input] [file-output]`
 Attempts to convert given XNB input (this can be a path to a single asset or an entire directory) and save it at given output (if input is a directory, converts all files within it recursively and dumps all converted files in specified path).
 
 - `[--convert-to-xnb, -X] [file-input] [xnb-output]`
 Attempts to convert given input (this can be a path to a single file or an entire directory) into XNB file(s) and save it at given output (if input is a directory, converts all files within it recursively and dumps all converted files in specified path).
+
+Commands that convert XNB assets can take optional conversion flags:
+
+- `--use-trixel-art-bundle` - converts trixel art based assets (ArtObjects and TrileSets) into a bundle of JSON, OBJ and PNG files instead of encoding it into binary glTF file.
 
 ## Examples
 

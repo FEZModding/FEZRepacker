@@ -8,9 +8,9 @@
         public string[] Aliases => new[] { "help", "?", "-?", "-h" };
         public string Description => "Displays help for all commands or help for given command.";
         
-        public CommandLineArgument[] Arguments => new[] { 
-            new CommandLineArgument(Command, ArgumentType.OptionalPositional) 
-        };
+        public IEnumerable<CommandLineArgument> Arguments => [
+            new(Command, ArgumentType.OptionalPositional)
+        ];
 
         public void Execute(Dictionary<string, string> args)
         {

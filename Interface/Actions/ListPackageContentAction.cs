@@ -10,9 +10,9 @@ namespace FEZRepacker.Interface.Actions
         public string Name => "--list";
         public string[] Aliases => new[] { "-l" };
         public string Description => "Lists all files contained withing given .PAK package.";
-        public CommandLineArgument[] Arguments => new[] {
-            new CommandLineArgument(PakPath)
-        };
+        public IEnumerable<CommandLineArgument> Arguments => [
+            new(PakPath)
+        ];
 
         public void Execute(Dictionary<string, string> args)
         {

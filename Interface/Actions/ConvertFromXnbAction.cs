@@ -11,10 +11,6 @@ namespace FEZRepacker.Interface.Actions
         
         private const string FileOutput = "file-output";
         
-        private const string UseLegacyAo = "use-legacy-ao";
-        
-        private const string UseLegacyTs =  "use-legacy-ts";
-        
         public string Name => "--convert-from-xnb";
 
         public string[] Aliases => new[] { "-x" };
@@ -24,12 +20,10 @@ namespace FEZRepacker.Interface.Actions
             "and save it at given output directory. If input is a directory, dumps all converted files in specified " +
             "path recursively. If output directory is not given, outputs next to the input file(s).";
 
-        public CommandLineArgument[] Arguments => new[] {
+        public IEnumerable<CommandLineArgument> Arguments => new[] {
             new CommandLineArgument(XnbInput),
             new CommandLineArgument(FileOutput, ArgumentType.OptionalPositional),
-            new CommandLineArgument(UseLegacyAo, ArgumentType.Flag),
-            new CommandLineArgument(UseLegacyTs, ArgumentType.Flag)
-        };
+        }.Concat(FormatConverterSettingsFlags.Arguments);
 
         private List<string> FindXnbFilesAtPath(string path)
         {
@@ -69,11 +63,7 @@ namespace FEZRepacker.Interface.Actions
             Console.WriteLine($"Converting {xnbFilesToConvert.Count()} XNB files...");
 
             var filesDone = 0;
-            var settings = new FormatConverterSettings
-            {
-                UseLegacyArtObjectBundle = args.ContainsKey(UseLegacyAo),
-                UseLegacyTrileSetBundle = args.ContainsKey(UseLegacyTs)
-            };
+            var settings = FormatConverterSettingsFlags.ReadFromArguments(args);
             
             foreach (var xnbPath in xnbFilesToConvert)
             {

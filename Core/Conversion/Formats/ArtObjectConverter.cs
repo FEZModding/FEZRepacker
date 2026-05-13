@@ -17,7 +17,7 @@ namespace FEZRepacker.Core.Conversion.Formats
 
         public override FileBundle ConvertTyped(ArtObject data)
         {
-            if (!Settings.UseLegacyArtObjectBundle)
+            if (!Settings.UseTrixelArtBundle)
             {
                 return FileBundle.Single(GetTransmissionFormatStream(data), FileFormat, ".glb");
             }

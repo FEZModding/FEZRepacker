@@ -8,5 +8,10 @@
         public override string Description =>
             "Unpacks entire .PAK package into specified directory (creates one " +
             "if doesn't exist) leaving XNB assets in their original form.";
+        
+        public override IEnumerable<CommandLineArgument> Arguments => new[] {
+            new CommandLineArgument(PakPath),
+            new CommandLineArgument(DestinationFolder),
+        }.Concat(FormatConverterSettingsFlags.Arguments);
     }
 }

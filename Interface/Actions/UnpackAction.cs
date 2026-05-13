@@ -9,10 +9,8 @@ namespace FEZRepacker.Interface.Actions
 {
     internal abstract class UnpackAction : CommandLineAction
     {
-        private const string PakPath = "pak-path";
-        private const string DestinationFolder = "destination-folder";
-        private const string UseLegacyAo = "use-legacy-ao";
-        private const string UseLegacyTs = "use-legacy-ts";
+        protected const string PakPath = "pak-path";
+        protected const string DestinationFolder = "destination-folder";
         
         public enum UnpackingMode
         {
@@ -24,23 +22,12 @@ namespace FEZRepacker.Interface.Actions
         public abstract string Name { get; }
         public abstract string Description { get; }
         public abstract string[] Aliases { get; }
-
-        public CommandLineArgument[] Arguments => new[] {
-            new CommandLineArgument(PakPath),
-            new CommandLineArgument(DestinationFolder),
-            new CommandLineArgument(UseLegacyAo, ArgumentType.Flag),
-            new CommandLineArgument(UseLegacyTs, ArgumentType.Flag)
-        };
-
+        public abstract IEnumerable<CommandLineArgument> Arguments { get; }
         public void Execute(Dictionary<string, string> args)
         {
             var pakPath = args[PakPath];
             var outputDir = args[DestinationFolder];
-            var settings = new FormatConverterSettings
-            {
-                UseLegacyArtObjectBundle = args.ContainsKey(UseLegacyAo),
-                UseLegacyTrileSetBundle = args.ContainsKey(UseLegacyTs)
-            };
+            var settings = FormatConverterSettingsFlags.ReadFromArguments(args);
             
             UnpackPackage(pakPath, outputDir, Mode, settings);
         }
