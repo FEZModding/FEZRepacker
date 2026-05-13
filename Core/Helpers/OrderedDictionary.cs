@@ -24,7 +24,10 @@ namespace FEZRepacker.Core.Helpers
             }
             set 
             {
-                RemoveFromLists(key);
+                if (_dictionary.ContainsKey(key))
+                {
+                    RemoveFromLists(key);
+                }
 
                 _dictionary[key] = value;
                 _keys.Add(key);
@@ -87,8 +90,12 @@ namespace FEZRepacker.Core.Helpers
 
         public bool Remove(TKey key) 
         {
-            RemoveFromLists(key);
-            return _dictionary.Remove(key);
+            var removed = _dictionary.Remove(key);
+            if (removed)
+            {
+                RemoveFromLists(key);
+            }
+            return removed;
         }
 
         public bool TryGetValue(TKey key, out TValue value) 
