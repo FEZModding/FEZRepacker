@@ -16,11 +16,7 @@
         {
             if (args.Count == 0)
             {
-                foreach (var cmd in CommandLineInterface.Commands)
-                {
-                    ShowHelpFor(cmd);
-                    Console.WriteLine();
-                }
+                ShowGeneralHelp();
                 return;
             }
 
@@ -28,7 +24,7 @@
             var command = CommandLineInterface.FindCommand(arg);
             if (command != null)
             {
-                ShowHelpFor(command);
+                ShowCommandHelp(command);
             }
             else
             {
@@ -37,27 +33,52 @@
             }
         }
 
-        private static void ShowHelpFor(CommandLineAction command)
+        private static void ShowGeneralHelp()
         {
-            string allNames = command.Name;
+            Console.WriteLine("Available commands:");
+            Console.WriteLine();
+            foreach (var command in CommandLineInterface.Commands)
+            {
+                ShowCommandHelp(command);
+                Console.WriteLine();
+            }
+        }
+
+        private static void ShowCommandHelp(CommandLineAction command)
+        {
+            Console.Write($"Command: ");
+            ShowCommandUsage(command);
             if (command.Aliases.Length > 0)
             {
-                allNames = $"[{command.Name}, {String.Join(", ", command.Aliases)}]";
+                Console.WriteLine($"Aliases: {string.Join(", ", command.Aliases)}");
             }
 
-            var args = command.Arguments.Select(arg =>
-            {
-                return arg.Type switch
-                {
-                    ArgumentType.OptionalPositional => $"<{arg.Name}>",
-                    ArgumentType.RequiredPositional => $"[{arg.Name}]",
-                    ArgumentType.Flag => $"--{arg.Name}",
-                    _ => throw new ArgumentOutOfRangeException($"Invalid argument type: {arg.Type}")
-                };
-            });
-            
-            Console.WriteLine($"Usage: {allNames} {String.Join(" ", args)}");
             Console.WriteLine($"Description: {command.Description}");
+        }
+
+        public static void ShowCommandUsage(CommandLineAction command)
+        {
+            var usage = $"{command.Name}";
+            foreach (var arg in command.Arguments)
+            {
+                if (arg.Type == ArgumentType.Flag)
+                {
+                    usage += arg.Type == ArgumentType.RequiredPositional ? " --" : " [--";
+                    usage += arg.Name;
+                    if (arg.Aliases.Length > 0)
+                    {
+                        usage += $" (-{string.Join(" -", arg.Aliases)})";
+                    }
+
+                    usage += arg.Type == ArgumentType.RequiredPositional ? "" : "]";
+                }
+                else
+                {
+                    usage += arg.Type == ArgumentType.RequiredPositional ? $" {arg.Name}" : $" [{arg.Name}]";
+                }
+            }
+
+            Console.WriteLine(usage);
         }
     }
 }

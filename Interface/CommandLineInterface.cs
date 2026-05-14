@@ -32,7 +32,6 @@ namespace FEZRepacker.Interface
             if (command == null)
             {
                 Console.WriteLine($"Unknown command \"{args[0]}\".");
-                Console.WriteLine($"Type \"FEZRepacker.exe --help\" for a list of commands.");
                 return false;
             }
 
@@ -40,8 +39,8 @@ namespace FEZRepacker.Interface
             if (parsedArgs == null)
             {
                 Console.WriteLine($"Invalid usage for command \"{args[0]}\".");
-                Console.WriteLine(
-                    $"Use \"FEZRepacker.exe --help {args[0]}\" for a usage instruction for that command.");
+                Console.Write("Usage: ");
+                HelpAction.ShowCommandUsage(command);
                 return false;
             }
 
@@ -88,30 +87,6 @@ namespace FEZRepacker.Interface
 
                 if (args.Length > 0)
                 {
-                    // Handle help command specifically
-                    if (args[0].ToLower() == "help" || args[0] == "--help" || args[0] == "-h")
-                    {
-                        if (args.Length > 1)
-                        {
-                            // Show help for a specific command
-                            var command = FindCommand(args[1]);
-                            if (command != null)
-                            {
-                                ShowCommandHelp(command);
-                            }
-                            else
-                            {
-                                Console.WriteLine($"Unknown command \"{args[1]}\".");
-                            }
-                        }
-                        else
-                        {
-                            ShowGeneralHelp();
-                        }
-
-                        continue;
-                    }
-
                     if (ParseCommandLine(args))
                     {
                         continue;
@@ -127,73 +102,6 @@ namespace FEZRepacker.Interface
             Console.WriteLine("To get usage help, use 'help' or '--help'");
             Console.WriteLine("For help with a specific command, use 'help <command>'");
             Console.WriteLine("To exit, use 'exit'");
-        }
-
-        private static void ShowGeneralHelp()
-        {
-            Console.WriteLine("Available commands:");
-            Console.WriteLine();
-            foreach (var command in Commands)
-            {
-                Console.WriteLine($"  {command.Name} - {command.Description}");
-                if (command.Aliases.Length < 1) continue;
-                Console.WriteLine($"    Aliases: {string.Join(", ", command.Aliases)}");
-                Console.WriteLine();
-            }
-        }
-
-        private static void ShowCommandHelp(CommandLineAction command)
-        {
-            Console.WriteLine($"Command: {command.Name}");
-            if (command.Aliases.Length > 0)
-            {
-                Console.WriteLine($"Aliases: {string.Join(", ", command.Aliases)}");
-            }
-
-            Console.WriteLine($"Description: {command.Description}");
-            Console.WriteLine("Usage:");
-
-            var usage = $"FEZRepacker.exe {command.Name}";
-            foreach (var arg in command.Arguments)
-            {
-                if (arg.Type == ArgumentType.Flag)
-                {
-                    usage += arg.Type == ArgumentType.RequiredPositional ? " --" : " [--";
-                    usage += arg.Name;
-                    if (arg.Aliases.Length > 0)
-                    {
-                        usage += $" (-{string.Join(" -", arg.Aliases)})";
-                    }
-
-                    usage += arg.Type == ArgumentType.RequiredPositional ? "" : "]";
-                }
-                else
-                {
-                    usage += arg.Type == ArgumentType.RequiredPositional ? $" {arg.Name}" : $" [{arg.Name}]";
-                }
-            }
-
-            Console.WriteLine(usage);
-
-            if (command.Arguments.Length <= 0) return;
-
-            Console.WriteLine("Arguments:");
-            foreach (var arg in command.Arguments)
-            {
-                var argInfo = $"  {arg.Name}";
-                if (arg is { Type: ArgumentType.Flag, Aliases.Length: > 0 })
-                {
-                    argInfo += $" (Aliases: {string.Join(", ", arg.Aliases.Select(a => $"-{a}"))})";
-                }
-
-                argInfo += arg.Type == ArgumentType.RequiredPositional ? " (Required)" : " (Optional)";
-                if (!string.IsNullOrEmpty(arg.Description))
-                {
-                    argInfo += $": {arg.Description}";
-                }
-
-                Console.WriteLine(argInfo);
-            }
         }
 
         private static bool ParseInteractiveModeCommands(string[] args, out bool terminationRequested)
