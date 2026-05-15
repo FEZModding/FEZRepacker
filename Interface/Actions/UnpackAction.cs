@@ -40,7 +40,7 @@ namespace FEZRepacker.Interface.Actions
             }
             else if (mode == UnpackingMode.DecompressedXNB)
             {
-                return FileBundle.Single(XnbCompressor.Decompress(data), ".xnb");
+                return FileBundle.Single(new XnbDecompressStream(data), ".xnb");
             }
             else if (mode == UnpackingMode.Converted)
             {

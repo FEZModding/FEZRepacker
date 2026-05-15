@@ -4,7 +4,11 @@ using Microsoft.Xna.Framework.Content;
 
 namespace FEZRepacker.Core.XNB
 {
-    internal class XnbDecompressStream : Stream
+    /// <summary>
+    /// A stream for reading compressed XNB asset, including header. Data is decompressed progressively as it's needed.
+    /// If an underlying stream does not contain compressed XNB asset, its content is simply copied over.
+    /// </summary>
+    public sealed class XnbDecompressStream : Stream
     {
         private readonly Stream _source;
         private readonly bool _copyOriginalSource;
