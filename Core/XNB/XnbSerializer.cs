@@ -29,7 +29,7 @@ namespace FEZRepacker.Core.XNB
         /// </exception>
         public static object? Deserialize(Stream xnbStream)
         {
-            using Stream decompressedInput = XnbCompressor.Decompress(xnbStream);
+            using var decompressedInput = new XnbDecompressStream(xnbStream);
             var primaryContentType = ExtractPrimaryContentIdentity(decompressedInput);
             using var xnbReader = new XnbContentReader(decompressedInput, primaryContentType, true);
             return xnbReader.ReadContent(primaryContentType.PrimaryContentSerializer.ContentType, true);
@@ -46,7 +46,7 @@ namespace FEZRepacker.Core.XNB
         /// </exception>
         public static Type DeserializePrimaryContentTypeOnly(Stream xnbStream)
         {
-            using Stream decompressedInput = XnbCompressor.Decompress(xnbStream);
+            using var decompressedInput = new XnbDecompressStream(xnbStream);
             var primaryContentType = ExtractPrimaryContentIdentity(decompressedInput);
             return primaryContentType.PrimaryContentSerializer.ContentType;
         }
