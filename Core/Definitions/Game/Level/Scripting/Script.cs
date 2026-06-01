@@ -11,13 +11,13 @@
         public TimeSpan? Timeout { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public List<ScriptTrigger> Triggers { get; set; } = new();
+        public List<ScriptTrigger>? Triggers { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public List<ScriptCondition> Conditions { get; set; } = new();
+        public List<ScriptCondition>? Conditions { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public List<ScriptAction> Actions { get; set; } = new();
+        public List<ScriptAction>? Actions { get; set; }
 
         [XnbProperty]
         public bool OneTime { get; set; }

@@ -16,10 +16,10 @@ namespace FEZRepacker.Core.Definitions.Game.Level
         public Vector3 Size { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public TrileFace StartingFace { get; set; } = new();
+        public TrileFace? StartingFace { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public string SequenceSamplesPath { get; set; } = "";
+        public string? SequenceSamplesPath { get; set; }
 
         [XnbProperty]
         public bool Flat { get; set; }
@@ -34,7 +34,7 @@ namespace FEZRepacker.Core.Definitions.Game.Level
         public float BaseAmbient { get; set; } = 0.35f;
 
         [XnbProperty(UseConverter = true)]
-        public string GomezHaloName { get; set; } = "";
+        public string? GomezHaloName { get; set; }
 
         [XnbProperty]
         public bool HaloFiltering { get; set; }
@@ -64,7 +64,7 @@ namespace FEZRepacker.Core.Definitions.Game.Level
         public IDictionary<int, Script> Scripts { get; set; } = new OrderedDictionary<int, Script>();
 
         [XnbProperty(UseConverter = true)]
-        public string SongName { get; set; } = "";
+        public string? SongName { get; set; }
 
         [XnbProperty]
         public int FAPFadeOutStart { get; set; }

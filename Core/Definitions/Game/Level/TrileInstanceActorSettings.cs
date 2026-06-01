@@ -9,16 +9,16 @@
         public int? ContainedTrile { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public string SignText { get; set; } = "";
+        public string? SignText { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public bool[] Sequence { get; set; } = { };
+        public bool[]? Sequence { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public string SequenceSampleName { get; set; } = "";
+        public string? SequenceSampleName { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public string SequenceAlternateSampleName { get; set; } = "";
+        public string? SequenceAlternateSampleName { get; set; }
 
         [XnbProperty(UseConverter = true)]
         public int? HostVolume { get; set; }

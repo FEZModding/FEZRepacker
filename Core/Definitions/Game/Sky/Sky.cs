@@ -26,13 +26,13 @@
         public List<string> Clouds { get; set; } = new();
 
         [XnbProperty(UseConverter = true)]
-        public string Shadows { get; set; } = "";
+        public string? Shadows { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public string Stars { get; set; } = "";
+        public string? Stars { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public string CloudTint { get; set; } = "";
+        public string? CloudTint { get; set; }
 
         [XnbProperty]
         public bool VerticalTiling { get; set; }

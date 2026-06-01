@@ -12,7 +12,7 @@ namespace FEZRepacker.Core.Definitions.Json
         public string Name { get; set; } = "";
         public LevelNodeType NodeType { get; set; }
         public Vector3 Size { get; set; }
-        public TrileFace StartingPosition { get; set; } = new();
+        public TrileFace? StartingPosition { get; set; }
         public bool Flat { get; set; }
         public bool Quantum { get; set; }
         public bool Descending { get; set; }
@@ -22,15 +22,15 @@ namespace FEZRepacker.Core.Definitions.Json
         public float BaseAmbient { get; set; }
         public string SkyName { get; set; } = "";
         public bool SkipPostProcess { get; set; }
-        public string GomezHaloName { get; set; } = "";
+        public string? GomezHaloName { get; set; }
         public bool HaloFiltering { get; set; }
         public bool BlinkingAlpha { get; set; }
         public float WaterHeight { get; set; }
         public LiquidType WaterType { get; set; }
-        public string SongName { get; set; } = "";
+        public string? SongName { get; set; }
         public List<string> MutedLoops { get; set; } = new();
         public List<AmbienceTrack> AmbienceTracks { get; set; } = new();
-        public string SequenceSamplesPath { get; set; } = "";
+        public string? SequenceSamplesPath { get; set; }
         public bool LowPass { get; set; }
         public int FAPFadeOutStart { get; set; }
         public int FAPFadeOutLength { get; set; }
@@ -178,7 +178,7 @@ namespace FEZRepacker.Core.Definitions.Json
                         existingTrile.OverlappedTriles = new List<TrileInstance>();
                     }
                     
-                    level.Triles[trileModel.Emplacement].OverlappedTriles.Add(trile);
+                    existingTrile.OverlappedTriles.Add(trile);
                     continue;
                 }
                 

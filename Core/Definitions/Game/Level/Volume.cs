@@ -17,6 +17,6 @@ namespace FEZRepacker.Core.Definitions.Game.Level
         public Vector3 To { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public VolumeActorSettings ActorSettings { get; set; } = new();
+        public VolumeActorSettings? ActorSettings { get; set; }
     }
 }

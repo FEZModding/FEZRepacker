@@ -53,6 +53,6 @@ namespace FEZRepacker.Core.Definitions.Game.Level
         public float SpinOffset { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public string AssociatedSound { get; set; } = "";
+        public string? AssociatedSound { get; set; }
     }
 }

@@ -14,7 +14,7 @@
         public PathEndBehavior EndBehavior { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public string SoundName { get; set; } = "";
+        public string? SoundName { get; set; }
 
         [XnbProperty]
         public bool IsSpline { get; set; }

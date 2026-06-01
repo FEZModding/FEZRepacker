@@ -8,6 +8,6 @@
         public string Text { get; set; } = "";
 
         [XnbProperty(UseConverter = true)]
-        public NpcActionContent OverrideContent { get; set; } = new();
+        public NpcActionContent? OverrideContent { get; set; }
     }
 }

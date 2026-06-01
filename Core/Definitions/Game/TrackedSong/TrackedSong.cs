@@ -26,6 +26,6 @@
         public bool RandomOrdering { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public int[] CustomOrdering { get; set; } = {};
+        public int[]? CustomOrdering { get; set; }
     }
 }
