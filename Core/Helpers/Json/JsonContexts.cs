@@ -50,7 +50,7 @@ namespace FEZRepacker.Core.Helpers.Json
     [JsonSerializable(typeof(SpriteFontPropertiesJsonModel))]
     internal partial class SpriteFontJsonSerializerContext : JsonSerializerContext {}
     
-    [JsonSerializable(typeof(OrderedDictionary<string, OrderedDictionary<string, string>>))]
+    [JsonSerializable(typeof(IDictionary<string, IDictionary<string, string>>))]
     internal partial class TextStorageJsonSerializerContext : JsonSerializerContext {}
     
     [JsonSerializable(typeof(TrackedSong))]

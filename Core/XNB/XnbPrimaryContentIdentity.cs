@@ -29,10 +29,6 @@ namespace FEZRepacker.Core.XNB
         public XnbPrimaryContentIdentity()
         {
             ContentSerializers = ContentSerializersFactory;
-            if (PrimaryContentSerializer.IsPrivate)
-            {
-                throw new XnbSerializationException($"{this.GetType().Name} has a private primary content type!");
-            }
         }
 
         public XnbContentSerializer? FindByReaderQualifier(XnbAssemblyQualifier qualifier)

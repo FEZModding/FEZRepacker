@@ -166,6 +166,12 @@ namespace FEZRepacker.Core
             {
                 fallback.Specification = "mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089";
             }
+            
+            // match specific dictionary type usage
+            if (fallback.Name.Contains("IDictionary"))
+            {
+                fallback.Name = fallback.Name.Replace("IDictionary", "Dictionary");
+            }
 
             fallback.AppendGenericTypesFromType(type);
             _xnbTypeCache[type] = fallback;

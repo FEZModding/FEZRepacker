@@ -2,7 +2,7 @@
 
 namespace FEZRepacker.Core.XNB.ContentSerialization.System
 {
-    internal class DictionaryContentSerializer<K, V> : XnbContentSerializer<OrderedDictionary<K, V>> where K : notnull
+    internal class DictionaryContentSerializer<K, V> : XnbContentSerializer<IDictionary<K, V>> where K : notnull
     {
         private XnbAssemblyQualifier _name;
         private bool skipKeyIdentifier;

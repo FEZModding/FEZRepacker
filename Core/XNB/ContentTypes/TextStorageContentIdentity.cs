@@ -1,5 +1,4 @@
-﻿using FEZRepacker.Core.Helpers;
-using FEZRepacker.Core.XNB.ContentSerialization;
+﻿using FEZRepacker.Core.XNB.ContentSerialization;
 using FEZRepacker.Core.XNB.ContentSerialization.System;
 
 namespace FEZRepacker.Core.XNB.ContentTypes
@@ -8,7 +7,8 @@ namespace FEZRepacker.Core.XNB.ContentTypes
     {
         protected override List<XnbContentSerializer> ContentSerializersFactory => new()
         {
-            new DictionaryContentSerializer<string, OrderedDictionary<string, string>>(),
+            new TextStorageContentSerializer().MarkPrivate(),
+            new DictionaryContentSerializer<string, IDictionary<string, string>>(),
             new StringContentSerializer(),
             new DictionaryContentSerializer<string, string>()
         };
