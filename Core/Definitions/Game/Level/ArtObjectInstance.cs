@@ -19,6 +19,6 @@ namespace FEZRepacker.Core.Definitions.Game.Level
         public Vector3 Scale { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public ArtObjectActorSettings ActorSettings { get; set; } = new();
+        public ArtObjectActorSettings? ActorSettings { get; set; }
     }
 }

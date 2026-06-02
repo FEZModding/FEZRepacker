@@ -19,7 +19,7 @@ namespace FEZRepacker.Core.Definitions.Game.Level
         public bool WaterLocked { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public CodeInput[] CodePattern { get; set; } = { };
+        public CodeInput[]? CodePattern { get; set; }
 
         [XnbProperty]
         public bool IsBlackHole { get; set; }
