@@ -5,13 +5,13 @@
     public class ScriptAction
     {
         [XnbProperty(UseConverter = true)]
-        public Entity Object { get; set; } = new();
+        public Entity? Object { get; set; } = new();
 
         [XnbProperty]
         public string Operation { get; set; } = "";
 
         [XnbProperty(UseConverter = true)]
-        public string[] Arguments { get; set; } = { };
+        public string[]? Arguments { get; set; } = { };
 
         [XnbProperty]
         public bool Killswitch { get; set; } // whether action should kill this script

@@ -7,7 +7,7 @@ namespace FEZRepacker.Core.Definitions.Game.NpcMetadata
     public class NpcMetadata
     {
         [XnbProperty]
-        public float WalkSpeed { get; set; }
+        public float WalkSpeed { get; set; } = 1.5f;
 
         [XnbProperty]
         public bool AvoidsGomez { get;set; }
@@ -16,6 +16,6 @@ namespace FEZRepacker.Core.Definitions.Game.NpcMetadata
         public string? SoundPath { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public List<NpcAction> SoundActions { get; set; } = new();
+        public List<NpcAction>? SoundActions { get; set; } = new();
     }
 }

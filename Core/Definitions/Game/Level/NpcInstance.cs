@@ -17,7 +17,7 @@ namespace FEZRepacker.Core.Definitions.Game.Level
         public Vector3 DestinationOffset { get; set; }
 
         [XnbProperty]
-        public float WalkSpeed { get; set; }
+        public float WalkSpeed { get; set; } = 1.5f;
 
         [XnbProperty]
         public bool RandomizeSpeech { get; set; }
@@ -32,9 +32,9 @@ namespace FEZRepacker.Core.Definitions.Game.Level
         public ActorType ActorType { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public List<SpeechLine> Speech { get; set; } = null!;
+        public List<SpeechLine>? Speech { get; set; } = new();
 
         [XnbProperty(UseConverter = true)]
-        public IDictionary<NpcAction, NpcActionContent> Actions { get; set; } = null!;
+        public IDictionary<NpcAction, NpcActionContent>? Actions { get; set; } = new FEZRepacker.Core.Helpers.OrderedDictionary<NpcAction, NpcActionContent>();
     }
 }

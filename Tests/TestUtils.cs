@@ -2,32 +2,47 @@
 
 namespace FEZRepacker.Tests
 {
+    // Supplies optional FEZ asset paths to package integration tests
     [TestClass]
     public class TestUtils
     {
-        public static TestContext Context;
+        private static TestContext Context { get; set; } = null!;
 
+        // Captures the MSTest context without requiring optional integration-test data
         [AssemblyInitialize]
         public static void SetupTestContext(TestContext testContext)
         {
             Context = testContext;
-            Assert.IsTrue(
-                Directory.Exists(GetGameAssetsDirectory()), 
-                "You forgot to put FEZ's Content path into .runsettings file"
-            );
         }
 
-        public static IEnumerable<object[]> PackagePathsTestData => 
-            GetPathsToPackages().Select(name => new object[] { name });
-
-        public static string GetGameAssetsDirectory()
+        public static IEnumerable<object?[]> PackagePathsTestData
         {
-            return Context.Properties["FEZContentDirPath"].ToString();
+            get
+            {
+                var assetsDirectory = GetGameAssetsDirectory();
+                if (assetsDirectory == null)
+                {
+                    yield return new object?[] { null };
+                    yield break;
+                }
+
+                foreach (var packagePath in GetPathsToPackages(assetsDirectory))
+                {
+                    yield return new object?[] { packagePath };
+                }
+            }
         }
 
-        public static IEnumerable<string> GetPathsToPackages()
+        private static string? GetGameAssetsDirectory()
         {
-            return Directory.EnumerateFiles(GetGameAssetsDirectory(), "*.pak", SearchOption.AllDirectories);
+            var configuredPath = Context.Properties["FEZContentDirPath"]?.ToString();
+            return string.IsNullOrWhiteSpace(configuredPath) ? null :
+                Directory.Exists(configuredPath) ? configuredPath : null;
+        }
+
+        private static IEnumerable<string> GetPathsToPackages(string assetsDirectory)
+        {
+            return Directory.EnumerateFiles(assetsDirectory, "*.pak", SearchOption.AllDirectories);
         }
     }
 }

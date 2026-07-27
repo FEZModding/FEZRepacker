@@ -7,7 +7,10 @@ namespace FEZRepacker.Core.Definitions.Json
     {
         public MapTree Deserialize()
         {
-            var mapTree = new MapTree();
+            var mapTree = new MapTree
+            {
+                Root = new MapNode()
+            };
 
             var nodesToConvert = new Dictionary<int, MapNode>()
             {

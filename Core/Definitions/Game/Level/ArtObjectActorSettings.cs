@@ -50,7 +50,7 @@ namespace FEZRepacker.Core.Definitions.Game.Level
         public string? TreasureMapName { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public FaceOrientation[] InvisibleSides { get; set; } = { };
+        public FaceOrientation[]? InvisibleSides { get; set; } = { };
 
         [XnbProperty]
         public float TimeswitchWindBackSpeed { get; set; }

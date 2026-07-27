@@ -5,7 +5,7 @@
     public class MovementPath
     {
         [XnbProperty(UseConverter = true)]
-        public List<PathSegment> Segments { get; set; } = new();
+        public List<PathSegment>? Segments { get; set; } = new();
 
         [XnbProperty]
         public bool NeedsTrigger { get; set; }

@@ -5,13 +5,13 @@
     public class Loop
     {
         [XnbProperty]
-        public int Duration { get; set; }
+        public int Duration { get; set; } = 1;
 
         [XnbProperty]
-        public int LoopTimesFrom { get; set; }
+        public int LoopTimesFrom { get; set; } = 1;
 
         [XnbProperty]
-        public int LoopTimesTo { get; set; }
+        public int LoopTimesTo { get; set; } = 1;
 
         [XnbProperty]
         public string Name { get; set; } = "";
@@ -26,16 +26,16 @@
         public int Delay { get; set; }
 
         [XnbProperty]
-        public bool Night { get; set; }
+        public bool Night { get; set; } = true;
 
         [XnbProperty]
-        public bool Day { get; set; }
+        public bool Day { get; set; } = true;
 
         [XnbProperty]
-        public bool Dusk { get; set; }
+        public bool Dusk { get; set; } = true;
 
         [XnbProperty]
-        public bool Dawn { get; set; }
+        public bool Dawn { get; set; } = true;
 
         [XnbProperty]
         public bool FractionalTime { get; set; }

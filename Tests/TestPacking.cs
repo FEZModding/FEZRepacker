@@ -3,13 +3,21 @@ using FEZRepacker.Core.FileSystem;
 
 namespace FEZRepacker.Tests
 {
+    // Verifies package data is byte-identical after unpacking and repacking
     [TestClass]
     public class TestPacking
     {
+        // Rebuilds each configured FEZ package and compares its complete payload
         [TestMethod]
         [DynamicData(nameof(TestUtils.PackagePathsTestData), typeof(TestUtils))]
-        public void RepackAndComparePackage(string packagePath)
+        public void RepackAndComparePackage(string? packagePath)
         {
+            if (packagePath == null)
+            {
+                Assert.Inconclusive("Set FEZContentDirPath in a runsettings file to run package integration tests.");
+                return;
+            }
+
             var pakData = File.ReadAllBytes(packagePath);
 
             using var pakStream = new MemoryStream(pakData);

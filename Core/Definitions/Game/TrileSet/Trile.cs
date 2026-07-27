@@ -4,6 +4,7 @@ using FEZRepacker.Core.Definitions.Game.ArtObject;
 using FEZRepacker.Core.Definitions.Game.Common;
 using FEZRepacker.Core.Definitions.Game.Graphics;
 using FEZRepacker.Core.Definitions.Game.XNA;
+using FEZRepacker.Core.Helpers;
 
 namespace FEZRepacker.Core.Definitions.Game.TrileSet
 {
@@ -12,13 +13,13 @@ namespace FEZRepacker.Core.Definitions.Game.TrileSet
     public class Trile
     {
         [XnbProperty]
-        public string Name { get; set; } = "";
+        public string Name { get; set; } = "Untitled";
 
         [XnbProperty]
         public string CubemapPath { get; set; } = "";
 
         [XnbProperty]
-        public Vector3 Size { get; set; }
+        public Vector3 Size { get; set; } = Vector3.One;
 
         [XnbProperty]
         public Vector3 Offset { get; set; }
@@ -36,11 +37,11 @@ namespace FEZRepacker.Core.Definitions.Game.TrileSet
         public bool ForceHugging { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public IDictionary<FaceOrientation, CollisionType> Faces { get; set; } = null!;
+        public IDictionary<FaceOrientation, CollisionType>? Faces { get; set; } = new OrderedDictionary<FaceOrientation, CollisionType>();
 
         [JsonIgnore]
         [XnbProperty(UseConverter = true)]
-        public IndexedPrimitives<VertexInstance, Vector4> Geometry { get; set; } = null!;
+        public IndexedPrimitives<VertexInstance, Vector4>? Geometry { get; set; }
 
         [XnbProperty(UseConverter = true)]
         public ActorType Type { get; set; }

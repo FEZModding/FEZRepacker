@@ -13,12 +13,12 @@ namespace FEZRepacker.Core.Definitions.Game.Level
         public Vector3 Position { get; set; }
 
         [XnbProperty]
-        public Quaternion Rotation { get; set; }
+        public Quaternion Rotation { get; set; } = Quaternion.Identity;
 
         [XnbProperty]
-        public Vector3 Scale { get; set; }
+        public Vector3 Scale { get; set; } = Vector3.One;
 
         [XnbProperty(UseConverter = true)]
-        public ArtObjectActorSettings? ActorSettings { get; set; }
+        public ArtObjectActorSettings? ActorSettings { get; set; } = new();
     }
 }

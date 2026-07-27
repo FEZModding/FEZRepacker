@@ -11,7 +11,7 @@
         public bool InFront { get; set; }
 
         [XnbProperty]
-        public float Opacity { get; set; }
+        public float Opacity { get; set; } = 1f;
 
         [XnbProperty]
         public float FogTint { get; set; }
