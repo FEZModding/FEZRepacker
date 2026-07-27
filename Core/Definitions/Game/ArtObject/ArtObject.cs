@@ -16,14 +16,14 @@ namespace FEZRepacker.Core.Definitions.Game.ArtObject
 
         [JsonIgnore]
         [XnbProperty(UseConverter = true)]
-        public Texture2D Cubemap { get; set; } = new();
+        public Texture2D? Cubemap { get; set; }
 
         [XnbProperty]
         public Vector3 Size { get; set; }
 
         [JsonIgnore]
         [XnbProperty(UseConverter = true)]
-        public IndexedPrimitives<VertexInstance, Matrix> Geometry { get; set; } = new();
+        public IndexedPrimitives<VertexInstance, Matrix>? Geometry { get; set; }
 
         [XnbProperty(UseConverter = true)]
         public ActorType ActorType { get; set; }

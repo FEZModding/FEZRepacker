@@ -5,19 +5,29 @@
     public class TrackedSong
     {
         [XnbProperty(UseConverter = true)]
-        public List<Loop> Loops { get; set; } = new();
+        public List<Loop>? Loops { get; set; } = new();
 
         [XnbProperty]
-        public string Name { get; set; } = "";
+        public string Name { get; set; } = "Untitled";
 
         [XnbProperty]
-        public int Tempo { get; set; }
+        public int Tempo { get; set; } = 60;
 
         [XnbProperty]
-        public int TimeSignature { get; set; }
+        public int TimeSignature { get; set; } = 4;
 
         [XnbProperty(UseConverter = true)]
-        public ShardNotes[] Notes { get; set; } = { };
+        public ShardNotes[]? Notes { get; set; } = new[]
+        {
+            ShardNotes.C2,
+            ShardNotes.D2,
+            ShardNotes.E2,
+            ShardNotes.F2,
+            ShardNotes.G2,
+            ShardNotes.A2,
+            ShardNotes.B2,
+            ShardNotes.C3
+        };
 
         [XnbProperty(UseConverter = true)]
         public AssembleChords AssembleChord { get; set; }

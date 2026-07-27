@@ -5,25 +5,25 @@
     public class Sky
     {
         [XnbProperty]
-        public string Name { get; set; } = "";
+        public string Name { get; set; } = "Default";
 
         [XnbProperty]
-        public string Background { get; set; } = "";
+        public string Background { get; set; } = "SkyBack";
 
         [XnbProperty]
-        public float WindSpeed { get; set; }
+        public float WindSpeed { get; set; } = 1f;
 
         [XnbProperty]
-        public float Density { get; set; }
+        public float Density { get; set; } = 1f;
 
         [XnbProperty]
-        public float FogDensity { get; set; }
+        public float FogDensity { get; set; } = 0.02f;
 
         [XnbProperty(UseConverter = true)]
-        public List<SkyLayer> Layers { get; set; } = new();
+        public List<SkyLayer>? Layers { get; set; } = new();
 
         [XnbProperty(UseConverter = true)]
-        public List<string> Clouds { get; set; } = new();
+        public List<string>? Clouds { get; set; } = new();
 
         [XnbProperty(UseConverter = true)]
         public string? Shadows { get; set; }
@@ -41,7 +41,7 @@
         public bool HorizontalScrolling { get; set; }
 
         [XnbProperty]
-        public float LayerBaseHeight { get; set; }
+        public float LayerBaseHeight { get; set; } = 0.5f;
 
         [XnbProperty]
         public float InterLayerVerticalDistance { get; set; }
@@ -65,10 +65,10 @@
         public float WindDistance { get; set; }
 
         [XnbProperty]
-        public float CloudsParallax { get; set; }
+        public float CloudsParallax { get; set; } = 1f;
 
         [XnbProperty]
-        public float ShadowOpacity { get; set; }
+        public float ShadowOpacity { get; set; } = 0.7f;
 
         [XnbProperty]
         public bool FoliageShadows { get; set; }
