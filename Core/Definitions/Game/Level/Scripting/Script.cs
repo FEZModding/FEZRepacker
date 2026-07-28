@@ -5,7 +5,7 @@
     public class Script
     {
         [XnbProperty]
-        public string Name { get; set; } = "Untitled";
+        public string? Name { get; set; } = "Untitled";
 
         [XnbProperty(UseConverter = true)]
         public TimeSpan? Timeout { get; set; }
