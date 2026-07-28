@@ -52,7 +52,7 @@ namespace FEZRepacker.Core.Definitions.Game.Level
         public float WaterHeight { get; set; }
 
         [XnbProperty]
-        public string SkyName { get; set; } = "";
+        public string? SkyName { get; set; } = "";
 
         [XnbProperty(UseConverter = true)]
         public string? TrileSetName { get; set; }

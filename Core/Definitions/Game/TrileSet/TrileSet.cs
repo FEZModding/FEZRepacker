@@ -10,7 +10,7 @@ namespace FEZRepacker.Core.Definitions.Game.TrileSet
     public class TrileSet
     {
         [XnbProperty]
-        public string Name { get; set; } = "";
+        public string? Name { get; set; } = "";
 
         [XnbProperty(UseConverter = true)]
         public IDictionary<int, Trile>? Triles { get; set; } = new OrderedDictionary<int, Trile>();

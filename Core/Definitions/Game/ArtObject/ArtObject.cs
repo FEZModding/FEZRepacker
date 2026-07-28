@@ -12,7 +12,7 @@ namespace FEZRepacker.Core.Definitions.Game.ArtObject
     public class ArtObject
     {
         [XnbProperty]
-        public string Name { get; set; } = "";
+        public string? Name { get; set; } = "";
 
         [JsonIgnore]
         [XnbProperty(UseConverter = true)]

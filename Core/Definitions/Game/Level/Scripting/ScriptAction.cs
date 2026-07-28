@@ -8,7 +8,7 @@
         public Entity? Object { get; set; } = new();
 
         [XnbProperty]
-        public string Operation { get; set; } = "";
+        public string? Operation { get; set; } = "";
 
         [XnbProperty(UseConverter = true)]
         public string[]? Arguments { get; set; } = { };

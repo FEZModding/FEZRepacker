@@ -7,7 +7,7 @@ namespace FEZRepacker.Core.Definitions.Game.MapTree
     public class MapNode
     {
         [XnbProperty]
-        public string LevelName { get; set; } = "";
+        public string? LevelName { get; set; } = "";
 
         [XnbProperty(UseConverter = true)]
         public List<MapNodeConnection>? Connections { get; set; } = new();

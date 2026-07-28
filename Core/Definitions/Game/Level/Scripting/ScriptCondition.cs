@@ -11,9 +11,9 @@
         public ComparisonOperator Operator { get; set; } = ComparisonOperator.None;
 
         [XnbProperty]
-        public string Property { get; set; } = "";
+        public string? Property { get; set; } = "";
 
         [XnbProperty]
-        public string Value { get; set; } = "";
+        public string? Value { get; set; } = "";
     }
 }

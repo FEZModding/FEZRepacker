@@ -13,10 +13,10 @@ namespace FEZRepacker.Core.Definitions.Game.TrileSet
     public class Trile
     {
         [XnbProperty]
-        public string Name { get; set; } = "Untitled";
+        public string? Name { get; set; } = "Untitled";
 
         [XnbProperty]
-        public string CubemapPath { get; set; } = "";
+        public string? CubemapPath { get; set; } = "";
 
         [XnbProperty]
         public Vector3 Size { get; set; } = Vector3.One;
