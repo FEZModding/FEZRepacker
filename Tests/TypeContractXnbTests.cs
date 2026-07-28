@@ -6,6 +6,7 @@ using FEZRepacker.Core.Definitions.Game.NpcMetadata;
 using FEZRepacker.Core.Definitions.Game.Sky;
 using FEZRepacker.Core.Definitions.Game.TrackedSong;
 using FEZRepacker.Core.Definitions.Game.TrileSet;
+using FEZRepacker.Core.Definitions.Game.XNA;
 using FEZRepacker.Core.XNB;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -16,6 +17,32 @@ namespace FEZRepacker.Tests
     [TestClass]
     public class TypeContractXnbTests
     {
+        // Serializes required strings, models, and arrays set to null and checks the contract error
+        [TestMethod]
+        public void RequiredReferencePropertyCannotBeSerializedAsNull()
+        {
+            AssertRequiredPropertyValidation(
+                new Level { SkyName = null! },
+                nameof(Level),
+                nameof(Level.SkyName));
+
+            AssertRequiredPropertyValidation(
+                new SpriteFont { Texture = null! },
+                nameof(SpriteFont),
+                nameof(SpriteFont.Texture));
+
+            AssertRequiredPropertyValidation(
+                new Texture2D { TextureData = null! },
+                nameof(Texture2D),
+                nameof(Texture2D.TextureData));
+        }
+
+        private static void AssertRequiredPropertyValidation(object model, string modelName, string propertyName)
+        {
+            var exception = Assert.ThrowsException<InvalidOperationException>(() => XnbSerializer.Serialize(model));
+            StringAssert.Contains(exception.Message, $"{modelName}.{propertyName}");
+        }
+
         // Packs and reads an NPC action with no sound to prevent empty-string regression
         [TestMethod]
         public void NpcActionNullSoundSurvivesXnbRoundTrip()

@@ -8,7 +8,7 @@
         public List<Loop>? Loops { get; set; } = new();
 
         [XnbProperty]
-        public string? Name { get; set; } = "Untitled";
+        public string Name { get; set; } = "Untitled";
 
         [XnbProperty]
         public int Tempo { get; set; } = 60;

@@ -8,6 +8,6 @@
         public Entity? Object { get; set; } = new();
 
         [XnbProperty]
-        public string? Event { get; set; } = "";
+        public string Event { get; set; } = "";
     }
 }

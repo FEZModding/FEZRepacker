@@ -14,7 +14,7 @@
         public int LoopTimesTo { get; set; } = 1;
 
         [XnbProperty]
-        public string? Name { get; set; } = "";
+        public string Name { get; set; } = "";
 
         [XnbProperty]
         public int TriggerFrom { get; set; }

@@ -5,10 +5,10 @@
     public class Sky
     {
         [XnbProperty]
-        public string? Name { get; set; } = "Default";
+        public string Name { get; set; } = "Default";
 
         [XnbProperty]
-        public string? Background { get; set; } = "SkyBack";
+        public string Background { get; set; } = "SkyBack";
 
         [XnbProperty]
         public float WindSpeed { get; set; } = 1f;

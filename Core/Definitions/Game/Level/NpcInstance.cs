@@ -8,7 +8,7 @@ namespace FEZRepacker.Core.Definitions.Game.Level
     public class NpcInstance
     {
         [XnbProperty]
-        public string? Name { get; set; } = "";
+        public string Name { get; set; } = "";
 
         [XnbProperty]
         public Vector3 Position { get; set; }

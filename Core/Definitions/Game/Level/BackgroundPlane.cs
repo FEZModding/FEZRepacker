@@ -20,7 +20,7 @@ namespace FEZRepacker.Core.Definitions.Game.Level
         public Vector3 Size { get; set; }
 
         [XnbProperty]
-        public string? TextureName { get; set; } = "";
+        public string TextureName { get; set; } = "";
 
         [XnbProperty]
         public bool LightMap { get; set; }
