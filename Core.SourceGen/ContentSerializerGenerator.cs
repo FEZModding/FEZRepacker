@@ -28,6 +28,7 @@ public sealed class ContentSerializerGenerator : IIncrementalGenerator
         public string TypeFullName;
         public bool IsNullable;
         public bool IsReferenceType;
+        public bool IsRequiredReferenceType;
         public int Order;
         public bool UseConverter;
         public bool Optional;
@@ -106,7 +107,8 @@ public sealed class ContentSerializerGenerator : IIncrementalGenerator
                 Name = member.Name,
                 TypeFullName = underlyingPropertyType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat),
                 IsNullable = propertyNullable,
-                IsReferenceType = !propertyNullable && member.Type.IsReferenceType,
+                IsReferenceType = member.Type.IsReferenceType,
+                IsRequiredReferenceType = member.Type.IsReferenceType && member.NullableAnnotation == NullableAnnotation.NotAnnotated,
                 Order = order,
                 UseConverter = useConverter,
                 Optional = optional,
@@ -263,10 +265,34 @@ public sealed class ContentSerializerGenerator : IIncrementalGenerator
 
             foreach (var prop in model.Properties)
             {
+                EmitRequiredPropertyValidation(cb, model, prop);
+            }
+
+            if (model.Properties.Any(prop => !prop.Optional && prop.IsRequiredReferenceType))
+            {
+                cb.AppendLine();
+            }
+
+            foreach (var prop in model.Properties)
+            {
                 EmitPropertySerialize(cb, prop);
             }
         }
         cb.EndCodeBlock();
+    }
+
+    private static void EmitRequiredPropertyValidation(CodeStringBuilder cb, XnbTypeInfo model, XnbPropertyInfo prop)
+    {
+        if (prop is { Optional: false, IsRequiredReferenceType: true })
+        {
+            cb.AppendLine($"if (content.{prop.Name} is null)");
+            cb.BeginCodeBlock();
+            {
+                cb.AppendLine(
+                    $"throw new global::System.InvalidOperationException(\"Cannot serialize required XNB property {model.TypeName}.{prop.Name} because it is null.\");");
+            }
+            cb.EndCodeBlock();
+        }
     }
 
     private static void EmitPropertySerialize(CodeStringBuilder cb, XnbPropertyInfo prop)

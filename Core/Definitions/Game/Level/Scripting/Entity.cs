@@ -5,7 +5,7 @@
     public class Entity
     {
         [XnbProperty]
-        public string? Type { get; set; } = "";
+        public string Type { get; set; } = "";
 
         [XnbProperty(UseConverter = true)]
         public int? Identifier { get; set; }

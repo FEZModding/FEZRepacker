@@ -27,6 +27,6 @@ namespace FEZRepacker.Core.Definitions.Game.Graphics
         public byte[] TextureData { get; set; } = { };
 
         [XnbProperty(UseConverter = true)]
-        public List<FrameContent> Frames { get; set; } = new();
+        public List<FrameContent>? Frames { get; set; } = new();
     }
 }
