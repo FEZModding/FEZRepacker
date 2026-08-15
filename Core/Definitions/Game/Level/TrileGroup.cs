@@ -8,7 +8,7 @@ namespace FEZRepacker.Core.Definitions.Game.Level
     public class TrileGroup
     {
         [XnbProperty(UseConverter = true)]
-        public List<TrileInstance>? Triles { get; set; } = new();
+        public List<TrileInstance> Triles { get; set; } = new();
 
         [XnbProperty(UseConverter = true)]
         public MovementPath? Path { get; set; } = null;

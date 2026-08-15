@@ -32,9 +32,9 @@ namespace FEZRepacker.Core.Definitions.Game.Level
         public ActorType ActorType { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public List<SpeechLine>? Speech { get; set; } = new();
+        public List<SpeechLine> Speech { get; set; } = new();
 
         [XnbProperty(UseConverter = true)]
-        public IDictionary<NpcAction, NpcActionContent>? Actions { get; set; } = new FEZRepacker.Core.Helpers.OrderedDictionary<NpcAction, NpcActionContent>();
+        public IDictionary<NpcAction, NpcActionContent> Actions { get; set; } = new FEZRepacker.Core.Helpers.OrderedDictionary<NpcAction, NpcActionContent>();
     }
 }

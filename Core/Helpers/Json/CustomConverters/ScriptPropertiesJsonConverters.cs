@@ -146,14 +146,14 @@ namespace FEZRepacker.Core.Helpers.Json.CustomConverters
 
             string[] beforeFuncSplit = afterFuncSplit[0].Split('(');
             (action.Object, action.Operation) = EntityJsonConverter.FromPropertyIdentifier(beforeFuncSplit[0]);
-            if (beforeFuncSplit.Length > 1 && beforeFuncSplit[1].Length > 0)
+            action.Arguments = beforeFuncSplit.Length > 1 && beforeFuncSplit[1].Length > 0
+                ? beforeFuncSplit[1].Split(',')
+                : [];
+
+            for (int i = 0; i < action.Arguments.Length; i++)
             {
-                action.Arguments = beforeFuncSplit[1].Split(',');
-                for (int i = 0; i < action.Arguments.Length; i++)
-                {
-                    var arg = action.Arguments[i].Trim();
-                    action.Arguments[i] = arg == "null" ? "" : arg;
-                }
+                var arg = action.Arguments[i].Trim();
+                action.Arguments[i] = arg == "null" ? "" : arg;
             }
 
             return action;
@@ -166,12 +166,14 @@ namespace FEZRepacker.Core.Helpers.Json.CustomConverters
             JsonSerializerOptions options)
         {
 
+            var arguments = value.Arguments ?? [];
+
             string output = $"{EntityJsonConverter.ToPropertyIdentifier(value.Object, value.Operation)}";
             output += "(";
-            for (int i = 0; i < value.Arguments.Count(); i++)
+            for (int i = 0; i < arguments.Length; i++)
             {
                 if (i > 0) output += ", ";
-                var arg = value.Arguments[i];
+                var arg = arguments[i];
                 output += string.IsNullOrEmpty(arg) ? "null" : arg;
             }
             output += ")";

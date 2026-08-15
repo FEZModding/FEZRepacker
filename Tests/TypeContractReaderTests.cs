@@ -9,7 +9,7 @@ using Mono.Cecil.Cil;
 
 namespace FEZRepacker.Tests
 {
-    // Verifies model nullability against direct assignments in preserved FEZ reader IL
+    // Verifies model nullability against FEZ defaults first, then preserved FEZ reader IL
     [TestClass]
     public class TypeContractReaderTests
     {
@@ -33,27 +33,18 @@ namespace FEZRepacker.Tests
             NullableObject
         }
 
-        // // These reader expressions transform, flatten, or conditionally assign their source values
+        // These readers assign through a closure or under a name FezEngine does not share with the model
         private static readonly IReadOnlyDictionary<string, ReaderValueContract> ReaderOverrides =
             new Dictionary<string, ReaderValueContract>(StringComparer.Ordinal)
             {
                 ["FezEngine.Readers.TrileSetReader.TextureAtlas"] = ReaderValueContract.NullableObject,
-                ["FezEngine.Readers.ArtObjectActorSettingsReader.InvisibleSides"] = ReaderValueContract.NullableObject,
-                ["FezEngine.Readers.ArtObjectInstanceReader.Name"] = ReaderValueContract.Required,
-                ["FezEngine.Readers.BackgroundPlaneReader.Filter"] = ReaderValueContract.Required,
-                ["FezEngine.Readers.LevelReader.StartingFace"] = ReaderValueContract.NullableObject,
-                ["FezEngine.Readers.TrileFaceReader.Id"] = ReaderValueContract.Required,
-                ["FezEngine.Readers.VolumeReader.Orientations"] = ReaderValueContract.NullableObject,
-                ["FezEngine.Readers.AnimatedTextureReader.TextureData"] = ReaderValueContract.Required,
-                ["FezEngine.Readers.AnimatedTextureReader.Frames"] = ReaderValueContract.NullableObject,
-                ["FezEngine.Readers.FrameReader.Rectangle"] = ReaderValueContract.Required,
-                ["FezEngine.Readers.ShaderInstancedIndexedPrimitivesReader`2.Indices"] = ReaderValueContract.NullableObject,
-                ["FezEngine.Readers.ArtObjectReader.Cubemap"] = ReaderValueContract.NullableObject
+                ["FezEngine.Readers.ArtObjectReader.Cubemap"] = ReaderValueContract.NullableObject,
+                ["FezEngine.Readers.LevelReader.StartingFace"] = ReaderValueContract.NullableObject
             };
 
         // Maps every reader-backed reference property and checks its nullable write metadata
         [TestMethod]
-        public void DirectReaderAssignmentsMatchModelNullability()
+        public void ModelDefaultsAndReaderAssignmentsMatchModelNullability()
         {
             var fixturePath = Path.Combine(AppContext.BaseDirectory, FixturePath);
             var failures = new List<string>();
@@ -90,6 +81,15 @@ namespace FEZRepacker.Tests
                 foreach (var property in GetReferenceXnbProperties(repackerType))
                 {
                     var key = $"{reader.FullName}.{property.Name}";
+
+                    // We say a default value of a property means it's highly unlikely to be null,
+                    // so assume it's non-nullable.
+                    if (HasNonNullDefault(repackerType, property))
+                    {
+                        AssertNullability(property, ReaderValueContract.Required, key, failures);
+                        continue;
+                    }
+
                     var expected = GetDirectContract(readMethod, property.Name);
 
                     if (expected is not null)
@@ -114,6 +114,39 @@ namespace FEZRepacker.Tests
             }
         }
 
+        // Keeps every model property on one side of the rule: a default means non-nullable, and nothing else does
+        [TestMethod]
+        public void NullabilityMatchesDefaultPresence()
+        {
+            var failures = new List<string>();
+
+            foreach (var repackerType in typeof(Level).Assembly.GetTypes())
+            {
+                foreach (var property in GetReferenceXnbProperties(repackerType))
+                {
+                    if (CreateDefaultInstance(repackerType) is null)
+                    {
+                        continue;
+                    }
+
+                    var hasDefault = HasNonNullDefault(repackerType, property);
+                    var isNullable = new NullabilityInfoContext().Create(property).WriteState == NullabilityState.Nullable;
+
+                    if (hasDefault == isNullable)
+                    {
+                        failures.Add(hasDefault
+                            ? $"{repackerType.Name}.{property.Name} has a default but is declared nullable."
+                            : $"{repackerType.Name}.{property.Name} is declared non-nullable but has no default.");
+                    }
+                }
+            }
+
+            if (failures.Any())
+            {
+                Assert.Fail("Default and nullability mismatches:\n" + string.Join(Environment.NewLine, failures));
+            }
+        }
+
         private static void AssertNullability(
             PropertyInfo property,
             ReaderValueContract contract,
@@ -129,6 +162,25 @@ namespace FEZRepacker.Tests
             {
                 failures.Add($"{key} must be {expectedNullability} but is {actual}.");
             }
+        }
+
+        private static bool HasNonNullDefault(Type declaringType, PropertyInfo property)
+        {
+            var instance = CreateDefaultInstance(declaringType);
+
+            return instance is not null &&
+                instance.GetType().GetProperty(property.Name)?.GetValue(instance) is not null;
+        }
+
+        private static object? CreateDefaultInstance(Type type)
+        {
+            if (type.IsGenericTypeDefinition)
+            {
+                var placeholders = type.GetGenericArguments().Select(_ => typeof(object)).ToArray();
+                type = type.MakeGenericType(placeholders);
+            }
+
+            return type.GetConstructor(Type.EmptyTypes) is null ? null : Activator.CreateInstance(type);
         }
 
         private static IEnumerable<PropertyInfo> GetReferenceXnbProperties(Type type)

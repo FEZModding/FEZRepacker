@@ -5,7 +5,7 @@
     public class ScriptTrigger
     {
         [XnbProperty(UseConverter = true)]
-        public Entity? Object { get; set; } = new();
+        public Entity? Object { get; set; }
 
         [XnbProperty]
         public string Event { get; set; } = "";

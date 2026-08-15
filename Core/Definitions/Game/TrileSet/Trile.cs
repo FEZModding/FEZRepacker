@@ -37,7 +37,7 @@ namespace FEZRepacker.Core.Definitions.Game.TrileSet
         public bool ForceHugging { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public IDictionary<FaceOrientation, CollisionType>? Faces { get; set; } = new OrderedDictionary<FaceOrientation, CollisionType>();
+        public IDictionary<FaceOrientation, CollisionType> Faces { get; set; } = new OrderedDictionary<FaceOrientation, CollisionType>();
 
         [JsonIgnore]
         [XnbProperty(UseConverter = true)]

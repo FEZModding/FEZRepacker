@@ -5,7 +5,7 @@
     public class TrackedSong
     {
         [XnbProperty(UseConverter = true)]
-        public List<Loop>? Loops { get; set; } = new();
+        public List<Loop> Loops { get; set; } = new();
 
         [XnbProperty]
         public string Name { get; set; } = "Untitled";
@@ -17,7 +17,7 @@
         public int TimeSignature { get; set; } = 4;
 
         [XnbProperty(UseConverter = true)]
-        public ShardNotes[]? Notes { get; set; } = new[]
+        public ShardNotes[] Notes { get; set; } = new[]
         {
             ShardNotes.C2,
             ShardNotes.D2,

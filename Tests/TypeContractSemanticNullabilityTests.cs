@@ -1,9 +1,9 @@
 using System.Reflection;
 using System.Text.Json;
 
-using FEZRepacker.Core.Definitions.Game.ArtObject;
 using FEZRepacker.Core.Definitions.Game.Level;
 using FEZRepacker.Core.Definitions.Game.Level.Scripting;
+using FEZRepacker.Core.Definitions.Game.MapTree;
 using FEZRepacker.Core.Definitions.Game.Sky;
 using FEZRepacker.Core.Definitions.Game.TrackedSong;
 
@@ -30,16 +30,16 @@ namespace FEZRepacker.Tests
         {
             AssertJsonNullRoundTrip<NpcActionContent>(nameof(NpcActionContent.AnimationName));
             AssertJsonNullRoundTrip<NpcActionContent>(nameof(NpcActionContent.SoundName));
-            AssertJsonNullRoundTrip<NpcInstance>(nameof(NpcInstance.Speech));
-            AssertJsonNullRoundTrip<NpcInstance>(nameof(NpcInstance.Actions));
-            AssertJsonNullRoundTrip<Script>(nameof(Script.Triggers));
             AssertJsonNullRoundTrip<Script>(nameof(Script.Conditions));
-            AssertJsonNullRoundTrip<Script>(nameof(Script.Actions));
-            AssertJsonNullRoundTrip<TrackedSong>(nameof(TrackedSong.Loops));
-            AssertJsonNullRoundTrip<TrackedSong>(nameof(TrackedSong.Notes));
-            AssertJsonNullRoundTrip<Sky>(nameof(Sky.Layers));
-            AssertJsonNullRoundTrip<Sky>(nameof(Sky.Clouds));
-            AssertJsonNullRoundTrip<ArtObjectInstance>(nameof(ArtObjectInstance.ActorSettings));
+            AssertJsonNullRoundTrip<ScriptAction>(nameof(ScriptAction.Object));
+            AssertJsonNullRoundTrip<ScriptAction>(nameof(ScriptAction.Arguments));
+            AssertJsonNullRoundTrip<TrackedSong>(nameof(TrackedSong.CustomOrdering));
+            AssertJsonNullRoundTrip<Sky>(nameof(Sky.Shadows));
+            AssertJsonNullRoundTrip<Sky>(nameof(Sky.Stars));
+            AssertJsonNullRoundTrip<MapTree>(nameof(MapTree.Root));
+            AssertJsonNullRoundTrip<MapNodeConnection>(nameof(MapNodeConnection.Node));
+            AssertJsonNullRoundTrip<TrileInstance>(nameof(TrileInstance.OverlappedTriles));
+            AssertJsonNullRoundTrip<VolumeActorSettings>(nameof(VolumeActorSettings.CodePattern));
         }
 
         private static void AssertNullable<T>(string propertyName)

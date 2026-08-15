@@ -8,7 +8,7 @@ namespace FEZRepacker.Core.Definitions.Game.Level
     public class Volume
     {
         [XnbProperty(UseConverter = true)]
-        public FaceOrientation[]? Orientations { get; set; } = { };
+        public FaceOrientation[] Orientations { get; set; } = { };
 
         [XnbProperty]
         public Vector3 From { get; set; }

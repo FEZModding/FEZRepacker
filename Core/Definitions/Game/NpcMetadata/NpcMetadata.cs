@@ -16,6 +16,6 @@ namespace FEZRepacker.Core.Definitions.Game.NpcMetadata
         public string? SoundPath { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public List<NpcAction>? SoundActions { get; set; } = new();
+        public List<NpcAction> SoundActions { get; set; } = new();
     }
 }

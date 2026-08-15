@@ -1,4 +1,6 @@
 using FEZRepacker.Core.Definitions.Game.Level;
+using FEZRepacker.Core.Definitions.Game.Level.Scripting;
+using FEZRepacker.Core.Definitions.Game.MapTree;
 using FEZRepacker.Core.Definitions.Game.NpcMetadata;
 using FEZRepacker.Core.Definitions.Game.Sky;
 using FEZRepacker.Core.Definitions.Game.TrackedSong;
@@ -14,13 +16,56 @@ namespace FEZRepacker.Tests
     [TestClass]
     public class TypeContractDefaultsTests
     {
-        // Constructs a level and checks the FEZ filtering default
+        // Constructs a level and checks the FEZ filtering, lighting, and collection defaults
         [TestMethod]
         public void LevelUsesFezDefaults()
         {
             var level = new Level();
 
             Assert.IsTrue(level.HaloFiltering);
+            Assert.AreEqual(1f, level.BaseDiffuse);
+            Assert.AreEqual(0.35f, level.BaseAmbient);
+            Assert.AreEqual(0, level.Triles.Count);
+            Assert.AreEqual(0, level.Volumes.Count);
+            Assert.AreEqual(0, level.Scripts.Count);
+            Assert.AreEqual(0, level.ArtObjects.Count);
+            Assert.AreEqual(0, level.BackgroundPlanes.Count);
+            Assert.AreEqual(0, level.Groups.Count);
+            Assert.AreEqual(0, level.NonPlayerCharacters.Count);
+            Assert.AreEqual(0, level.Paths.Count);
+            Assert.AreEqual(0, level.MutedLoops.Count);
+            Assert.AreEqual(0, level.AmbienceTracks.Count);
+        }
+
+        // Constructs level members and checks the collection defaults FEZ constructors provide
+        [TestMethod]
+        public void LevelMembersUseFezDefaults()
+        {
+            Assert.AreEqual(0, new TrileGroup().Triles.Count);
+            Assert.AreEqual(0, new MovementPath().Segments.Count);
+            Assert.AreEqual(0, new Volume().Orientations.Length);
+            Assert.AreEqual(0, new VolumeActorSettings().DotDialogue.Count);
+            Assert.AreEqual(0, new ArtObjectActorSettings().InvisibleSides.Length);
+            Assert.AreEqual(0, new Script().Triggers.Count);
+            Assert.AreEqual(0, new Script().Actions.Count);
+            Assert.AreEqual("Untitled", new Script().Name);
+            Assert.IsNull(new Script().Conditions);
+            Assert.IsNull(new ScriptAction().Object);
+            Assert.IsNull(new ScriptAction().Arguments);
+            Assert.IsNull(new TrileInstance().ActorSettings);
+        }
+
+        // Constructs map models and checks which nodes FEZ leaves for the reader to supply
+        [TestMethod]
+        public void MapModelsUseFezDefaults()
+        {
+            var node = new MapNode();
+
+            Assert.AreEqual(0, node.Connections.Count);
+            Assert.IsNotNull(node.Conditions);
+            Assert.AreEqual(0, node.Conditions.ScriptIds.Count);
+            Assert.IsNull(new MapTree().Root);
+            Assert.IsNull(new MapNodeConnection().Node);
         }
 
         // Constructs an art-object instance and checks its transform and settings defaults

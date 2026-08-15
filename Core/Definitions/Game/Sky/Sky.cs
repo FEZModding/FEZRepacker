@@ -20,10 +20,10 @@
         public float FogDensity { get; set; } = 0.02f;
 
         [XnbProperty(UseConverter = true)]
-        public List<SkyLayer>? Layers { get; set; } = new();
+        public List<SkyLayer> Layers { get; set; } = new();
 
         [XnbProperty(UseConverter = true)]
-        public List<string>? Clouds { get; set; } = new();
+        public List<string> Clouds { get; set; } = new();
 
         [XnbProperty(UseConverter = true)]
         public string? Shadows { get; set; }

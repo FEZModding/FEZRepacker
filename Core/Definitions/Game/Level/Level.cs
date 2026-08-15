@@ -58,10 +58,10 @@ namespace FEZRepacker.Core.Definitions.Game.Level
         public string? TrileSetName { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public IDictionary<int, Volume>? Volumes { get; set; } = new OrderedDictionary<int, Volume>();
+        public IDictionary<int, Volume> Volumes { get; set; } = new OrderedDictionary<int, Volume>();
 
         [XnbProperty(UseConverter = true)]
-        public IDictionary<int, Script>? Scripts { get; set; } = new OrderedDictionary<int, Script>();
+        public IDictionary<int, Script> Scripts { get; set; } = new OrderedDictionary<int, Script>();
 
         [XnbProperty(UseConverter = true)]
         public string? SongName { get; set; }
@@ -73,22 +73,22 @@ namespace FEZRepacker.Core.Definitions.Game.Level
         public int FAPFadeOutLength { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public IDictionary<TrileEmplacement, TrileInstance>? Triles { get; set; } = new OrderedDictionary<TrileEmplacement, TrileInstance>();
+        public IDictionary<TrileEmplacement, TrileInstance> Triles { get; set; } = new OrderedDictionary<TrileEmplacement, TrileInstance>();
 
         [XnbProperty(UseConverter = true)]
-        public IDictionary<int, ArtObjectInstance>? ArtObjects { get; set; } = new OrderedDictionary<int, ArtObjectInstance>();
+        public IDictionary<int, ArtObjectInstance> ArtObjects { get; set; } = new OrderedDictionary<int, ArtObjectInstance>();
 
         [XnbProperty(UseConverter = true)]
-        public IDictionary<int, BackgroundPlane>? BackgroundPlanes { get; set; } = new OrderedDictionary<int, BackgroundPlane>();
+        public IDictionary<int, BackgroundPlane> BackgroundPlanes { get; set; } = new OrderedDictionary<int, BackgroundPlane>();
 
         [XnbProperty(UseConverter = true)]
-        public IDictionary<int, TrileGroup>? Groups { get; set; } = new OrderedDictionary<int, TrileGroup>();
+        public IDictionary<int, TrileGroup> Groups { get; set; } = new OrderedDictionary<int, TrileGroup>();
 
         [XnbProperty(UseConverter = true)]
-        public IDictionary<int, NpcInstance>? NonPlayerCharacters { get; set; } = new OrderedDictionary<int, NpcInstance>();
+        public IDictionary<int, NpcInstance> NonPlayerCharacters { get; set; } = new OrderedDictionary<int, NpcInstance>();
 
         [XnbProperty(UseConverter = true)]
-        public IDictionary<int, MovementPath>? Paths { get; set; } = new OrderedDictionary<int, MovementPath>();
+        public IDictionary<int, MovementPath> Paths { get; set; } = new OrderedDictionary<int, MovementPath>();
 
         [XnbProperty]
         public bool Descending { get; set; }
@@ -100,10 +100,10 @@ namespace FEZRepacker.Core.Definitions.Game.Level
         public bool LowPass { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public List<string>? MutedLoops { get; set; } = new();
+        public List<string> MutedLoops { get; set; } = new();
 
         [XnbProperty(UseConverter = true)]
-        public List<AmbienceTrack>? AmbienceTracks { get; set; } = new();
+        public List<AmbienceTrack> AmbienceTracks { get; set; } = new();
 
         [XnbProperty(UseConverter = true)]
         public LevelNodeType NodeType { get; set; }

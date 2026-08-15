@@ -13,7 +13,7 @@ namespace FEZRepacker.Core.Definitions.Game.Level
         public bool IsPointOfInterest { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public List<DotDialogueLine>? DotDialogue { get; set; } = new();
+        public List<DotDialogueLine> DotDialogue { get; set; } = new();
 
         [XnbProperty]
         public bool WaterLocked { get; set; }

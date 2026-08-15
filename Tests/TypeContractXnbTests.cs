@@ -1,6 +1,7 @@
 using FEZRepacker.Core.Definitions.Game.ArtObject;
 using FEZRepacker.Core.Definitions.Game.Common;
 using FEZRepacker.Core.Definitions.Game.Level;
+using FEZRepacker.Core.Definitions.Game.Level.Scripting;
 using FEZRepacker.Core.Definitions.Game.MapTree;
 using FEZRepacker.Core.Definitions.Game.NpcMetadata;
 using FEZRepacker.Core.Definitions.Game.Sky;
@@ -35,6 +36,26 @@ namespace FEZRepacker.Tests
                 new Texture2D { TextureData = null! },
                 nameof(Texture2D),
                 nameof(Texture2D.TextureData));
+
+            AssertRequiredPropertyValidation(
+                new Level { SkyName = "TEST_SKY", Triles = null! },
+                nameof(Level),
+                nameof(Level.Triles));
+
+            AssertRequiredPropertyValidation(
+                new TrackedSong { Notes = null! },
+                nameof(TrackedSong),
+                nameof(TrackedSong.Notes));
+
+            AssertRequiredPropertyValidation(
+                new Sky { Clouds = null! },
+                nameof(Sky),
+                nameof(Sky.Clouds));
+
+            AssertRequiredPropertyValidation(
+                new MapTree { Root = new MapNode { Conditions = null! } },
+                nameof(MapNode),
+                nameof(MapNode.Conditions));
         }
 
         private static void AssertRequiredPropertyValidation(object model, string modelName, string propertyName)
@@ -86,30 +107,28 @@ namespace FEZRepacker.Tests
             var level = RoundTrip(new Level
             {
                 SkyName = "TEST_SKY",
-                Volumes = null,
-                Scripts = null,
-                Triles = null,
-                ArtObjects = null,
-                BackgroundPlanes = null,
-                Groups = null,
-                NonPlayerCharacters = null,
-                Paths = null,
-                MutedLoops = null,
-                AmbienceTracks = null
+                Name = null,
+                TrileSetName = null,
+                SongName = null,
+                StartingFace = null,
+                Scripts = new Dictionary<int, Script>
+                {
+                    [0] = new() { Conditions = null, Actions = { new ScriptAction { Object = null } } }
+                }
             });
             var song = RoundTrip(new TrackedSong
             {
-                Loops = null,
-                Notes = null
+                CustomOrdering = null
             });
             var sky = RoundTrip(new Sky
             {
-                Layers = null,
-                Clouds = null
+                Shadows = null,
+                Stars = null,
+                CloudTint = null
             });
             var metadata = RoundTrip(new NpcMetadata
             {
-                SoundActions = null
+                SoundPath = null
             });
             var mapTree = RoundTrip(new MapTree
             {
@@ -117,7 +136,7 @@ namespace FEZRepacker.Tests
             });
             var trileSet = RoundTrip(new TrileSet
             {
-                Triles = null,
+                Triles = new Dictionary<int, Trile> { [0] = new() { Geometry = null } },
                 TextureAtlas = null
             });
             var artObject = RoundTrip(new ArtObject
@@ -127,23 +146,20 @@ namespace FEZRepacker.Tests
                 Geometry = null
             });
 
-            Assert.IsNull(level.Volumes);
-            Assert.IsNull(level.Scripts);
-            Assert.IsNull(level.Triles);
-            Assert.IsNull(level.ArtObjects);
-            Assert.IsNull(level.BackgroundPlanes);
-            Assert.IsNull(level.Groups);
-            Assert.IsNull(level.NonPlayerCharacters);
-            Assert.IsNull(level.Paths);
-            Assert.IsNull(level.MutedLoops);
-            Assert.IsNull(level.AmbienceTracks);
-            Assert.IsNull(song.Loops);
-            Assert.IsNull(song.Notes);
-            Assert.IsNull(sky.Layers);
-            Assert.IsNull(sky.Clouds);
-            Assert.IsNull(metadata.SoundActions);
+            Assert.IsNull(level.Name);
+            Assert.IsNull(level.TrileSetName);
+            Assert.IsNull(level.SongName);
+            Assert.IsNull(level.StartingFace);
+            Assert.IsNull(level.Scripts[0].Conditions);
+            Assert.IsNull(level.Scripts[0].Actions[0].Object);
+            Assert.IsNull(level.Scripts[0].Actions[0].Arguments);
+            Assert.IsNull(song.CustomOrdering);
+            Assert.IsNull(sky.Shadows);
+            Assert.IsNull(sky.Stars);
+            Assert.IsNull(sky.CloudTint);
+            Assert.IsNull(metadata.SoundPath);
             Assert.IsNull(mapTree.Root);
-            Assert.IsNull(trileSet.Triles);
+            Assert.IsNull(trileSet.Triles[0].Geometry);
             Assert.IsNull(trileSet.TextureAtlas);
             Assert.IsNull(artObject.Cubemap);
             Assert.IsNull(artObject.Geometry);

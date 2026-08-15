@@ -11,9 +11,9 @@ namespace FEZRepacker.Core.Definitions.Game.Graphics
         public PrimitiveType PrimitiveType { get; set; }
 
         [XnbProperty(UseConverter = true)]
-        public TemplateType[]? Vertices { get; set; }
+        public TemplateType[] Vertices { get; set; } = { };
 
         [XnbProperty(UseConverter = true)]
-        public ushort[]? Indices { get; set; }
+        public ushort[] Indices { get; set; } = { };
     }
 }
