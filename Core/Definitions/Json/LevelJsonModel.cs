@@ -9,7 +9,7 @@ namespace FEZRepacker.Core.Definitions.Json
 {
     public class LevelJsonModel : JsonModel<Level>
     {
-        public string Name { get; set; } = "";
+        public string? Name { get; set; }
         public LevelNodeType NodeType { get; set; }
         public Vector3 Size { get; set; }
         public TrileFace? StartingPosition { get; set; }
@@ -34,7 +34,7 @@ namespace FEZRepacker.Core.Definitions.Json
         public bool LowPass { get; set; }
         public int FAPFadeOutStart { get; set; }
         public int FAPFadeOutLength { get; set; }
-        public string TrileSetName { get; set; } = "";
+        public string? TrileSetName { get; set; }
         public List<TrileInstanceJsonModel> Triles { get; set; } = new();
         public IDictionary<int, TrileGroupJsonModel> Groups { get; set; } = new OrderedDictionary<int, TrileGroupJsonModel>();
         public IDictionary<int, Volume> Volumes { get; set; } = new OrderedDictionary<int, Volume>();
