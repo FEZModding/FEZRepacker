@@ -44,18 +44,18 @@ namespace FEZRepacker.Interface
                 return false;
             }
 
-            try
-            {
+            #if DEBUG
                 command.Execute(parsedArgs);
-            }
-            catch (Exception ex)
-            {
-                #if DEBUG
-                    throw;
-                #else
+            #else
+                try
+                {
+                    command.Execute(parsedArgs);
+                }
+                catch (Exception ex)
+                {
                     Console.Error.WriteLine($"Error while executing command: {ex.Message}");
-                #endif
-            }
+                }
+            #endif
 
             return true;
         }
