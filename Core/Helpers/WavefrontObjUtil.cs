@@ -100,6 +100,7 @@ namespace FEZRepacker.Core.Helpers
 
             var objectNames = new List<string> { "UNNAMED" };
             var indicesGroup = new List<List<string>> { new List<string>() };
+            var withinUnnamedObject = true;
 
             using var objReader = new StringReader(obj);
             for (string line = objReader.ReadLine(); line != null; line = objReader.ReadLine())
@@ -107,7 +108,7 @@ namespace FEZRepacker.Core.Helpers
                 var tokens = line.Split(new char[] {' '});
                 if (tokens.Length < 2) continue;
 
-                if(tokens[0] == "o")
+                if (tokens[0] == "o")
                 {
                     var newObjectName = tokens.Length > 1 ? tokens[1] : "UNNAMED";
 
@@ -119,16 +120,21 @@ namespace FEZRepacker.Core.Helpers
                         indexedNewObjectName = $"{newObjectName}_{index}";
                         index++;
                     }
-
-                    if(indicesGroup[indicesGroup.Count - 1].Count > 0)
+                    
+                    if (withinUnnamedObject && indicesGroup[0].Count == 0)
                     {
-                        indicesGroup.Add(new List<string>());
-                        objectNames.Add(indexedNewObjectName);
+                        // making sure to rename temporary empty object
+                        objectNames[0] = indexedNewObjectName;
                     }
                     else
                     {
-                        objectNames[objectNames.Count - 1] = indexedNewObjectName;
+                        // move to the next named object. at this point, if we had
+                        // indices but no object defined, we accept temporary object name
+                        indicesGroup.Add(new List<string>());
+                        objectNames.Add(indexedNewObjectName);
                     }
+
+                    withinUnnamedObject = false;
                 }
 
                 else if(tokens[0] == "v" && tokens.Length >= 4)
