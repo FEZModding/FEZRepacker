@@ -42,7 +42,7 @@ namespace FEZRepacker.Tests
 
         private static IEnumerable<string> GetPathsToPackages(string assetsDirectory)
         {
-            return Directory.EnumerateFiles(assetsDirectory, "*.pak", SearchOption.AllDirectories);
+            return Directory.EnumerateFiles(assetsDirectory, "*.pak", SearchOption.TopDirectoryOnly);
         }
     }
 }
