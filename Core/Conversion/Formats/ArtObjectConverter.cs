@@ -49,7 +49,6 @@ namespace FEZRepacker.Core.Conversion.Formats
             }
             catch (FileNotFoundException)
             {
-                Console.WriteLine("  The glTF bundle was not found! Using legacy art object bundle format...");
                 var artObject = ConfiguredJsonSerializer.DeserializeFromFileBundle<ArtObject>(bundle);
 
                 AppendGeometryStream(ref artObject, bundle.GetData(".obj"));

@@ -51,9 +51,7 @@ namespace FEZRepacker.Core.Conversion.Formats
             }
             catch (FileNotFoundException)
             {
-                Console.WriteLine("  The glTF bundle was not found! Using legacy trile set bundle format...");
                 var trileSet = ConfiguredJsonSerializer.DeserializeFromFileBundle<TrileSet>(bundle);
-            
                 AppendGeometryStream(ref trileSet, bundle.RequireData(".obj"));
                 LoadCubemap(ref trileSet, bundle.GetData(".png"), bundle.GetData(".apng"));
             
