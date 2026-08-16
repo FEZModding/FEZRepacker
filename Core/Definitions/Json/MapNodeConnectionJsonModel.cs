@@ -7,7 +7,7 @@ namespace FEZRepacker.Core.Definitions.Json
     public class MapNodeConnectionJsonModel : JsonModel<MapNodeConnection>
     {
         public FaceOrientation Face { get; set; }
-        public int Node { get; set; }
+        public int? Node { get; set; }
         public float BranchOversize { get; set; }
 
         public MapNodeConnectionJsonModel()
