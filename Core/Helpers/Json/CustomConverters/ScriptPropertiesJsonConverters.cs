@@ -8,8 +8,15 @@ namespace FEZRepacker.Core.Helpers.Json.CustomConverters
 {
     internal static class EntityJsonConverter
     {
-        public static string ToPropertyIdentifier(Entity entity, string property)
+        private const string NullEntityToken = "null";
+
+        public static string ToPropertyIdentifier(Entity? entity, string property)
         {
+            if (entity == null)
+            {
+                return $"{NullEntityToken}.{property}";
+            }
+
             string output = $"{entity.Type}";
             if (entity.Identifier.HasValue)
             {
@@ -18,11 +25,16 @@ namespace FEZRepacker.Core.Helpers.Json.CustomConverters
             output += $".{property}";
             return output;
         }
-        public static (Entity, string) FromPropertyIdentifier(string identifier)
+        public static (Entity?, string) FromPropertyIdentifier(string identifier)
         {
             string[] split = identifier.Split('.');
             string entityStr = split[0];
             string property = split.Length > 1 ? split[1] : "";
+
+            if (entityStr == NullEntityToken)
+            {
+                return (null, property);
+            }
 
             string[] entitySplit = entityStr.Split('[');
             Entity ent = new Entity();
