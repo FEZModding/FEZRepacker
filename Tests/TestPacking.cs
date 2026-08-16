@@ -28,7 +28,7 @@ namespace FEZRepacker.Tests
 
             foreach (var item in pakReader.ReadFiles())
             {
-                repackWriter.WriteFile(item.Path, new MemoryStream(item.Payload));
+                repackWriter.AppendNewFile(item.Path, new MemoryStream(item.Payload));
             }
 
             repackWriter.Dispose();

@@ -51,7 +51,12 @@ namespace FEZRepacker.Core.FileSystem
             return true;
         }
 
-        private void AppendNewFile(string name, Stream data)
+        /// <summary>
+        /// Appends a file data at the end of PAK package, allowing duplicate file names.
+        /// </summary>
+        /// <param name="name">Path and name to identify the file data with in the package.</param>
+        /// <param name="data">File data to store in the package.</param>
+        public void AppendNewFile(string name, Stream data)
         {
             writer.Write(name);
             writer.Write((uint)data.Length);
@@ -60,7 +65,7 @@ namespace FEZRepacker.Core.FileSystem
         }
 
         /// <summary>
-        /// Appends a file data at the end of PAK package.
+        /// Appends a file data at the end of PAK package if a file with given name and type has not been written yet.
         /// </summary>
         /// <param name="name">Path and name to identify the file data with in the package.</param>
         /// <param name="data">File data to store in the package.</param>
