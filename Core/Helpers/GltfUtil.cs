@@ -52,8 +52,8 @@ namespace FEZRepacker.Core.Helpers
         public static ModelRoot ToGltfModel<T>(
             string name,
             List<GltfEntry<T>> entries,
-            RgbaImage albedo,
-            RgbaImage emission)
+            RgbaImage? albedo,
+            RgbaImage? emission)
         {
             var steps = 0;
             var translation = XnaVector3.Zero;
@@ -68,7 +68,7 @@ namespace FEZRepacker.Core.Helpers
                 node.LocalTransform = new AffineTransform(System.Numerics.Quaternion.Identity, translation.ToNumeric());
                 node.Mesh = CreateMesh(model, entry.Geometry, material);
                 node.Extras = entry.Extras ?? new JsonObject();
-                node.Extras[PrimitiveTypeKey] = ConfiguredJsonSerializer.SerializeToNode(entry.Geometry.PrimitiveType);
+                WritePrimitiveType(node, entry.Geometry);
 
                 steps++;
                 translation.X += StepOffsetX;
@@ -83,18 +83,18 @@ namespace FEZRepacker.Core.Helpers
 
         public static ModelRoot ToGltfModel<T>(
             GltfEntry<T> entry,
-            RgbaImage albedo,
-            RgbaImage emission)
+            RgbaImage? albedo,
+            RgbaImage? emission)
         {
             var model = ModelRoot.CreateModel();
             var scene = model.UseScene(entry.Name);
             var material = CreateMaterial(model, albedo, emission);
-            
+
             var node = scene.CreateNode(entry.Name);
             node.LocalTransform = AffineTransform.Identity;
             node.Mesh = CreateMesh(model, entry.Geometry, material);
             node.Extras = entry.Extras ?? new JsonObject();
-            node.Extras[PrimitiveTypeKey] = ConfiguredJsonSerializer.SerializeToNode(entry.Geometry.PrimitiveType);
+            WritePrimitiveType(node, entry.Geometry);
 
             model.DefaultScene = scene;
             return model;
@@ -108,13 +108,10 @@ namespace FEZRepacker.Core.Helpers
             {
                 if (node.Mesh == null)
                 {
-                    var jsonNode = node.Extras[PrimitiveTypeKey];
-                    var primitiveType = ConfiguredJsonSerializer.DeserializeFromNode<XnaPrimitiveType>(jsonNode);
-                    var instance = new IndexedPrimitives<VertexInstance, T> { PrimitiveType = primitiveType };
-                    geometryList.Add(new GltfEntry<T>(node.Name, instance, node.Extras));
+                    geometryList.Add(new GltfEntry<T>(node.Name, ReadEmptyGeometry<T>(node), node.Extras));
                     continue;
                 }
-                
+
                 var primitive = node.Mesh.Primitives[0];
                 var positions = primitive.GetVertexAccessor("POSITION").AsVector3Array();
                 var normals = primitive.GetVertexAccessor("NORMAL").AsVector3Array();
@@ -165,11 +162,32 @@ namespace FEZRepacker.Core.Helpers
             return (albedoStream, emissionStream);
         }
 
-        private static Material CreateMaterial(
-            ModelRoot root,
-            RgbaImage albedo,
-            RgbaImage emission)
+        // A mesh-less node stands for geometry that's either empty or missing entirely.
+        // The recorded primitive type is what tells those two apart.
+        private static void WritePrimitiveType<T>(Node node, IndexedPrimitives<VertexInstance, T>? geometry)
         {
+            if (geometry == null) return;
+            node.Extras[PrimitiveTypeKey] = ConfiguredJsonSerializer.SerializeToNode(geometry.PrimitiveType);
+        }
+
+        private static IndexedPrimitives<VertexInstance, T>? ReadEmptyGeometry<T>(Node node)
+        {
+            var jsonNode = node.Extras?[PrimitiveTypeKey];
+            if (jsonNode == null) return null;
+
+            return new IndexedPrimitives<VertexInstance, T>
+            {
+                PrimitiveType = ConfiguredJsonSerializer.DeserializeFromNode<XnaPrimitiveType>(jsonNode)
+            };
+        }
+
+        private static Material? CreateMaterial(
+            ModelRoot root,
+            RgbaImage? albedo,
+            RgbaImage? emission)
+        {
+            if (albedo == null || emission == null) return null;
+
             ImageBuilder albedoImage = albedo.SaveAsMemoryStream(new PngEncoder()).ToArray();
             ImageBuilder emissionImage = emission.SaveAsMemoryStream(new PngEncoder()).ToArray();
 
@@ -201,10 +219,10 @@ namespace FEZRepacker.Core.Helpers
 
         private static Mesh? CreateMesh<T>(
             ModelRoot root,
-            IndexedPrimitives<VertexInstance, T> geometry,
-            Material material)
+            IndexedPrimitives<VertexInstance, T>? geometry,
+            Material? material)
         {
-            if (geometry.Vertices.Length == 0)
+            if (geometry == null || geometry.Vertices.Length == 0)
             {
                 // glTF's nodes may not store mesh data.
                 // See: https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html#geometry-overview
@@ -222,10 +240,12 @@ namespace FEZRepacker.Core.Helpers
                 .ToArray();
 
             var mesh = root.CreateMesh();
-            mesh.CreatePrimitive()
-                .WithMaterial(material)
+            var primitive = mesh.CreatePrimitive()
                 .WithVertexAccessors(vertexAccessors)
                 .WithIndicesAccessor(primitiveType, indices);
+
+            // glTF's materials are optional, and so are FEZ's cubemaps.
+            if (material != null) primitive.WithMaterial(material);
 
             return mesh;
         }
@@ -279,6 +299,6 @@ namespace FEZRepacker.Core.Helpers
     /// </summary>
     public record struct GltfEntry<TInstanceType>(
         string Name,
-        IndexedPrimitives<VertexInstance, TInstanceType> Geometry,
+        IndexedPrimitives<VertexInstance, TInstanceType>? Geometry,
         JsonNode? Extras);
 }

@@ -32,8 +32,12 @@ namespace FEZRepacker.Core.Conversion.Formats
             
             var bundle = ConfiguredJsonSerializer.SerializeToFileBundle(BundleFileFormat, data);
 
-            bundle.AddFile(GetTextureStream(data, TexturesUtil.CubemapPart.Albedo), ".png");
-            bundle.AddFile(GetTextureStream(data, TexturesUtil.CubemapPart.Emission), ".apng");
+            if (data.TextureAtlas is { } textureAtlas)
+            {
+                bundle.AddFile(GetTextureStream(textureAtlas, TexturesUtil.CubemapPart.Albedo), ".png");
+                bundle.AddFile(GetTextureStream(textureAtlas, TexturesUtil.CubemapPart.Emission), ".apng");
+            }
+
             bundle.AddFile(GetModelStream(data), ".obj");
 
             return bundle;
@@ -57,9 +61,9 @@ namespace FEZRepacker.Core.Conversion.Formats
             }
         }
 
-        private static Stream GetTextureStream(TrileSet data, TexturesUtil.CubemapPart part)
+        private static Stream GetTextureStream(Texture2D textureAtlas, TexturesUtil.CubemapPart part)
         {
-            using var texture = TexturesUtil.ExtractCubemapPartFromTexture(data.TextureAtlas, part);
+            using var texture = TexturesUtil.ExtractCubemapPartFromTexture(textureAtlas, part);
             return texture.SaveAsMemoryStream(new PngEncoder());
         }
 
@@ -69,7 +73,8 @@ namespace FEZRepacker.Core.Conversion.Formats
 
             foreach (var trileRecord in data.Triles)
             {
-                geometryDict[trileRecord.Key.ToString()] = trileRecord.Value.Geometry.WithReversedWindingIndices();
+                if (trileRecord.Value.Geometry is not { } geometry) continue;
+                geometryDict[trileRecord.Key.ToString()] = geometry.WithReversedWindingIndices();
             }
 
             var objString = WavefrontObjUtil.ToWavefrontObj(geometryDict);
@@ -83,14 +88,16 @@ namespace FEZRepacker.Core.Conversion.Formats
             {
                 var extras = ConfiguredJsonSerializer.SerializeToNode(trileRecord.Value) ?? new JsonObject();
                 extras[TrileIdKey] = trileRecord.Key;
-                var geometry = trileRecord.Value.Geometry.WithReversedWindingIndices();
+                var geometry = trileRecord.Value.Geometry?.WithReversedWindingIndices();
                 entries.Add(new GltfEntry<Vector4>(trileRecord.Value.Name, geometry, extras));
             }
 
-            using var albedo =
-                TexturesUtil.ExtractCubemapPartFromTexture(data.TextureAtlas, TexturesUtil.CubemapPart.Albedo);
-            using var emission =
-                TexturesUtil.ExtractCubemapPartFromTexture(data.TextureAtlas, TexturesUtil.CubemapPart.Emission);
+            using var albedo = data.TextureAtlas is { } albedoAtlas
+                ? TexturesUtil.ExtractCubemapPartFromTexture(albedoAtlas, TexturesUtil.CubemapPart.Albedo)
+                : null;
+            using var emission = data.TextureAtlas is { } emissionAtlas
+                ? TexturesUtil.ExtractCubemapPartFromTexture(emissionAtlas, TexturesUtil.CubemapPart.Emission)
+                : null;
 
             return GltfUtil.ToGltfModel(data.Name, entries, albedo, emission).SaveAsGlb();
         }
@@ -114,7 +121,7 @@ namespace FEZRepacker.Core.Conversion.Formats
                     trileSet.Triles[id] = ConfiguredJsonSerializer.DeserializeFromNode<Trile>(entry.Extras) ?? new Trile();
                 }
 
-                trileSet.Triles[id].Geometry = entry.Geometry.WithReversedWindingIndices();
+                trileSet.Triles[id].Geometry = entry.Geometry?.WithReversedWindingIndices();
             }
 
             (Stream? albedo, Stream? emission) = GltfUtil.ExtractCubemapStreams(modelRoot);
@@ -128,7 +135,8 @@ namespace FEZRepacker.Core.Conversion.Formats
             var geometries = WavefrontObjUtil.FromWavefrontObjStream<Vector4>(geometryStream);
             foreach (var objRecord in geometries)
             {
-                var id = int.Parse(objRecord.Key);
+                // Groups not named after a trile id hold no trile geometry.
+                if (!int.TryParse(objRecord.Key, out var id)) continue;
 
                 if (!data.Triles.ContainsKey(id))
                 {
@@ -142,7 +150,7 @@ namespace FEZRepacker.Core.Conversion.Formats
         private static void LoadCubemap(ref TrileSet data, Stream? albedoStream, Stream? emissionStream)
         {
             using var image = TexturesUtil.ConstructCubemap(albedoStream, emissionStream);
-            data.TextureAtlas = TexturesUtil.ImageToTexture2D(image);
+            data.TextureAtlas = image == null ? null : TexturesUtil.ImageToTexture2D(image);
         }
     }
 }

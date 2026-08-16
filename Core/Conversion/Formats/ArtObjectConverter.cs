@@ -1,6 +1,7 @@
 ﻿using System.Text;
 
 using FEZRepacker.Core.Definitions.Game.ArtObject;
+using FEZRepacker.Core.Definitions.Game.Graphics;
 using FEZRepacker.Core.Definitions.Game.XNA;
 using FEZRepacker.Core.FileSystem;
 using FEZRepacker.Core.Helpers;
@@ -26,9 +27,16 @@ namespace FEZRepacker.Core.Conversion.Formats
             
             var bundle = ConfiguredJsonSerializer.SerializeToFileBundle(BundleFileFormat, data);
 
-            bundle.AddFile(GetTextureStream(data, TexturesUtil.CubemapPart.Albedo), ".png");
-            bundle.AddFile(GetTextureStream(data, TexturesUtil.CubemapPart.Emission), ".apng");
-            bundle.AddFile(GetModelStream(data), ".obj");
+            if (data.Cubemap is { } cubemap)
+            {
+                bundle.AddFile(GetTextureStream(cubemap, TexturesUtil.CubemapPart.Albedo), ".png");
+                bundle.AddFile(GetTextureStream(cubemap, TexturesUtil.CubemapPart.Emission), ".apng");
+            }
+
+            if (data.Geometry is { } geometry)
+            {
+                bundle.AddFile(GetModelStream(geometry), ".obj");
+            }
 
             return bundle;
         }
@@ -44,33 +52,36 @@ namespace FEZRepacker.Core.Conversion.Formats
                 Console.WriteLine("  The glTF bundle was not found! Using legacy art object bundle format...");
                 var artObject = ConfiguredJsonSerializer.DeserializeFromFileBundle<ArtObject>(bundle);
 
-                AppendGeometryStream(ref artObject, bundle.RequireData(".obj"));
+                AppendGeometryStream(ref artObject, bundle.GetData(".obj"));
                 LoadCubemap(ref artObject, bundle.GetData(".png"), bundle.GetData(".apng"));
 
                 return artObject;
             }
         }
 
-        private static Stream GetTextureStream(ArtObject data, TexturesUtil.CubemapPart part)
+        private static Stream GetTextureStream(Texture2D cubemap, TexturesUtil.CubemapPart part)
         {
-            using var texture = TexturesUtil.ExtractCubemapPartFromTexture(data.Cubemap, part);
+            using var texture = TexturesUtil.ExtractCubemapPartFromTexture(cubemap, part);
             return texture.SaveAsMemoryStream(new PngEncoder());
         }
 
-        private static Stream GetModelStream(ArtObject data)
+        private static Stream GetModelStream(IndexedPrimitives<VertexInstance, Matrix> geometry)
         {
-            var geometry = data.Geometry.WithReversedWindingIndices();
-            return new MemoryStream(Encoding.UTF8.GetBytes(geometry.ToWavefrontObj()));
+            var reversedGeometry = geometry.WithReversedWindingIndices();
+            return new MemoryStream(Encoding.UTF8.GetBytes(reversedGeometry.ToWavefrontObj()));
         }
 
         private static Stream GetTransmissionFormatStream(ArtObject data)
         {
-            using var albedo =
-                TexturesUtil.ExtractCubemapPartFromTexture(data.Cubemap, TexturesUtil.CubemapPart.Albedo);
-            using var emission =
-                TexturesUtil.ExtractCubemapPartFromTexture(data.Cubemap, TexturesUtil.CubemapPart.Emission);
+            using var albedo = data.Cubemap is { } albedoCubemap
+                ? TexturesUtil.ExtractCubemapPartFromTexture(albedoCubemap, TexturesUtil.CubemapPart.Albedo)
+                : null;
+            using var emission = data.Cubemap is { } emissionCubemap
+                ? TexturesUtil.ExtractCubemapPartFromTexture(emissionCubemap, TexturesUtil.CubemapPart.Emission)
+                : null;
+
             var extras = ConfiguredJsonSerializer.SerializeToNode(data);
-            var entry = new GltfEntry<Matrix>(data.Name, data.Geometry.WithReversedWindingIndices(), extras);
+            var entry = new GltfEntry<Matrix>(data.Name, data.Geometry?.WithReversedWindingIndices(), extras);
             return GltfUtil.ToGltfModel(entry, albedo, emission).SaveAsGlb();
         }
 
@@ -84,27 +95,35 @@ namespace FEZRepacker.Core.Conversion.Formats
 
             var entry = entries.First();
             var artObject = ConfiguredJsonSerializer.DeserializeFromNode<ArtObject>(entry.Extras) ?? new ArtObject();
-            artObject.Geometry = entry.Geometry.WithReversedWindingIndices();
-            FezGeometryUtil.RecalculateCubemapTexCoords(artObject.Geometry, artObject.Size, true);
-            
+            artObject.Geometry = entry.Geometry?.WithReversedWindingIndices();
+            if (artObject.Geometry is { } geometry)
+            {
+                FezGeometryUtil.RecalculateCubemapTexCoords(geometry, artObject.Size, true);
+            }
+
+
             (Stream? albedo, Stream? emission) = GltfUtil.ExtractCubemapStreams(modelRoot);
             LoadCubemap(ref artObject, albedo, emission);
 
             return artObject;
         }
 
-        private static void AppendGeometryStream(ref ArtObject data, Stream geometryStream)
+        private static void AppendGeometryStream(ref ArtObject data, Stream? geometryStream)
         {
+            if (geometryStream == null) return;
+
             var geometries = WavefrontObjUtil.FromWavefrontObjStream<Matrix>(geometryStream);
             if (geometries.Count < 1) return;
-            data.Geometry = geometries.First().Value.WithReversedWindingIndices();
-            FezGeometryUtil.RecalculateCubemapTexCoords(data.Geometry, data.Size, true);
+
+            var geometry = geometries.First().Value.WithReversedWindingIndices();
+            FezGeometryUtil.RecalculateCubemapTexCoords(geometry, data.Size, true);
+            data.Geometry = geometry;
         }
 
         private static void LoadCubemap(ref ArtObject data, Stream? albedoStream, Stream? emissionStream)
         {
             using var image = TexturesUtil.ConstructCubemap(albedoStream, emissionStream);
-            data.Cubemap = TexturesUtil.ImageToTexture2D(image);
+            data.Cubemap = image == null ? null : TexturesUtil.ImageToTexture2D(image);
         }
     }
 }

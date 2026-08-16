@@ -86,10 +86,9 @@ namespace FEZRepacker.Core.Helpers
             return image;
         }
 
-        public static Image<Rgba32> ConstructCubemap(Stream? imageAlbedoStream, Stream? imageEmissionStream)
+        public static Image<Rgba32>? ConstructCubemap(Stream? imageAlbedoStream, Stream? imageEmissionStream)
         {
-            if (imageAlbedoStream == null && imageEmissionStream == null) 
-                return new Image<Rgba32>(1, 1, Color.Pink);
+            if (imageAlbedoStream == null && imageEmissionStream == null) return null;
 
             var albedoImage = Image.Load<Rgba32>(imageAlbedoStream ?? imageEmissionStream);
 
