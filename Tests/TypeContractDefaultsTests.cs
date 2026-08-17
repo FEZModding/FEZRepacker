@@ -55,7 +55,7 @@ namespace FEZRepacker.Tests
             Assert.IsNull(new TrileInstance().ActorSettings);
         }
 
-        // Constructs map models and checks which nodes FEZ leaves for the reader to supply
+        // Constructs map models and checks their defaults
         [TestMethod]
         public void MapModelsUseFezDefaults()
         {
@@ -64,8 +64,13 @@ namespace FEZRepacker.Tests
             Assert.AreEqual(0, node.Connections.Count);
             Assert.IsNotNull(node.Conditions);
             Assert.AreEqual(0, node.Conditions.ScriptIds.Count);
-            Assert.IsNull(new MapTree().Root);
-            Assert.IsNull(new MapNodeConnection().Node);
+            
+            // NOTE - Both MapTree's Root and MapNodeConnection's Node are initialized with null
+            // from default constructor, however, realistically, they would never be a null value,
+            // and the game never anticipates them to be, so it's safer to assume they are both
+            // an exception and claim they need to have a value on Repacker's conversion level.
+            Assert.IsNotNull(new MapTree().Root);
+            Assert.IsNotNull(new MapNodeConnection().Node);
         }
 
         // Constructs an art-object instance and checks its transform and settings defaults

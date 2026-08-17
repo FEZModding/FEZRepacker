@@ -3,7 +3,6 @@ using System.Text.Json;
 
 using FEZRepacker.Core.Definitions.Game.Level;
 using FEZRepacker.Core.Definitions.Game.Level.Scripting;
-using FEZRepacker.Core.Definitions.Game.MapTree;
 using FEZRepacker.Core.Definitions.Game.Sky;
 using FEZRepacker.Core.Definitions.Game.TrackedSong;
 
@@ -36,8 +35,6 @@ namespace FEZRepacker.Tests
             AssertJsonNullRoundTrip<TrackedSong>(nameof(TrackedSong.CustomOrdering));
             AssertJsonNullRoundTrip<Sky>(nameof(Sky.Shadows));
             AssertJsonNullRoundTrip<Sky>(nameof(Sky.Stars));
-            AssertJsonNullRoundTrip<MapTree>(nameof(MapTree.Root));
-            AssertJsonNullRoundTrip<MapNodeConnection>(nameof(MapNodeConnection.Node));
             AssertJsonNullRoundTrip<TrileInstance>(nameof(TrileInstance.OverlappedTriles));
             AssertJsonNullRoundTrip<VolumeActorSettings>(nameof(VolumeActorSettings.CodePattern));
         }

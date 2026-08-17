@@ -5,6 +5,6 @@
     public class MapTree
     {
         [XnbProperty(UseConverter = true)]
-        public MapNode? Root { get; set; }
+        public MapNode Root { get; set; } = new();
     }
 }

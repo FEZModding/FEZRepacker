@@ -56,6 +56,17 @@ namespace FEZRepacker.Tests
                 new MapTree { Root = new MapNode { Conditions = null! } },
                 nameof(MapNode),
                 nameof(MapNode.Conditions));
+
+            // Required despite the encoding being able to carry a null, because FEZ cannot read one.
+            AssertRequiredPropertyValidation(
+                new MapTree { Root = null! },
+                nameof(MapTree),
+                nameof(MapTree.Root));
+
+            AssertRequiredPropertyValidation(
+                new MapTree { Root = new MapNode { Connections = { new MapNodeConnection { Node = null! } } } },
+                nameof(MapNodeConnection),
+                nameof(MapNodeConnection.Node));
         }
 
         private static void AssertRequiredPropertyValidation(object model, string modelName, string propertyName)
@@ -130,10 +141,6 @@ namespace FEZRepacker.Tests
             {
                 SoundPath = null
             });
-            var mapTree = RoundTrip(new MapTree
-            {
-                Root = null
-            });
             var trileSet = RoundTrip(new TrileSet
             {
                 Triles = new Dictionary<int, Trile> { [0] = new() { Geometry = null } },
@@ -158,7 +165,6 @@ namespace FEZRepacker.Tests
             Assert.IsNull(sky.Stars);
             Assert.IsNull(sky.CloudTint);
             Assert.IsNull(metadata.SoundPath);
-            Assert.IsNull(mapTree.Root);
             Assert.IsNull(trileSet.Triles[0].Geometry);
             Assert.IsNull(trileSet.TextureAtlas);
             Assert.IsNull(artObject.Cubemap);

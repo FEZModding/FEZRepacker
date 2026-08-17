@@ -7,11 +7,6 @@ namespace FEZRepacker.Core.Definitions.Json
     {
         public MapTree Deserialize()
         {
-            if (Count == 0)
-            {
-                return new MapTree();
-            }
-
             var mapTree = new MapTree
             {
                 Root = new MapNode()
@@ -39,22 +34,22 @@ namespace FEZRepacker.Core.Definitions.Json
 
                     foreach (var modConnection in modNode.Connections)
                     {
+                        if (!modConnection.Node.HasValue)
+                        {
+                            continue;
+                        }
+                        
+                        if (convertedNodes.Contains(modConnection.Node.Value)) continue;
+                        convertedNodes.Add(nodeRecord.Key);
+
                         var connection = new MapNodeConnection()
                         {
                             Face = modConnection.Face,
-                            BranchOversize = modConnection.BranchOversize
+                            BranchOversize = modConnection.BranchOversize,
+                            Node = new MapNode()
                         };
 
-                        if (modConnection.Node is { } nodeIndex)
-                        {
-                            if (convertedNodes.Contains(nodeIndex)) continue;
-                            convertedNodes.Add(nodeRecord.Key);
-
-                            var connectedNode = new MapNode();
-                            connection.Node = connectedNode;
-                            newNodesToConvert[nodeIndex] = connectedNode;
-                        }
-
+                        newNodesToConvert[modConnection.Node.Value] = connection.Node;
                         nodeRecord.Value.Connections.Add(connection);
                     }
                 }
@@ -73,26 +68,15 @@ namespace FEZRepacker.Core.Definitions.Json
             {
                 Connections = node.Connections.Select(conn => new MapNodeConnectionJsonModel(conn)
                 {
-                    Node = FindNodeIndex(nodesToConvert, conn.Node)
+                    Node = nodesToConvert.FindIndex(node => node == conn.Node)
                 }).ToList()
             }).Select((node, index) => (Node: node, Index: index));
 
             foreach ((var node, var index) in convertedIndexedNodes) this[index] = node;
         }
 
-        private static int? FindNodeIndex(List<MapNode> nodes, MapNode? node)
+        private List<MapNode> UnpackMapNodes(MapNode rootNode)
         {
-            if (node == null) return null;
-            return nodes.FindIndex(other => other == node);
-        }
-
-        private static List<MapNode> UnpackMapNodes(MapNode? rootNode)
-        {
-            if (rootNode == null)
-            {
-                return new List<MapNode>();
-            }
-            
             var nodesToConvert = new List<MapNode>();
             var nodesToUnpack = new List<MapNode>() { rootNode };
 
@@ -102,8 +86,7 @@ namespace FEZRepacker.Core.Definitions.Json
 
                 nodesToUnpack = nodesToUnpack
                     .SelectMany(node => node.Connections)
-                    .Select(conn => conn.Node)
-                    .OfType<MapNode>().ToList();
+                    .Select(conn => conn.Node).ToList();
             }
 
             return nodesToConvert;
