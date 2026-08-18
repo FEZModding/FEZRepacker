@@ -12,7 +12,8 @@
 
     <Configurations>Debug;Release</Configurations>
 
-    <Version>1.3.2</Version>
+    <MinVerTagPrefix>v</MinVerTagPrefix>
+    <MinVerDefaultPreReleaseIdentifiers>dev</MinVerDefaultPreReleaseIdentifiers>
 
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 
@@ -34,6 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="MinVer" Version="7.0.0" PrivateAssets="all" />
     <PackageReference Include="SharpGLTF.Core" Version="1.0.4" />
     <PackageReference Include="SharpGLTF.Toolkit" Version="1.0.4" />
     <PackageReference Include="System.Text.Json" Version="9.0.4" />

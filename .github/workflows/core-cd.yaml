@@ -10,21 +10,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.x'
-
-      - name: Fetch version
-        run: echo "VERSION=${GITHUB_REF/refs\/tags\/v/}" >> $GITHUB_ENV
 
       - name: Restore packages
         run: dotnet restore Core/FEZRepacker.Core.csproj
 
       - name: Build
-        run: dotnet build Core/FEZRepacker.Core.csproj -c Release /p:Version=${VERSION}
+        run: dotnet build Core/FEZRepacker.Core.csproj -c Release
 
       - name: Pack
-        run: dotnet pack Core/FEZRepacker.Core.csproj -c Release /p:Version=${VERSION}  --no-build --output .
+        run: dotnet pack Core/FEZRepacker.Core.csproj -c Release --no-build --output .
 
       - name: Push
-        run: dotnet nuget push FEZRepacker.Core.${VERSION}.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
+        run: dotnet nuget push *.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
