@@ -26,7 +26,7 @@ namespace FEZRepacker.Core.Definitions.Game.XNA
         [XnbProperty(UseConverter = true)]
         public List<Vector3> KerningData { get; set; } = new();
 
-        [XnbProperty(UseConverter = true, Optional = true)]
+        [XnbProperty(UseConverter = true, Optional = true, SkipIdentifier = true)]
         public char? DefaultCharacter { get; set; }
     }
 }
