@@ -12,6 +12,8 @@ namespace FEZRepacker.Interface.Actions
         private const string FileInput = "file-input";
         
         private const string XnbOutput = "xnb-output";
+
+        private const string UseCompression = "compress";
         
         public string Name => "--convert-to-xnb";
 
@@ -24,12 +26,13 @@ namespace FEZRepacker.Interface.Actions
 
         public IEnumerable<CommandLineArgument> Arguments => [
             new(FileInput),
-            new(XnbOutput, ArgumentType.OptionalPositional)
+            new(XnbOutput, ArgumentType.OptionalPositional),
+            new(UseCompression, ArgumentType.Flag, "Compresses XNBs only when at least 5% smaller (except for sounds)")
         ];
 
         public delegate void ConversionFunc(string path, string extension, Stream stream, bool converted);
         
-        public static void PerformBatchConversion(List<FileBundle> fileBundles, ConversionFunc processFileFunc)
+        public static void PerformBatchConversion(List<FileBundle> fileBundles, ConversionFunc processFileFunc, bool useCompression)
         {
             Console.WriteLine($"Converting {fileBundles.Count()} assets...");
             var filesDone = 0;
@@ -40,7 +43,7 @@ namespace FEZRepacker.Interface.Actions
                 try
                 {
                     object convertedData = FormatConversion.Deconvert(fileBundle)!;
-                    var data = XnbSerializer.Serialize(convertedData);
+                    var data = XnbSerializer.Serialize(convertedData, useCompression);
 
                     Console.WriteLine($"  Format {fileBundle.MainExtension} deconverted into {convertedData.GetType().Name}.");
                     processFileFunc(fileBundle.BundlePath, ".xnb", data, true);
@@ -65,6 +68,7 @@ namespace FEZRepacker.Interface.Actions
         {
             var inputPath = args[FileInput];
             var outputPath = args.GetValueOrDefault(XnbOutput, inputPath);
+            var useCompression = args.ContainsKey(UseCompression);
 
             if (File.Exists(outputPath))
             {
@@ -86,7 +90,7 @@ namespace FEZRepacker.Interface.Actions
 
                 using var assetFile = File.Create(assetOutputFullPathNormalized);
                 stream.CopyTo(assetFile);
-            });
+            }, useCompression);
         }
     }
 }

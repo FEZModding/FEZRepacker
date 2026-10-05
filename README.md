@@ -58,7 +58,7 @@ Unpacks entire .PAK package into specified directory (creates one if doesn't exi
 - `[--unpack-fez-content, -g] [fez-content-directory] [destination-folder]`
 Unpacks and converts all game assets into specified directory (creates one if doesn't exist).
 
-- `[--pack, -p] [input-directory-path] [destination-pak-path] <include-pak-path>`
+- `[--pack, -p] [input-directory-path] [destination-pak-path] <include-pak-path> [--compress]`
 Loads files from given input directory path, tries to deconvert them and pack into a destination .PAK file with given path. If include .PAK path is provided, it'll add its content into the new .PAK package.
 
 - `[--list, -l] [pak-path]`
@@ -67,7 +67,7 @@ Lists all files contained withing given .PAK package.
 - `[--convert-from-xnb, -x] [xnb-input] [file-output]`
 Attempts to convert given XNB input (this can be a path to a single asset or an entire directory) and save it at given output (if input is a directory, converts all files within it recursively and dumps all converted files in specified path).
 
-- `[--convert-to-xnb, -X] [file-input] [xnb-output]`
+- `[--convert-to-xnb, -X] [file-input] [xnb-output] [--compress]`
 Attempts to convert given input (this can be a path to a single file or an entire directory) into XNB file(s) and save it at given output (if input is a directory, converts all files within it recursively and dumps all converted files in specified path).
 
 Commands that convert XNB assets can take optional conversion flags:

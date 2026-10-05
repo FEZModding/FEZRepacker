@@ -63,7 +63,10 @@ public sealed class ContentSerializerGenerator : IIncrementalGenerator
         bool isPrivate = xnbReaderTypeAttribute.NamedArguments
             .FirstOrDefault(x => x.Key == "IsPrivate").Value.Value is true;
 
-        if (isPrivate)
+        bool useCustomSerializer = xnbReaderTypeAttribute.NamedArguments
+            .FirstOrDefault(x => x.Key == "UseCustomSerializer").Value.Value is true;
+
+        if (isPrivate || useCustomSerializer)
         {
             return null;
         }

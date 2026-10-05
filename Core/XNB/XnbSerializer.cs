@@ -1,5 +1,6 @@
 ﻿using System.Text;
 
+using FEZRepacker.Core.Definitions.Game.XNA;
 using FEZRepacker.Core.Helpers;
 
 namespace FEZRepacker.Core.XNB
@@ -57,11 +58,18 @@ namespace FEZRepacker.Core.XNB
         /// <param name="obj">
         /// Object to serialize into an XNB asset. Must be a valid primary content type for FEZ.
         /// </param>
+        /// <param name="useCompression">
+        /// Enables compression on an XNB asset.
+        /// </param>
         /// <returns>The stream containing serialized data, positioned at the beginning.</returns>
         /// <exception cref="XnbSerializationException">
         /// Thrown when given object is not a valid primary content type for FEZ.
         /// </exception>
-        public static Stream Serialize(object obj)
+        /// <remarks>
+        /// A XNB asset will be compressed, if it is not <see cref="SoundEffect"/> and
+        /// final compressed size will be 5% smaller than uncompressed one.
+        /// </remarks>
+        public static Stream Serialize(object obj, bool useCompression = false)
         {
             var contentIdentity = XnbPrimaryContents.FindByType(obj.GetType());
 
@@ -88,6 +96,26 @@ namespace FEZRepacker.Core.XNB
             xnbContentWriter.BaseStream.Position = 0;
             xnbContentWriter.BaseStream.CopyTo(outputStream);
 
+            outputStream.Position = 0;
+            if (!useCompression || obj is SoundEffect)
+            {
+                return outputStream;
+            }
+
+            var compressedStream = new MemoryStream();
+            using (var compressor = new XnbCompressStream(outputStream))
+            {
+                compressor.CopyTo(compressedStream);
+                compressedStream.Position = 0;
+            }
+
+            if (compressedStream.Length * 100L <= outputStream.Length * 95L)
+            {
+                outputStream.Dispose();
+                return compressedStream;
+            }
+
+            compressedStream.Dispose();
             outputStream.Position = 0;
             return outputStream;
         }

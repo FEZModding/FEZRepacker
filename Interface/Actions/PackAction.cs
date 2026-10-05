@@ -9,6 +9,7 @@ namespace FEZRepacker.Interface.Actions
         private const string InputDirectoryPath = "input-directory-path";
         private const string DestinationPakPath = "destination-pak-path";
         private const string IncludePakPath = "include-pak-path";
+        private const string UseCompression = "compress";
         
         public string Name => "--pack";
         public string[] Aliases => new[] { "-p" };
@@ -18,7 +19,8 @@ namespace FEZRepacker.Interface.Actions
         public IEnumerable<CommandLineArgument> Arguments => [
             new(InputDirectoryPath),
             new(DestinationPakPath),
-            new(IncludePakPath, ArgumentType.OptionalPositional)
+            new(IncludePakPath, ArgumentType.OptionalPositional),
+            new(UseCompression, ArgumentType.Flag, "Compresses XNBs only when at least 5% smaller (except for sounds)")
         ];
 
         private class TemporaryPak : IDisposable
@@ -84,7 +86,7 @@ namespace FEZRepacker.Interface.Actions
 
                 if (converterA != null && converterB == null) return 1;
                 if (converterA == null && converterB != null) return -1;
-                return a.BundlePath.CompareTo(b.BundlePath);
+                return string.Compare(a.BundlePath, b.BundlePath, StringComparison.Ordinal);
             });
         }
 
@@ -92,6 +94,7 @@ namespace FEZRepacker.Interface.Actions
         {
             var inputPath = args[InputDirectoryPath];
             var outputPackagePath = args[DestinationPakPath];
+            var useCompression = args.ContainsKey(UseCompression);
 
             var fileBundlesToAdd = FileBundle.BundleFilesAtPath(inputPath);
             SortBundlesToPreventInvalidOrdering(ref fileBundlesToAdd);
@@ -104,8 +107,10 @@ namespace FEZRepacker.Interface.Actions
                 {
                     Console.WriteLine($"  Packing raw file {path}{extension}...");
                 }
+
+                // ReSharper disable once AccessToDisposedClosure
                 tempPak.Writer.WriteFile(path, stream, extension);
-            });
+            }, useCompression);
 
 
             if (args.TryGetValue(IncludePakPath, out var includePackagePath))

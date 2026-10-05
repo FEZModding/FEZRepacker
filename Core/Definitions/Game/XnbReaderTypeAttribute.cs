@@ -12,6 +12,7 @@ namespace FEZRepacker.Core.Definitions.Game
     {
         public XnbAssemblyQualifier Qualifier { get; set; }
         public bool IsPrivate { get; set; }
+        public bool UseCustomSerializer { get; set; }
 
         public XnbReaderTypeAttribute(string _qualifier)
         {
